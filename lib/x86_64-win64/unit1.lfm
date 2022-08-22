@@ -1,0 +1,390 @@
+object CSV: TCSV
+  Left = 481
+  Height = 274
+  Top = 120
+  Width = 635
+  Anchors = []
+  Caption = 'CSV Tool'
+  ClientHeight = 274
+  ClientWidth = 635
+  LCLVersion = '2.0.12.0'
+  object OpenCSV: TButton
+    Left = 8
+    Height = 32
+    Top = 160
+    Width = 99
+    Caption = 'Open CSV'
+    OnClick = OpenCSVClick
+    TabOrder = 0
+  end
+  object Button2: TButton
+    Left = 528
+    Height = 32
+    Top = 212
+    Width = 99
+    Caption = 'Close'
+    OnClick = Button2Click
+    TabOrder = 1
+  end
+  object GroupBox1: TGroupBox
+    Left = 8
+    Height = 144
+    Top = 8
+    Width = 212
+    Caption = 'Initial file'
+    ClientHeight = 124
+    ClientWidth = 208
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 2
+    object Label2: TLabel
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 47
+      Caption = 'Run start'
+      ParentColor = False
+    end
+    object RunStart: TLabel
+      Left = 88
+      Height = 1
+      Top = 8
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label1: TLabel
+      Left = 8
+      Height = 15
+      Top = 32
+      Width = 44
+      Caption = 'Run end'
+      ParentColor = False
+    end
+    object RunEnd: TLabel
+      Left = 88
+      Height = 1
+      Top = 32
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label3: TLabel
+      Left = 8
+      Height = 15
+      Top = 56
+      Width = 69
+      Caption = 'Run duration'
+      ParentColor = False
+    end
+    object Duration: TLabel
+      Left = 88
+      Height = 1
+      Top = 56
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label5: TLabel
+      Left = 8
+      Height = 15
+      Top = 104
+      Width = 40
+      Caption = 'File size'
+      ParentColor = False
+    end
+    object CSVFileSize: TLabel
+      Left = 88
+      Height = 1
+      Top = 104
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object Label6: TLabel
+      Left = 8
+      Height = 15
+      Top = 80
+      Width = 42
+      Caption = 'Records'
+      ParentColor = False
+    end
+    object Records: TLabel
+      Left = 88
+      Height = 1
+      Top = 80
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 412
+    Height = 145
+    Top = 8
+    Width = 213
+    Caption = 'Target file'
+    ClientHeight = 125
+    ClientWidth = 209
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 3
+    OnClick = GroupBox2Click
+    object Label4: TLabel
+      Left = 8
+      Height = 15
+      Top = 8
+      Width = 47
+      Caption = 'Run start'
+      ParentColor = False
+    end
+    object Label7: TLabel
+      Left = 8
+      Height = 15
+      Top = 32
+      Width = 44
+      Caption = 'Run end'
+      ParentColor = False
+    end
+    object Label8: TLabel
+      Left = 8
+      Height = 15
+      Top = 56
+      Width = 69
+      Caption = 'Run duration'
+      ParentColor = False
+    end
+    object Label9: TLabel
+      Left = 8
+      Height = 15
+      Top = 80
+      Width = 42
+      Caption = 'Records'
+      ParentColor = False
+    end
+    object Label10: TLabel
+      Left = 8
+      Height = 15
+      Top = 104
+      Width = 40
+      Caption = 'File size'
+      ParentColor = False
+    end
+    object RunStartT: TLabel
+      Left = 88
+      Height = 1
+      Top = 8
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object RunEndT: TLabel
+      Left = 88
+      Height = 1
+      Top = 32
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object DurationT: TLabel
+      Left = 88
+      Height = 1
+      Top = 56
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object RecordsT: TLabel
+      Left = 88
+      Height = 1
+      Top = 80
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+    object FileSizeT: TLabel
+      Left = 88
+      Height = 1
+      Top = 104
+      Width = 1
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clNavy
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Pitch = fpVariable
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object Label11: TLabel
+    Left = 228
+    Height = 15
+    Top = 16
+    Width = 60
+    Caption = 'Record rate'
+    ParentColor = False
+  end
+  object RecordRate: TEdit
+    Left = 296
+    Height = 23
+    Top = 12
+    Width = 36
+    TabOrder = 4
+    Text = '1'
+  end
+  object Label12: TLabel
+    Left = 340
+    Height = 15
+    Top = 16
+    Width = 17
+    Caption = 'sec'
+    ParentColor = False
+  end
+  object Estimate: TButton
+    Left = 412
+    Height = 33
+    Top = 160
+    Width = 92
+    Caption = 'Estimate'
+    OnClick = EstimateClick
+    TabOrder = 5
+  end
+  object Generate: TButton
+    Left = 534
+    Height = 33
+    Top = 160
+    Width = 91
+    Caption = 'Generate'
+    Enabled = False
+    OnClick = GenerateClick
+    TabOrder = 6
+  end
+  object ProgressBar: TProgressBar
+    Left = 8
+    Height = 16
+    Top = 252
+    Width = 619
+    Step = 1
+    TabOrder = 7
+  end
+  object Label13: TLabel
+    Left = 228
+    Height = 15
+    Top = 52
+    Width = 53
+    Caption = 'Start Time'
+    ParentColor = False
+  end
+  object StartTime: TEdit
+    Left = 296
+    Height = 23
+    Top = 48
+    Width = 108
+    TabOrder = 8
+  end
+  object Label14: TLabel
+    Left = 228
+    Height = 15
+    Top = 84
+    Width = 49
+    Caption = 'End Time'
+    ParentColor = False
+  end
+  object EndTime: TEdit
+    Left = 296
+    Height = 23
+    Top = 80
+    Width = 108
+    TabOrder = 9
+  end
+  object FullRange: TButton
+    Left = 312
+    Height = 25
+    Top = 112
+    Width = 92
+    Caption = 'Full range'
+    OnClick = FullRangeClick
+    TabOrder = 10
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.CSV'
+    Filter = 'CSV files|*.CSV'
+    Left = 32
+    Top = 204
+  end
+end
