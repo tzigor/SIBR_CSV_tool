@@ -6,13 +6,15 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, DateUtils, StrUtils;
+  ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding;
 
 type
 
   { TCSV }
 
   TCSV = class(TForm)
+    Button1: TButton;
+    OpenCSVFast: TButton;
     FullRange: TButton;
     EndTime: TEdit;
     Label14: TLabel;
@@ -50,12 +52,14 @@ type
     OpenDialog1: TOpenDialog;
     RunStartT: TLabel;
     StaticText1: TStaticText;
+    procedure Button1Click(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
     procedure GenerateClick(Sender: TObject);
     procedure GroupBox2Click(Sender: TObject);
     procedure OpenCSVClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure EstimateClick(Sender: TObject);
+    procedure OpenCSVFastClick(Sender: TObject);
   private
   public
   end;
@@ -63,6 +67,7 @@ type
 var
   CSV: TCSV;
   CSVFileName: String;
+  CSVContent: TStringList;
 
 implementation
 
@@ -130,7 +135,6 @@ var CSVFile: TextFile;
     TextLine: String;
     ParamPos: Integer;
     NumOfLines, FSize, DurationInMinutes: Longint;
-    FSize2: Int64;
     StartRun: Boolean;
     EndRun: String;
     StartRunDT, EndRunDT: TDateTime;
@@ -151,7 +155,7 @@ begin
         Readln(CSVFile, TextLine);
         ParamPos:= GetParamPosition('RTCs',TextLine);
         //FSize2:= FileSize(CSVFileName);
-        ShowMessage(IntToStr(FSize2));
+        //ShowMessage(IntToStr(FSize2));
         FSize:= Length(TextLine);
         NumOfLines:= 0;
         StartRun:= false;
@@ -239,8 +243,16 @@ begin
   EndTime.Text:= RunEnd.Caption;
 end;
 
+procedure TCSV.Button1Click(Sender: TObject);
+  var
+    ss : TStringStream;
+  begin
+
+  end;
+
 procedure TCSV.Button2Click(Sender: TObject);
 begin
+  FreeAndNil(CSVContent);
   CSV.Close;
 end;
 
@@ -305,6 +317,50 @@ begin
       end else ShowMessage('Start Time should be earlier than End Time');
     end else ShowMessage('Plese put correct value of Record Rate in sec. (1...)');
   end else ShowMessage('Open CSV file first.');
+end;
+
+procedure TCSV.OpenCSVFastClick(Sender: TObject);
+var ParamPos: Integer;
+    NumOfLines, FSize, DurationInMinutes: Longint;
+    StartRun: Boolean;
+    EndRun: String;
+    StartRunDT, EndRunDT: TDateTime;
+begin
+  if OpenDialog1.Execute then
+   begin
+      CSVFileName:= OpenDialog1.FileName;
+      try
+        Generate.Enabled:= False;
+        ProgressBar.Position:= 0;
+        RecordsT.Caption:= '';
+        FileSizeT.Caption:= '';
+        RunStartT.Caption:= '';
+        RunEndT.Caption:= '';
+        DurationT.Caption:= '';
+
+        NumOfLines:= 0;
+        StartRun:= false;
+
+        if CSVContent is TStringList then FreeAndNil(CSVContent);
+        CSVContent:= TStringList.Create;
+        CSVContent.LoadFromFile(CSVFileName);
+        //ShowMessage(CSVContent[0]);
+
+        //EndRunDT:= UnixToDateTime(StrToInt(EndRun));
+        //RunEnd.Caption:= DateTimeToStr(EndRunDT);
+        //EndTime.Text:= DateTimeToStr(EndRunDT);
+
+        Records.Caption:= IntToStr(CSVContent.Count);
+        ProgressBar.Max:= CSVContent.Count;
+        CSVFileSize.Caption:= IntToStr(Round(CSVContent.Count/1000))+' KB';
+        DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
+        Duration.Caption:= IntToStr(Round(DurationInMinutes/60)) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
+      except
+      on E: EInOutError do
+        ShowMessage('Error: ' + E.Message);
+      end;
+   end;
+
 end;
 
 

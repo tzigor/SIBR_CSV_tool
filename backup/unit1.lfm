@@ -1,12 +1,16 @@
 object CSV: TCSV
-  Left = 481
+  Left = 611
   Height = 274
-  Top = 120
-  Width = 635
+  Top = 95
+  Width = 634
+  HorzScrollBar.Page = 627
+  HorzScrollBar.Range = 627
+  VertScrollBar.Page = 268
+  VertScrollBar.Range = 268
   Anchors = []
-  Caption = 'CSV Tool'
+  Caption = 'CSV Tool v1.0'
   ClientHeight = 274
-  ClientWidth = 635
+  ClientWidth = 634
   LCLVersion = '2.0.12.0'
   object OpenCSV: TButton
     Left = 8
@@ -380,6 +384,24 @@ object CSV: TCSV
     Caption = 'Full range'
     OnClick = FullRangeClick
     TabOrder = 10
+  end
+  object Button1: TButton
+    Left = 208
+    Height = 25
+    Top = 199
+    Width = 75
+    Caption = 'Button1'
+    OnClick = Button1Click
+    TabOrder = 11
+  end
+  object OpenCSVFast: TButton
+    Left = 121
+    Height = 32
+    Top = 160
+    Width = 99
+    Caption = 'Open CSV'
+    OnClick = OpenCSVFastClick
+    TabOrder = 12
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.CSV'
