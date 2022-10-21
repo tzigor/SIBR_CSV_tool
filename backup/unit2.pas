@@ -16,10 +16,14 @@ type SibrParam = record
 end;
 
 var SibrParams: array of SibrParam;
+    AdditionalParams: array[0..31] of Single;
 
 function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
-function SWLine(name:String; SW: Longint; PF: String): String;
+function SWLine(name:String; SW, Expected: Longint; PF: String): String;
 procedure FillParams;
+function AmplitudeName(n: Integer):String;
+function PhaseShiftName(n: Integer):String;
+function NameToInt(name: String): Integer;
 
 implementation
 
@@ -39,13 +43,14 @@ begin
    ParamLine:= wStr;
 end;
 
-function SWLine(name:String; SW: Longint; PF: String): String;
+function SWLine(name:String; SW, Expected: Longint; PF: String): String;
 var wStr: String;
 begin
    wStr:= AddCharR(' ',name, 16);
    wStr:= wStr + AddCharR(' ',IntToStr(SW), 6);
    wStr:= wStr + AddCharR(' ', '0x' + Dec2Numb(SW, 4, 16),7);
    wStr:= wStr + AddCharR(' ', Dec2Numb(SW, 16, 2), 16);
+   wStr:= wStr + ' | ' + AddCharR(' ', '0x' + Dec2Numb(Expected, 4, 16),7);
    wStr:= wStr + ' | ' + PF;
    SWLine:= wStr;
 end;
@@ -55,15 +60,15 @@ begin
   setLength(SibrParams, 63);
   SibrParams[0].name:= 'TEMP_CTRL';
   SibrParams[0].min:= 0;
-  SibrParams[0].max:= 120;
-  SibrParams[0].stdDev:= 0;
+  SibrParams[0].max:= 40;
+  SibrParams[0].stdDev:= 0.2;
   SibrParams[0].k:= 5;
   SibrParams[0].m:= 2;
 
   SibrParams[1].name:= 'AX';
   SibrParams[1].min:= -1;
   SibrParams[1].max:= 1;
-  SibrParams[1].stdDev:= 0;
+  SibrParams[1].stdDev:= 0.1;
   SibrParams[1].k:= 5;
   SibrParams[1].m:= 4;
 
@@ -77,14 +82,14 @@ begin
   SibrParams[3].name:= 'AZ';
   SibrParams[3].min:= -1;
   SibrParams[3].max:= 1;
-  SibrParams[3].stdDev:= 0;
+  SibrParams[3].stdDev:= 0.1;
   SibrParams[3].k:= 5;
   SibrParams[3].m:= 4;
 
   SibrParams[4].name:= 'AY';
   SibrParams[4].min:= -1;
   SibrParams[4].max:= 1;
-  SibrParams[4].stdDev:= 0;
+  SibrParams[4].stdDev:= 0.1;
   SibrParams[4].k:= 5;
   SibrParams[4].m:= 4;
 
@@ -104,169 +109,169 @@ begin
 
   SibrParams[7].name:= 'BHT';
   SibrParams[7].min:= 0;
-  SibrParams[7].max:= 120;
-  SibrParams[7].stdDev:= 0;
+  SibrParams[7].max:= 40;
+  SibrParams[7].stdDev:= 0.2;
   SibrParams[7].k:= 5;
   SibrParams[7].m:= 2;
 
   SibrParams[8].name:= 'BHP';
   SibrParams[8].min:= -5;
   SibrParams[8].max:= 5;
-  SibrParams[8].stdDev:= 1;
+  SibrParams[8].stdDev:= 0.2;
   SibrParams[8].k:= 6;
   SibrParams[8].m:= 2;
 
   SibrParams[9].name:= 'V1P';
   SibrParams[9].min:= -1;
-  SibrParams[9].max:= 0;
-  SibrParams[9].stdDev:= 0;
+  SibrParams[9].max:= 1;
+  SibrParams[9].stdDev:= 0.02;
   SibrParams[9].k:= 7;
   SibrParams[9].m:= 6;
 
   SibrParams[10].name:= 'V2P';
-  SibrParams[10].min:= 2.8;
-  SibrParams[10].max:= 2.4;
-  SibrParams[10].stdDev:= 0;
+  SibrParams[10].min:= 2.4;
+  SibrParams[10].max:= 2.8;
+  SibrParams[10].stdDev:= 0.02;
   SibrParams[10].k:= 4;
   SibrParams[10].m:= 3;
 
   SibrParams[11].name:= 'VTERM';
   SibrParams[11].min:= 0;
   SibrParams[11].max:= 1;
-  SibrParams[11].stdDev:= 0;
+  SibrParams[11].stdDev:= 0.02;
   SibrParams[11].k:= 7;
   SibrParams[11].m:= 6;
 
   SibrParams[12].name:= 'ADC_VOFST';
   SibrParams[12].min:= -1;
   SibrParams[12].max:= 1;
-  SibrParams[12].stdDev:= 0;
+  SibrParams[12].stdDev:= 0.02;
   SibrParams[12].k:= 7;
   SibrParams[12].m:= 6;
 
   SibrParams[13].name:= 'ADC_VREF';
   SibrParams[13].min:= 3;
   SibrParams[13].max:= 4;
-  SibrParams[13].stdDev:= 0;
+  SibrParams[13].stdDev:= 0.02;
   SibrParams[13].k:= 7;
   SibrParams[13].m:= 6;
 
   SibrParams[14].name:= 'I24';
   SibrParams[14].min:= 0;
   SibrParams[14].max:= 1;
-  SibrParams[14].stdDev:= 0;
+  SibrParams[14].stdDev:= 0.02;
   SibrParams[14].k:= 7;
   SibrParams[14].m:= 6;
 
   SibrParams[15].name:= 'V_24V_CTRL';
   SibrParams[15].min:= 17;
   SibrParams[15].max:= 31;
-  SibrParams[15].stdDev:= 0;
+  SibrParams[15].stdDev:= 0.02;
   SibrParams[15].k:= 5;
   SibrParams[15].m:= 3;
 
   SibrParams[16].name:= 'V_20VP_SONDE';
   SibrParams[16].min:= 14;
   SibrParams[16].max:= 26;
-  SibrParams[16].stdDev:= 0;
+  SibrParams[16].stdDev:= 0.02;
   SibrParams[16].k:= 5;
   SibrParams[16].m:= 3;
 
   SibrParams[17].name:= 'V_20VP';
   SibrParams[17].min:= 14;
   SibrParams[17].max:= 26;
-  SibrParams[17].stdDev:= 0;
+  SibrParams[17].stdDev:= 0.02;
   SibrParams[17].k:= 5;
   SibrParams[17].m:= 3;
 
   SibrParams[18].name:= 'V_5RV';
   SibrParams[18].min:= 4.5;
   SibrParams[18].max:= 5.5;
-  SibrParams[18].stdDev:= 0;
+  SibrParams[18].stdDev:= 0.02;
   SibrParams[18].k:= 7;
   SibrParams[18].m:= 3;
 
   SibrParams[19].name:= 'V_5TV';
   SibrParams[19].min:= 4.5;
   SibrParams[19].max:= 5.5;
-  SibrParams[19].stdDev:= 0;
+  SibrParams[19].stdDev:= 0.02;
   SibrParams[19].k:= 7;
   SibrParams[19].m:= 3;
 
   SibrParams[20].name:= 'V_3.3V';
   SibrParams[20].min:= 3;
   SibrParams[20].max:= 3.6;
-  SibrParams[20].stdDev:= 0;
+  SibrParams[20].stdDev:= 0.02;
   SibrParams[20].k:= 7;
   SibrParams[20].m:= 3;
 
   SibrParams[21].name:= 'V_2.5V';
   SibrParams[21].min:= 2.25;
   SibrParams[21].max:= 2.75;
-  SibrParams[21].stdDev:= 0;
+  SibrParams[21].stdDev:= 0.02;
   SibrParams[21].k:= 7;
   SibrParams[21].m:= 3;
 
   SibrParams[22].name:= 'V_1.8V';
   SibrParams[22].min:= 1.62;
   SibrParams[22].max:= 1.98;
-  SibrParams[22].stdDev:= 0;
+  SibrParams[22].stdDev:= 0.02;
   SibrParams[22].k:= 7;
   SibrParams[22].m:= 3;
 
   SibrParams[23].name:= 'V_1.2V';
   SibrParams[23].min:= 1.08;
   SibrParams[23].max:= 1.32;
-  SibrParams[23].stdDev:= 0;
+  SibrParams[23].stdDev:= 0.02;
   SibrParams[23].k:= 7;
   SibrParams[23].m:= 3;
 
   SibrParams[24].name:= 'I_24V_CTRL';
-  SibrParams[24].min:= 0;
-  SibrParams[24].max:= 0;
-  SibrParams[24].stdDev:= 0;
+  SibrParams[24].min:= 0.03;
+  SibrParams[24].max:= 0.05;
+  SibrParams[24].stdDev:= 0.02;
   SibrParams[24].k:= 7;
   SibrParams[24].m:= 3;
 
   SibrParams[25].name:= 'I_20VP_SONDE';
   SibrParams[25].min:= 0;
-  SibrParams[25].max:= 0;
-  SibrParams[25].stdDev:= 0;
+  SibrParams[25].max:= 0.01;
+  SibrParams[25].stdDev:= 0.02;
   SibrParams[25].k:= 7;
   SibrParams[25].m:= 3;
 
   SibrParams[26].name:= 'I_5RV';
-  SibrParams[26].min:= 0;
-  SibrParams[26].max:= 0;
-  SibrParams[26].stdDev:= 0;
+  SibrParams[26].min:= 0.05;
+  SibrParams[26].max:= 0.1;
+  SibrParams[26].stdDev:= 0.02;
   SibrParams[26].k:= 7;
   SibrParams[26].m:= 3;
 
   SibrParams[27].name:= 'I_5TV';
-  SibrParams[27].min:= 0;
-  SibrParams[27].max:= 0;
-  SibrParams[27].stdDev:= 0;
+  SibrParams[27].min:= 0.1;
+  SibrParams[27].max:= 0.2;
+  SibrParams[27].stdDev:= 0.02;
   SibrParams[27].k:= 7;
   SibrParams[27].m:= 3;
 
   SibrParams[28].name:= 'I_3.3V';
-  SibrParams[28].min:= 0;
-  SibrParams[28].max:= 0;
-  SibrParams[28].stdDev:= 0;
+  SibrParams[28].min:= 0.3;
+  SibrParams[28].max:= 0.5;
+  SibrParams[28].stdDev:= 0.02;
   SibrParams[28].k:= 7;
   SibrParams[28].m:= 6;
 
   SibrParams[29].name:= 'I_1.8V';
-  SibrParams[29].min:= 0;
-  SibrParams[29].max:= 0;
-  SibrParams[29].stdDev:= 0;
+  SibrParams[29].min:= 0.02;
+  SibrParams[29].max:= 0.05;
+  SibrParams[29].stdDev:= 0.02;
   SibrParams[29].k:= 7;
   SibrParams[29].m:= 3;
 
   SibrParams[30].name:= 'I_1.2V';
-  SibrParams[30].min:= 0;
-  SibrParams[30].max:= 0;
-  SibrParams[30].stdDev:= 0;
+  SibrParams[30].min:= 0.1;
+  SibrParams[30].max:= 0.3;
+  SibrParams[30].stdDev:= 0.02;
   SibrParams[30].k:= 7;
   SibrParams[30].m:= 3;
 
@@ -493,6 +498,30 @@ begin
   SibrParams[62].stdDev:= 0;
   SibrParams[62].k:= 7;
   SibrParams[62].m:= 6;
+end;
+
+function AmplitudeName(n: Integer):String;
+begin
+   AmplitudeName:= 'AR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
+end;
+
+function PhaseShiftName(n: Integer):String;
+begin
+   PhaseShiftName:= 'PR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
+end;
+
+function NameToInt(name: String): Integer;
+var a, b ,c: Integer;
+begin
+   a:= StrToInt(name[3])-1;
+   b:= StrToInt(name[7])-1;
+   c:= StrToInt(name[5]);
+   NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
+end;
+
+function Amplitude(Param: String): Single;
+begin
+
 end;
 
 end.

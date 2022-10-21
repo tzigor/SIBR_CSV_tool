@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
-  TASources, TACustomSource, TASeries, Unit2;
+  TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
+  DateTimePicker, Unit2, Types;
 
 type
 
@@ -15,25 +16,33 @@ type
 
   TCSV = class(TForm)
     App: TPageControl;
-    Button1: TButton;
+    ChartToolset1: TChartToolset;
+    ChartToolset1PanDragTool1: TPanDragTool;
+    ChartToolset1ZoomDragTool1: TZoomDragTool;
+    ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
+    ChartPoints: TCheckBox;
+    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
+    Draw: TButton;
     Button2: TButton;
     Button3: TButton;
     Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
+    Parameters: TComboBox;
+    SaveReport: TButton;
     Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
     Chart1LineSeries4: TLineSeries;
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     CSVFileSize: TLabel;
+    TestDate: TDateTimePicker;
     Duration: TLabel;
     DurationT: TLabel;
     EndTime: TEdit;
-    ReportEndTime: TEdit;
+    GroupBox3: TGroupBox;
     EstimateFast: TButton;
     FileSizeT: TLabel;
     FullRange: TButton;
     Generate: TButton;
-    GenerateFast: TToggleBox;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     Label1: TLabel;
@@ -44,6 +53,8 @@ type
     Label14: TLabel;
     Label15: TLabel;
     Label16: TLabel;
+    Label17: TLabel;
+    Label18: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -60,24 +71,29 @@ type
     Records: TLabel;
     RecordsT: TLabel;
     Report: TButton;
+    ReportEndTime: TEdit;
+    ReportStartTime: TEdit;
+    SerialNumber: TEdit;
     ReportText: TMemo;
     RunEnd: TLabel;
     RunEndT: TLabel;
     RunStart: TLabel;
     RunStartT: TLabel;
     StartTime: TEdit;
-    ReportStartTime: TEdit;
-    TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
+    MainTab: TTabSheet;
+    ReportTab: TTabSheet;
+    Graphs: TTabSheet;
     UserDefinedChartSource1: TUserDefinedChartSource;
-    procedure Button1Click(Sender: TObject);
+    procedure ChartPointsChange(Sender: TObject);
+    procedure DateTimeIntervalChartSource1DateTimeStepChange(Sender: TObject;
+      ASteps: TDateTimeStep);
+    procedure DrawClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure SaveReportClick(Sender: TObject);
     procedure EstimateFastClick(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
     procedure GenerateClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
-    procedure GenerateFastChange(Sender: TObject);
     procedure OpenCSVFastClick(Sender: TObject);
     procedure ReportClick(Sender: TObject);
     procedure UserDefinedChartSource1GetChartDataItem(
@@ -87,21 +103,29 @@ type
   public
   end;
 
+type TChartData = record
+   Data: Double;
+   Time: TDateTime;
+end;
+
+Function Amplitude(nParam, n: Integer): Single;
+function PhaseShift(nParam, n: Integer): Single;
+
 Const LN = #13#10;
 
 var
   CSV: TCSV;
-  CSVFileName: String;
+  CSVFileName, DrawParameter: String;
   CSVContent: TStringList;
-  DataSource: array of Double;
+  DataSource: array of TChartData;
   ParamList: array of String;
+  ParameterCount: Integer;
 
 implementation
 
 {$R *.lfm}
 
 { TCSV }
-
 
 function GetParamPosition(Param: String): Integer;
 var i: Integer;
@@ -187,50 +211,9 @@ procedure TCSV.GenerateClick(Sender: TObject);
         end;
 end;
 
-procedure TCSV.GenerateFastChange(Sender: TObject);
-  var CSVFile, NewCSVFile: TextFile;
-        TextLine, FileName: String;
-        ParamPos, Rate: Integer;
-        PrevTime, CurrentTime, StartTimeDT, EndTimeDT: TDateTime;
-    begin
-          FileName:= ReplaceText(CSVFileName,'.csv','') + '_generated.csv';
-          ProgressBar.Position:= 0;
-          Rate:= StrToInt(RecordRate.Text);
-          AssignFile(CSVFile, CSVFileName);
-          AssignFile(NewCSVFile, FileName);
-          StartTimeDT:= StrToDateTime(StartTime.Text);
-          EndTimeDT:= StrToDateTime(EndTime.Text);
-          try
-            Reset(CSVFile);
-            ReWrite(NewCSVFile);
-            Readln(CSVFile, TextLine);
-            WriteLn(NewCSVFile,TextLine);
-            ParamPos:= GetParamPosition('RTCs');
-            PrevTime:= 0;
-            while not eof(CSVFile) do begin
-              Readln(CSVFile, TextLine);
-              CurrentTime:= UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine)));
-              if (YearOf(CurrentTime) <> 1970) and (SecondsBetween(PrevTime,CurrentTime) >= Rate ) and
-                   (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin;
-                 PrevTime:= UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine)));
-                 WriteLn(NewCSVFile,TextLine);
-              end;
-              ProgressBar.Position:= ProgressBar.Position + 1;
-            end;
-            CloseFile(CSVFile);
-            CloseFile(NewCSVFile);
-            ShowMessage('File generated');
-          except
-          on E: EInOutError do
-            ShowMessage('Error: ' + E.Message);
-          end;
-end;
-
 procedure TCSV.Button2Click(Sender: TObject);
 begin
   FreeAndNil(CSVContent);
-  //FreeAndNil(SibrParams);
-  //FreeAndNil(ParamList);
   CSV.Close;
 end;
 
@@ -283,36 +266,68 @@ begin
           end;
           RecordsT.Caption:= IntToStr(NumOfLines);
           FileSizeT.Caption:= IntToStr(Round(FSize/1000))+' KB';
-          GenerateFast.Enabled:= True;
       end else ShowMessage('Start Time should be earlier than End Time');
     end else ShowMessage('Plese put correct value of Record Rate in sec. (1...)');
   end else ShowMessage('Open CSV file first.');
 end;
 
-procedure TCSV.Button1Click(Sender: TObject);
+procedure TCSV.DrawClick(Sender: TObject);
 var i: Longint;
-    ParamPos: Integer;
+    ParamPos, TimePos: Integer;
     wStr:String;
 begin
+  TimePos:= GetParamPosition('RTCs');
+  setLength(DataSource, 0);
   setLength(DataSource, CSVContent.Count);
-  ParamPos:= GetParamPosition('BHT');
+  ParamPos:= GetParamPosition(Parameters.Text);
   for i:=1 to CSVContent.Count-1 do begin
-     DataSource[i-1]:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
+    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
+       if Parameters.ItemIndex < ParameterCount then DataSource[i-1].Data:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]))
+       else
+         if Parameters.ItemIndex - ParameterCount < 16 then DataSource[i-1].Data:= Amplitude(Parameters.ItemIndex - ParameterCount, i)
+         else DataSource[i-1].Data:= PhaseShift(Parameters.ItemIndex - ParameterCount - 16, i);
+         DataSource[i-1].Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+         wStr:= wStr + DataSource[i-1].Time + ' - ' + FloatToStr(DataSource[i-1].Data) + LN;
+    end;
   end;
+
+  ReportText.Text:= wStr;
 
   UserDefinedChartSource1.PointsNumber:= CSVContent.Count-1;
   UserDefinedChartSource1.Reset;
 end;
 
+procedure TCSV.DateTimeIntervalChartSource1DateTimeStepChange(Sender: TObject;
+  ASteps: TDateTimeStep);
+begin
+
+end;
+
+procedure TCSV.ChartPointsChange(Sender: TObject);
+begin
+  Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+end;
+
 procedure TCSV.Button3Click(Sender: TObject);
-var ParamPos, LineLength, Counter, i: Integer;
+var i, Step: integer;
     wStr: String;
 begin
-   ParamPos:= GetParamPosition('VR1C0F1r')-1;
-   for i := ParamPos to ParamPos + 63 do begin
-      wStr:= wStr + ParamList[i] + LN
+   for i:=0 to 15 do begin
+      wStr:= wStr + FloatToStr(Amplitude(i,1)) + LN;
    end;
-   ReportText.Text:=wStr;
+   ReportText.Text:= wStr;
+end;
+
+procedure TCSV.SaveReportClick(Sender: TObject);
+var  ReportFile: TextFile;
+     FileName, wStr: String;
+begin
+  FileName:= 'SIB-R xxx Air Test Report.prn';
+  AssignFile(ReportFile, FileName);
+  ReWrite(ReportFile);
+  wStr:= ReportText.Text;
+  Writeln(ReportFile, wStr);
+  CloseFile(ReportFile);
 end;
 
 procedure TCSV.OpenCSVFastClick(Sender: TObject);
@@ -346,18 +361,23 @@ begin
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then Counter:= Counter + 1;
         end;
-
+        setLength(ParamList, 0);
         setLength(ParamList, Counter);
+        ParameterCount:= Counter;
         Counter:= 0;
         SubStr:= '';
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then begin
               ParamList[Counter]:= Trim(SubStr);
+              Parameters.Items.Add(Trim(SubStr));
               Counter:= Counter + 1;
               SubStr:= '';
            end
            else SubStr:= SubStr + CSVContent[0][i];
         end;
+
+        for i:= 0 to 15 do Parameters.Items.Add(AmplitudeName(i));
+        for i:= 0 to 15 do Parameters.Items.Add(PhaseShiftName(i));
 
         ParamPos:= GetParamPosition('RTCs');
 
@@ -391,6 +411,7 @@ begin
         DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
         Duration.Caption:= IntToStr(Round(DurationInMinutes/60)) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
         EstimateFast.Enabled:= True;
+        ReportTab.Enabled:= True;
         FillParams;
       except
       on E: EInOutError do
@@ -399,7 +420,7 @@ begin
    end;
 end;
 
-function SWString(SWName: String; exptd: Longint; TimePos: Integer; StartTimeDT; EndTimeDT: TDateTime): String;
+function SWString(SWName: String; exptd: Longint; TimePos: Integer; StartTimeDT, EndTimeDT: TDateTime): String;
 var i, SW: Longint;
     PassFail: String;
     ParamPos: Integer;
@@ -418,6 +439,43 @@ begin
   SWString:= SWLine(SWName, SW, exptd, PassFail);
 end;
 
+procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
+var StartParamPos, Step: Integer;
+    RawR, RawX: Double;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
+  PhaseShift:= Arctan(-RawX/RawR);
+end;
+
+function Amplitude(nParam, n: Integer): Single;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Double;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX))
+end;
+
+function PhaseShift(nParam, n: Integer): Single;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Single;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  PhaseShift:= Arctan(-RawX/RawR);
+end;
+
 procedure TCSV.ReportClick(Sender: TObject);
 var i, j, SW: Longint;
     ParamPos, TimePos, Step: Integer;
@@ -432,6 +490,9 @@ begin
   EndTimeDT:= StrToDateTime(ReportEndTime.Text);
 
   wStr:= '';
+
+  wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + LN;
+  wStr:= wStr + 'Test Date: ' + DateToStr(TestDate.Date) + LN;
 
   wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
   wStr:= wStr + '                                                   Air Test' + LN;
@@ -466,47 +527,33 @@ begin
        StdDiviation:= StdDiviation + Sqr(Value-Avarage);
     end;
     StdDiviation:= Sqrt(StdDiviation/(CSVContent.Count-1));
-    if (Avarage < SibrParams[j].min) or (Avarage < SibrParams[j].max) or (StdDiviation > SibrParams[j].stdDev) then PassFail:= 'Failed'
+    if (Avarage < SibrParams[j].min) or (Avarage > SibrParams[j].max) or (StdDiviation > SibrParams[j].stdDev) then PassFail:= 'Failed'
     else PassFail:= 'Passed';
     wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ LN;
   end;
   ReportText.Text:= wStr;
 
-  ParamPos:= GetParamPosition('VR1C0F1r') + 4;
+  // *************   Amplitudes & Phases   *************************
   AmplAvarage:= 0; AmplStdDiviation:= 0;
   PSAvarage:= 0; PSStdDiviation:= 0;
 
-  Step:= 0;
   for j:=1 to 16 do begin
-    RawR:= StrToFloat(GetParamValue(ParamPos + Step, CSVContent[1]));
-    RawX:= StrToFloat(GetParamValue(ParamPos + Step + 1, CSVContent[1]));
-    AmplValue:= Sqrt(Sqr(RawR)+Sqr(RawX));
-    PSValue:= Arctan(-RawX/RawR);
+    GetResParameters(AmplValue, PSValue, j-1, i);
     MinAmplValue:= AmplValue; MaxAmplValue:= AmplValue;
     MinPSValue:= PSValue; MaxPSValue:= PSValue;
     for i:=1 to CSVContent.Count-1 do begin
-
-       RawR:= StrToFloat(GetParamValue(ParamPos + Step, CSVContent[i]));
-       RawX:= StrToFloat(GetParamValue(ParamPos + Step + 1, CSVContent[i]));
-       AmplValue:= Sqrt(Sqr(RawR)+Sqr(RawX));
-       PSValue:= Arctan(-RawX/RawR);
-
+       GetResParameters(AmplValue, PSValue, j-1, i);
        if AmplValue < MinAmplValue then MinAmplValue:= AmplValue;
        if AmplValue > MaxAmplValue then MaxAmplValue:= AmplValue;
-
        if PSValue < MinPSValue then MinPSValue:= PSValue;
        if PSValue > MaxPSValue then MaxPSValue:= PSValue;
-
        AmplAvarage:= AmplAvarage + AmplValue;
        PSAvarage:= PSAvarage + PSValue;
     end;
     AmplAvarage:=AmplAvarage/(CSVContent.Count-1);
     PSAvarage:=PSAvarage/(CSVContent.Count-1);
     for i:=1 to CSVContent.Count-1 do begin
-       RawR:= StrToFloat(GetParamValue(ParamPos + Step, CSVContent[i]));
-       RawX:= StrToFloat(GetParamValue(ParamPos + Step + 1, CSVContent[i]));
-       AmplValue:= Sqrt(Sqr(RawR)+Sqr(RawX));
-       PSValue:= Arctan(-RawX/RawR);
+       GetResParameters(AmplValue, PSValue, j-1, i);
        AmplStdDiviation:= AmplStdDiviation + Sqr(AmplValue - AmplAvarage);
        PSStdDiviation:= PSStdDiviation + Sqr(PSValue - PSAvarage);
     end;
@@ -514,8 +561,6 @@ begin
     PSStdDiviation:= Sqrt(PSStdDiviation/(CSVContent.Count-1));
     wStr:= wStr +ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + LN;
     PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PassFail) + LN;
-    if (j mod 2) = 0 then Step:= Step + 6
-    else Step:= Step + 2;
   end;
   for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
   ReportText.Text:= wStr;
@@ -524,8 +569,8 @@ end;
 procedure TCSV.UserDefinedChartSource1GetChartDataItem(
   ASource: TUserDefinedChartSource; AIndex: Integer; var AItem: TChartDataItem);
 begin
-  AItem.Y := DataSource[AIndex];
-  AItem.X := AIndex;
+  AItem.Y := DataSource[AIndex].Data;
+  AItem.X := DataSource[AIndex].Time;
 end;
 
 end.
