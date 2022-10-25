@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
   TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Types;
+  DateTimePicker, Unit2, Types, TAChartUtils;
 
 type
 
@@ -16,7 +16,10 @@ type
 
   TCSV = class(TForm)
     App: TPageControl;
+    Chart1LineSeries2: TLineSeries;
+    Chart2: TChart;
     ChartToolset1: TChartToolset;
+    ChartToolset1DataPointClickTool1: TDataPointClickTool;
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
@@ -27,13 +30,14 @@ type
     Button3: TButton;
     Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
-    Parameters: TComboBox;
+    Parameters: TListBox;
+    Parameters1: TComboBox;
     SaveReport: TButton;
-    Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
     Chart1LineSeries4: TLineSeries;
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     CSVFileSize: TLabel;
+    StatusBar1: TStatusBar;
     TestDate: TDateTimePicker;
     Duration: TLabel;
     DurationT: TLabel;
@@ -63,7 +67,6 @@ type
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
-    ListChartSource1: TListChartSource;
     OpenCSVFast: TButton;
     OpenDialog1: TOpenDialog;
     ProgressBar: TProgressBar;
@@ -83,12 +86,12 @@ type
     MainTab: TTabSheet;
     ReportTab: TTabSheet;
     Graphs: TTabSheet;
-    UserDefinedChartSource1: TUserDefinedChartSource;
     procedure ChartPointsChange(Sender: TObject);
-    procedure DateTimeIntervalChartSource1DateTimeStepChange(Sender: TObject;
-      ASteps: TDateTimeStep);
+    procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
+      APoint: TPoint);
     procedure DrawClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Parameters1Change(Sender: TObject);
     procedure SaveReportClick(Sender: TObject);
     procedure EstimateFastClick(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
@@ -103,9 +106,9 @@ type
   public
   end;
 
-type TChartData = record
-   Data: Double;
-   Time: TDateTime;
+type TSelectedParam = record
+    name: String;
+    index: Integer;
 end;
 
 Function Amplitude(nParam, n: Integer): Single;
@@ -117,8 +120,10 @@ var
   CSV: TCSV;
   CSVFileName, DrawParameter: String;
   CSVContent: TStringList;
-  DataSource: array of TChartData;
+  DataSource: array of Single;
+  TimeSource: array of TDateTime;
   ParamList: array of String;
+  SelectedParams: array[0..4] of TSelectedParam;
   ParameterCount: Integer;
 
 implementation
@@ -271,41 +276,127 @@ begin
   end else ShowMessage('Open CSV file first.');
 end;
 
-procedure TCSV.DrawClick(Sender: TObject);
+//procedure TCSV.DrawClick(Sender: TObject);
+//var i, counter, shift: Longint;
+//    ParamPos, TimePos: Integer;
+//    wStr:String;
+//    prevDate: TDateTime;
+//begin
+//  counter:= 0;
+//  TimePos:= GetParamPosition('RTCs');
+//  setLength(DataSource, 0);
+//  setLength(DataSource, CSVContent.Count);
+//  setLength(TimeSource, 0);
+//  setLength(TimeSource, CSVContent.Count);
+//  ParamPos:= GetParamPosition(Parameters1.Text);
+//
+//  for i:=shift to CSVContent.Count-1 do begin
+//    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) < 2020 then begin
+//
+//    end;
+//    if Parameters1.ItemIndex < ParameterCount then DataSource[counter]:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]))
+//    else
+//      if Parameters1.ItemIndex - ParameterCount < 16 then DataSource[counter]:= Amplitude(Parameters1.ItemIndex - ParameterCount, i)
+//      else DataSource[counter]:= PhaseShift(Parameters1.ItemIndex - ParameterCount - 16, i);
+//    TimeSource[counter]:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+//    wStr:= wStr + DateTimeToStr(TimeSource[counter]) + ' - ' + FloatToStr(DataSource[counter]) + LN;
+//    counter:= counter + 1;
+//  end;
+//
+//  ReportText.Text:= wStr;
+//
+//  UserDefinedChartSource1.PointsNumber:= counter;
+//  UserDefinedChartSource1.Reset;
+//end;
+
+procedure DrawChart(Chart: TChart; Chart1LineSeries: TLineSeries; SelectedParams: TSelectedParam);
 var i: Longint;
     ParamPos, TimePos: Integer;
     wStr:String;
+    PowerReset: boolean;
+    y: Single;
+    x: TDateTime;
+    ChartColor: TColor;
 begin
+  PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
-  setLength(DataSource, 0);
-  setLength(DataSource, CSVContent.Count);
-  ParamPos:= GetParamPosition(Parameters.Text);
+  ParamPos:= GetParamPosition(SelectedParams.name);
+  Chart1LineSeries.Clear;
+  Chart.Title.Text[0]:=SelectedParams.name;
+  ChartColor:= GetLineColor;
+  Chart.Title.Font.Color:= ChartColor;
+  Chart1LineSeries.SeriesColor:= ChartColor;
+  Chart1LineSeries.Pointer.Pen.Color:= ChartColor;
+  Chart1LineSeries.Pointer.Brush.Color:= ChartColor;
+
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-       if Parameters.ItemIndex < ParameterCount then DataSource[i-1].Data:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]))
-       else
-         if Parameters.ItemIndex - ParameterCount < 16 then DataSource[i-1].Data:= Amplitude(Parameters.ItemIndex - ParameterCount, i)
-         else DataSource[i-1].Data:= PhaseShift(Parameters.ItemIndex - ParameterCount - 16, i);
-         DataSource[i-1].Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
-         wStr:= wStr + DateTimeToStr(DataSource[i-1].Time) + ' - ' + FloatToStr(DataSource[i-1].Data) + LN;
+
+        if SelectedParams.index < ParameterCount then begin
+           y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+        end
+        else
+          if SelectedParams.index - ParameterCount < 16 then y:= Amplitude(SelectedParams.index - ParameterCount, i)
+          else y:= PhaseShift(SelectedParams.index - ParameterCount - 16, i);
+        x:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+
+        if PowerReset then begin
+          Chart1LineSeries.AddXY(x, y, 'P');
+          PowerReset:= false;
+        end
+        else begin
+          Chart1LineSeries.AddXY(x, y);
+        end;
+
+    end
+    else begin
+      if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
     end;
+
   end;
-
-  ReportText.Text:= wStr;
-
-  UserDefinedChartSource1.PointsNumber:= CSVContent.Count-1;
-  UserDefinedChartSource1.Reset;
 end;
 
-procedure TCSV.DateTimeIntervalChartSource1DateTimeStepChange(Sender: TObject;
-  ASteps: TDateTimeStep);
+procedure TCSV.DrawClick(Sender: TObject);
+var i, counter: Integer;
 begin
+  counter:= 0;
+  if Parameters.SelCount > 0 then begin
+     if Parameters.SelCount > 0 then begin
+        for i:=0 to Parameters.Items.Count - 1 do
+           if Parameters.Selected[i] then begin
+              SelectedParams[counter].name:= Parameters.Items[i];
+              SelectedParams[counter].index:= i;
+              counter:= counter + 1;
+           end;
+        DrawChart(Chart1, Chart1LineSeries1, SelectedParams[0]);
+     end
+     else ShowMessage('Please select 5 parameters maximum.');
+  end
+  else ShowMessage('No parameters selected.');
 
 end;
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
 begin
   Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+end;
+
+procedure TCSV.ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool; APoint: TPoint);
+var y: Double;
+    x: TDateTime;
+begin
+  with ATool as TDatapointClickTool do
+    if (Series is TLineSeries) then
+      with TLineSeries(Series) do begin
+        x:= GetXValue(PointIndex);
+        y:= GetYValue(PointIndex);
+        //Statusbar1.SimpleText:= Format('%s:  x = %f y = %f', [Title, x, y]);
+        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x)
+        else ListSource.Item[PointIndex]^.Text := '';
+        ParentChart.Repaint;
+      end
+    else
+    //Statusbar1.SimpleText := '';
 end;
 
 procedure TCSV.Button3Click(Sender: TObject);
@@ -316,6 +407,11 @@ begin
       wStr:= wStr + FloatToStr(Amplitude(i,1)) + LN;
    end;
    ReportText.Text:= wStr;
+end;
+
+procedure TCSV.Parameters1Change(Sender: TObject);
+begin
+
 end;
 
 procedure TCSV.SaveReportClick(Sender: TObject);
@@ -334,7 +430,7 @@ procedure TCSV.OpenCSVFastClick(Sender: TObject);
 var ParamPos, LineLength, Counter: Integer;
     FSize, DurationInMinutes, i: Longint;
     StartRun: Boolean;
-    EndRun, SubStr: String;
+    EndRun, SubStr, wStr: String;
     StartRunDT, EndRunDT: TDateTime;
 begin
   if OpenDialog1.Execute then
@@ -369,12 +465,16 @@ begin
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then begin
               ParamList[Counter]:= Trim(SubStr);
+              Parameters1.Items.Add(Trim(SubStr));
               Parameters.Items.Add(Trim(SubStr));
               Counter:= Counter + 1;
               SubStr:= '';
            end
            else SubStr:= SubStr + CSVContent[0][i];
         end;
+
+        for i:= 0 to 15 do Parameters1.Items.Add(AmplitudeName(i));
+        for i:= 0 to 15 do Parameters1.Items.Add(PhaseShiftName(i));
 
         for i:= 0 to 15 do Parameters.Items.Add(AmplitudeName(i));
         for i:= 0 to 15 do Parameters.Items.Add(PhaseShiftName(i));
@@ -409,7 +509,7 @@ begin
         ProgressBar.Max:= CSVContent.Count;
         CSVFileSize.Caption:= IntToStr(Round(FSize/1000))+' KB';
         DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
-        Duration.Caption:= IntToStr(Round(DurationInMinutes/60)) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
+        Duration.Caption:= IntToStr(DurationInMinutes div 60) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
         EstimateFast.Enabled:= True;
         ReportTab.Enabled:= True;
         FillParams;
@@ -466,7 +566,7 @@ end;
 
 function PhaseShift(nParam, n: Integer): Single;
 var StartParamPos, Step: Integer;
-    RawR, RawX: Single;
+    RawR, RawX: Double;
 begin
   StartParamPos:= GetParamPosition('VR1T0F1r');
   if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
@@ -569,8 +669,8 @@ end;
 procedure TCSV.UserDefinedChartSource1GetChartDataItem(
   ASource: TUserDefinedChartSource; AIndex: Integer; var AItem: TChartDataItem);
 begin
-  AItem.Y := DataSource[AIndex].Data;
-  AItem.X := DataSource[AIndex].Time;
+  AItem.Y := DataSource[AIndex];
+  AItem.X := TimeSource[AIndex];
 end;
 
 end.

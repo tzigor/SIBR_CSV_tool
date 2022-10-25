@@ -5,7 +5,10 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, StrUtils;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
+  TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
+  DateTimePicker, Types, TAChartUtils;
 
 type SibrParam = record
     name: String;
@@ -24,8 +27,21 @@ procedure FillParams;
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;
 function NameToInt(name: String): Integer;
+function GetLineColor(): TColor;
 
 implementation
+
+function GetLineColor(): TColor;
+var R, G, B: Byte;
+begin
+   Randomize;
+   repeat
+      R:= Random(256);
+      G:= Random(256);
+      B:= Random(256);
+   until (R + B + G) < 350;
+   GetLineColor:= RGBToColor(R, G, B);
+end;
 
 function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
 var wStr: String;
@@ -511,18 +527,10 @@ begin
 end;
 
 function NameToInt(name: String): Integer;
-var a, b ,c: Integer;
 begin
-   a:= StrToInt(name[3])-1;
-   b:= StrToInt(name[7])-1;
-   c:= StrToInt(name[5]);
    NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
 end;
 
-function Amplitude(Param: String): Single;
-begin
-
-end;
 
 end.
 
