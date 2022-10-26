@@ -6,9 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
-  TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Types, TAChartUtils;
+  ComCtrls, Grids, MaskEdit, DateUtils, StrUtils, csvdataset, LConvEncoding,
+  TAGraph, TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
+  DateTimePicker, Unit2, Types, TAChartUtils, TADataTools, TAChartExtentLink;
 
 type
 
@@ -16,28 +16,38 @@ type
 
   TCSV = class(TForm)
     App: TPageControl;
+    Button1: TButton;
+    Button4: TButton;
+    Chart1: TChart;
+    Chart1LineSeries1: TLineSeries;
     Chart1LineSeries2: TLineSeries;
+    Chart1LineSeries3: TLineSeries;
+    Chart1LineSeries4: TLineSeries;
+    Chart1LineSeries5: TLineSeries;
     Chart2: TChart;
+    Chart3: TChart;
+    Chart4: TChart;
+    Chart5: TChart;
+    ChartExtentLink1: TChartExtentLink;
+    ChartHeightControl: TTrackBar;
+    ChartPanel: TPanel;
     ChartToolset1: TChartToolset;
     ChartToolset1DataPointClickTool1: TDataPointClickTool;
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
     ChartPoints: TCheckBox;
+    ChartsLink: TCheckBox;
+    PowerResets: TCheckBox;
     DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
     Draw: TButton;
     Button2: TButton;
     Button3: TButton;
-    Chart1: TChart;
-    Chart1LineSeries1: TLineSeries;
+    Label19: TLabel;
     Parameters: TListBox;
-    Parameters1: TComboBox;
     SaveReport: TButton;
-    Chart1LineSeries3: TLineSeries;
-    Chart1LineSeries4: TLineSeries;
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     CSVFileSize: TLabel;
-    StatusBar1: TStatusBar;
     TestDate: TDateTimePicker;
     Duration: TLabel;
     DurationT: TLabel;
@@ -86,7 +96,10 @@ type
     MainTab: TTabSheet;
     ReportTab: TTabSheet;
     Graphs: TTabSheet;
+    procedure Button1Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
     procedure ChartPointsChange(Sender: TObject);
+    procedure ChartsLinkChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
       APoint: TPoint);
     procedure DrawClick(Sender: TObject);
@@ -125,6 +138,8 @@ var
   ParamList: array of String;
   SelectedParams: array[0..4] of TSelectedParam;
   ParameterCount: Integer;
+  ChartHeight: Integer;
+  ShowPR: Boolean;
 
 implementation
 
@@ -309,7 +324,7 @@ end;
 //  UserDefinedChartSource1.Reset;
 //end;
 
-procedure DrawChart(Chart: TChart; Chart1LineSeries: TLineSeries; SelectedParams: TSelectedParam);
+procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParams: TSelectedParam);
 var i: Longint;
     ParamPos, TimePos: Integer;
     wStr:String;
@@ -322,9 +337,10 @@ begin
   TimePos:= GetParamPosition('RTCs');
   ParamPos:= GetParamPosition(SelectedParams.name);
   Chart1LineSeries.Clear;
-  Chart.Title.Text[0]:=SelectedParams.name;
+  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParams.name;
   ChartColor:= GetLineColor;
-  Chart.Title.Font.Color:= ChartColor;
+  Chart1LineSeries.ParentChart.Title.Font.Color:= ChartColor;
+  Chart1LineSeries.ParentChart.Height:= ChartHeight;
   Chart1LineSeries.SeriesColor:= ChartColor;
   Chart1LineSeries.Pointer.Pen.Color:= ChartColor;
   Chart1LineSeries.Pointer.Brush.Color:= ChartColor;
@@ -341,7 +357,8 @@ begin
         x:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
 
         if PowerReset then begin
-          Chart1LineSeries.AddXY(x, y, 'P');
+          if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+          else Chart1LineSeries.AddXY(x, y);
           PowerReset:= false;
         end
         else begin
@@ -354,13 +371,29 @@ begin
     end;
 
   end;
+  Chart1LineSeries.ParentChart.Visible:= True;
 end;
 
 procedure TCSV.DrawClick(Sender: TObject);
 var i, counter: Integer;
 begin
+  ShowPR:= PowerResets.Checked;
+  ChartHeight:= ChartHeightControl.Position;
+  ChartPanel.Height:= ChartHeight * Parameters.SelCount;
+  Chart1.Visible:= False;
+  Chart2.Visible:= False;
+  Chart3.Visible:= False;
+  Chart4.Visible:= False;
+  Chart5.Visible:= False;
+  Chart1.ZoomFull;
+  Chart2.ZoomFull;
+  Chart3.ZoomFull;
+  Chart4.ZoomFull;
+  Chart5.ZoomFull;
+  for i:=0 to 4 do SelectedParams[i].name:= '';
   counter:= 0;
   if Parameters.SelCount > 0 then begin
+
      if Parameters.SelCount > 0 then begin
         for i:=0 to Parameters.Items.Count - 1 do
            if Parameters.Selected[i] then begin
@@ -368,17 +401,51 @@ begin
               SelectedParams[counter].index:= i;
               counter:= counter + 1;
            end;
-        DrawChart(Chart1, Chart1LineSeries1, SelectedParams[0]);
+           if SelectedParams[0].name <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0]);
+           if SelectedParams[1].name <> '' then DrawChart(Chart1LineSeries2, SelectedParams[1]);
+           if SelectedParams[2].name <> '' then DrawChart(Chart1LineSeries3, SelectedParams[2]);
+           if SelectedParams[3].name <> '' then DrawChart(Chart1LineSeries4, SelectedParams[3]);
+           if SelectedParams[4].name <> '' then DrawChart(Chart1LineSeries5, SelectedParams[4]);
      end
      else ShowMessage('Please select 5 parameters maximum.');
   end
   else ShowMessage('No parameters selected.');
-
 end;
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
 begin
   Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart1LineSeries2.Pointer.Visible:= ChartPoints.Checked;
+  Chart1LineSeries3.Pointer.Visible:= ChartPoints.Checked;
+  Chart1LineSeries4.Pointer.Visible:= ChartPoints.Checked;
+  Chart1LineSeries5.Pointer.Visible:= ChartPoints.Checked;
+end;
+
+procedure DeleteLabels(Chart1LineSeries: TLineSeries);
+var i, count: Longint;
+begin
+   count:= Chart1LineSeries.Count;
+   for i:=0 to count-1 do Chart1LineSeries.ListSource.Item[i]^.text:= '';
+   Chart1LineSeries.ParentChart.Repaint;
+end;
+
+procedure TCSV.Button1Click(Sender: TObject);
+begin
+   DeleteLabels(Chart1LineSeries1);
+   DeleteLabels(Chart1LineSeries2);
+   DeleteLabels(Chart1LineSeries3);
+   DeleteLabels(Chart1LineSeries4);
+   DeleteLabels(Chart1LineSeries5);
+end;
+
+procedure TCSV.Button4Click(Sender: TObject);
+begin
+  DrawClick(Sender);
+end;
+
+procedure TCSV.ChartsLinkChange(Sender: TObject);
+begin
+   ChartExtentLink1.Enabled:= ChartsLink.Checked;
 end;
 
 procedure TCSV.ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool; APoint: TPoint);
@@ -390,13 +457,11 @@ begin
       with TLineSeries(Series) do begin
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        //Statusbar1.SimpleText:= Format('%s:  x = %f y = %f', [Title, x, y]);
         if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x)
         else ListSource.Item[PointIndex]^.Text := '';
         ParentChart.Repaint;
       end
     else
-    //Statusbar1.SimpleText := '';
 end;
 
 procedure TCSV.Button3Click(Sender: TObject);
@@ -465,16 +530,12 @@ begin
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then begin
               ParamList[Counter]:= Trim(SubStr);
-              Parameters1.Items.Add(Trim(SubStr));
               Parameters.Items.Add(Trim(SubStr));
               Counter:= Counter + 1;
               SubStr:= '';
            end
            else SubStr:= SubStr + CSVContent[0][i];
         end;
-
-        for i:= 0 to 15 do Parameters1.Items.Add(AmplitudeName(i));
-        for i:= 0 to 15 do Parameters1.Items.Add(PhaseShiftName(i));
 
         for i:= 0 to 15 do Parameters.Items.Add(AmplitudeName(i));
         for i:= 0 to 15 do Parameters.Items.Add(PhaseShiftName(i));
