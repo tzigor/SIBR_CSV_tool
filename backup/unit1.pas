@@ -38,60 +38,62 @@ type
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
     ChartPoints: TCheckBox;
     ChartsLink: TCheckBox;
-    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
-    Draw: TButton;
-    Button2: TButton;
-    Button3: TButton;
-    Label19: TLabel;
-    Parameters: TListBox;
-    SaveReport: TButton;
-    Chart1UserDrawnSeries1: TUserDrawnSeries;
-    CSVFileSize: TLabel;
-    TestDate: TDateTimePicker;
-    Duration: TLabel;
     DurationT: TLabel;
     EndTime: TEdit;
-    GroupBox3: TGroupBox;
     EstimateFast: TButton;
     FileSizeT: TLabel;
     FullRange: TButton;
     Generate: TButton;
-    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
-    Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
+    OpenedFile: TLabel;
+    Label4: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    PowerResets: TCheckBox;
+    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
+    Draw: TButton;
+    Button2: TButton;
+    Label19: TLabel;
+    Parameters: TListBox;
+    ProgressBar: TProgressBar;
+    RecordRate: TEdit;
+    RecordsT: TLabel;
+    RunEndT: TLabel;
+    RunStartT: TLabel;
+    SaveReport: TButton;
+    Chart1UserDrawnSeries1: TUserDrawnSeries;
+    CSVFileSize: TLabel;
+    StartTime: TEdit;
+    TabSheet1: TTabSheet;
+    TestDate: TDateTimePicker;
+    Duration: TLabel;
+    GroupBox3: TGroupBox;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
     Label18: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
     OpenCSVFast: TButton;
     OpenDialog1: TOpenDialog;
-    ProgressBar: TProgressBar;
-    RecordRate: TEdit;
     Records: TLabel;
-    RecordsT: TLabel;
     Report: TButton;
     ReportEndTime: TEdit;
     ReportStartTime: TEdit;
     SerialNumber: TEdit;
     ReportText: TMemo;
     RunEnd: TLabel;
-    RunEndT: TLabel;
     RunStart: TLabel;
-    RunStartT: TLabel;
-    StartTime: TEdit;
     MainTab: TTabSheet;
     ReportTab: TTabSheet;
     Graphs: TTabSheet;
@@ -123,8 +125,8 @@ type TSelectedParam = record
     index: Integer;
 end;
 
-Function Amplitude(nParam, n: Integer): Single;
-function PhaseShift(nParam, n: Integer): Single;
+Function Amplitude(nParam, n: Integer): Double;
+function PhaseShift(nParam, n: Integer): Double;
 
 Const LN = #13#10;
 
@@ -138,6 +140,7 @@ var
   SelectedParams: array[0..4] of TSelectedParam;
   ParameterCount: Integer;
   ChartHeight: Integer;
+  ShowPR: Boolean;
 
 implementation
 
@@ -192,7 +195,7 @@ begin
 end;
 
 procedure TCSV.GenerateClick(Sender: TObject);
-  var CSVFile, NewCSVFile: TextFile;
+  var WorkingFile, NewCSVFile: TextFile;
       TextLine, FileName: String;
       ParamPos, Rate: Integer;
       PrevTime, CurrentTime, StartTimeDT, EndTimeDT: TDateTime;
@@ -200,19 +203,19 @@ procedure TCSV.GenerateClick(Sender: TObject);
         FileName:= ReplaceText(CSVFileName,'.csv','') + '_generated.csv';
         ProgressBar.Position:= 0;
         Rate:= StrToInt(RecordRate.Text);
-        AssignFile(CSVFile, CSVFileName);
+        AssignFile(WorkingFile, CSVFileName);
         AssignFile(NewCSVFile, FileName);
         StartTimeDT:= StrToDateTime(StartTime.Text);
         EndTimeDT:= StrToDateTime(EndTime.Text);
         try
-          Reset(CSVFile);
+          Reset(WorkingFile);
           ReWrite(NewCSVFile);
-          Readln(CSVFile, TextLine);
+          Readln(WorkingFile, TextLine);
           WriteLn(NewCSVFile,TextLine);
           ParamPos:= GetParamPosition('RTCs');
           PrevTime:= 0;
-          while not eof(CSVFile) do begin
-            Readln(CSVFile, TextLine);
+          while not eof(WorkingFile) do begin
+            Readln(WorkingFile, TextLine);
             CurrentTime:= UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine)));
             if (YearOf(CurrentTime) <> 1970) and (SecondsBetween(PrevTime,CurrentTime) >= Rate ) and
                  (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin;
@@ -221,8 +224,10 @@ procedure TCSV.GenerateClick(Sender: TObject);
             end;
             ProgressBar.Position:= ProgressBar.Position + 1;
           end;
-          CloseFile(CSVFile);
+          CloseFile(WorkingFile);
           CloseFile(NewCSVFile);
+          ShowMessage('Completed');
+          ProgressBar.Position:= 0;
         except
         on E: EInOutError do
           ShowMessage('Error: ' + E.Message);
@@ -284,6 +289,7 @@ begin
           end;
           RecordsT.Caption:= IntToStr(NumOfLines);
           FileSizeT.Caption:= IntToStr(Round(FSize/1000))+' KB';
+          Generate.Enabled:= True;
       end else ShowMessage('Start Time should be earlier than End Time');
     end else ShowMessage('Plese put correct value of Record Rate in sec. (1...)');
   end else ShowMessage('Open CSV file first.');
@@ -355,7 +361,8 @@ begin
         x:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
 
         if PowerReset then begin
-          Chart1LineSeries.AddXY(x, y, 'P');
+          if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+          else Chart1LineSeries.AddXY(x, y);
           PowerReset:= false;
         end
         else begin
@@ -373,7 +380,9 @@ end;
 
 procedure TCSV.DrawClick(Sender: TObject);
 var i, counter: Integer;
+    wStr: String;
 begin
+  ShowPR:= PowerResets.Checked;
   ChartHeight:= ChartHeightControl.Position;
   ChartPanel.Height:= ChartHeight * Parameters.SelCount;
   Chart1.Visible:= False;
@@ -389,8 +398,7 @@ begin
   for i:=0 to 4 do SelectedParams[i].name:= '';
   counter:= 0;
   if Parameters.SelCount > 0 then begin
-
-     if Parameters.SelCount > 0 then begin
+     if Parameters.SelCount < 6 then begin
         for i:=0 to Parameters.Items.Count - 1 do
            if Parameters.Selected[i] then begin
               SelectedParams[counter].name:= Parameters.Items[i];
@@ -497,6 +505,7 @@ begin
   if OpenDialog1.Execute then
    begin
       CSVFileName:= OpenDialog1.FileName;
+      OpenedFile.Caption:= CSVFileName;
       try
         Generate.Enabled:= False;
         ProgressBar.Position:= 0;
@@ -606,10 +615,11 @@ begin
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
   Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
-  PhaseShift:= Arctan(-RawX/RawR);
+  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  else PhaseShift:= 0;
 end;
 
-function Amplitude(nParam, n: Integer): Single;
+function Amplitude(nParam, n: Integer): Double;
 var StartParamPos, Step: Integer;
     RawR, RawX: Double;
 begin
@@ -621,7 +631,7 @@ begin
   Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX))
 end;
 
-function PhaseShift(nParam, n: Integer): Single;
+function PhaseShift(nParam, n: Integer): Double;
 var StartParamPos, Step: Integer;
     RawR, RawX: Double;
 begin
@@ -630,7 +640,8 @@ begin
   else Step:= ((nParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  PhaseShift:= Arctan(-RawX/RawR);
+  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  else PhaseShift:= 0;
 end;
 
 procedure TCSV.ReportClick(Sender: TObject);
