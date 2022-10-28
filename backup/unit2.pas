@@ -10,7 +10,7 @@ uses
   TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
   DateTimePicker, Types, TAChartUtils;
 
-type SibrParam = record
+type TSibrParam = record
     name: String;
     min: Single;
     max: Single;
@@ -18,18 +18,146 @@ type SibrParam = record
     k, m: Integer;
 end;
 
-var SibrParams: array of SibrParam;
-    AdditionalParams: array[0..31] of Single;
+type TSelectedParam = record
+    name: String;
+    index: Integer;
+end;
 
-function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
-function SWLine(name:String; SW, Expected: Longint; PF: String): String;
+Const LN = #13#10;
+      SWLo: array of String[70] = (
+      '+24V_CTRL out of range ±30%',
+      '+20V_SONDE out of range ±30%',
+      '+20VP out of range ±10%',
+      '+5V out of range ±10%',
+      '+3.3V out of range ±10%',
+      '+2.5V out of range ±10%',
+      '+1.8V out of range ±10%',
+      '+1.2V out of range ±10%',
+      '+5V Transmitters out of range ±10%',
+      'CTRL board temperature out of range',
+      'RTC is out of sync (waiting for TIMESTAMPING command)',
+      'CAN bus error. Data cannot be sent',
+      'GOLD firmware loaded',
+      'SPI-Flash error',
+      'I2C0 bus error',
+      'I2C0 bus multiple error');
+      SWHi: array of String[70] = (
+      'SPI0 bus error',
+      'SPI1 bus error',
+      'NAND Flash initialisation error',
+      'NAND Flash page write error',
+      'NAND Flash block clear error',
+      'NAND Flash page read error',
+      'NAND Flash new bad block',
+      'NAND-Flash is about full',
+      'NAND-Flash is full',
+      'Packets loss',
+      'LVDS bus error',
+      'ADC input overflow',
+      'ADC multiple input overflow',
+      'Low signal of any receivers',
+      'Reserved',
+      'PIPE DETECTOR. Low signal of both receivers');
+      ESWLo: array of String[70] = (
+      'Data exchange error with transmitter - addr 1',
+      'Data exchange error with transmitter - addr 2',
+      'Data exchange error with transmitter - addr 3',
+      'Data exchange error with receiver - addr 4',
+      'Data exchange error with receiver - addr 5',
+      'Logging started',
+      'BHT & TEMP_CTRL difference > 25C ',
+      'Calculation error',
+      'Cabration file corrupted',
+      'Reserve',
+      'Reserve',
+      'Reserve',
+      'Active logging identifier bit 0',
+      'Active logging identifier bit 1',
+      'Active logging identifier bit 2',
+      'Active logging identifier bit 3');
+
+var
+  CSVFileName, DrawParameter: String;
+  CSVContent: TStringList;
+  DataSource: array of Single;
+  TimeSource: array of TDateTime;
+  ParamList: array of String;
+  SelectedParams: array[0..4] of TSelectedParam;
+  ParameterCount: Integer;
+  ChartHeight: Integer;
+  ShowPR: Boolean;
+  SibrParams: array of TSibrParam;
+  AdditionalParams: array[0..31] of Single;
+
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;
 function NameToInt(name: String): Integer;
 function GetLineColor(): TColor;
+function GetParamPosition(Param: String): Integer;
+function GetParamValue(ParamNum: Integer; TextLine: String): String;
+function FileSize(FileName:string):Integer;
+function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
+function SWLine(name:String; SW, Expected: Longint; PF: String): String;
+procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
+function Amplitude(nParam, n: Integer): Double;
+function PhaseShift(nParam, n: Integer): Double;
+function expon2(n: Integer): Integer;
 
 implementation
+
+function expon2(n: Integer): Integer;
+var i, exp: Integer;
+begin
+  exp:= 1;
+  for i:=1 to n do exp:= exp * 2
+end;
+
+function GetParamPosition(Param: String): Integer;
+var i: Integer;
+begin
+  for i:= 0 to Length(ParamList)-1 do begin
+     if ParamList[i] = Param then begin
+        GetParamPosition:= i+1;
+        break
+     end
+  end
+end;
+
+function GetParamValue(ParamNum: Integer; TextLine: String): String;
+var LineLength, i, Counter, ParamStart: Integer;
+    SubStr: String;
+begin
+  LineLength:= Length(TextLine);
+  Counter:= 1;
+  SubStr:= '';
+  for i:= 1 to LineLength do begin
+     if ParamNum = Counter then begin
+        ParamStart:= i;
+        break;
+     end;
+     if TextLine[i] = ';' then Counter:= Counter + 1;
+  end;
+  i:= ParamStart;
+  repeat
+    SubStr:= SubStr + TextLine[i];
+    i:= i + 1;
+  until ( TextLine[i] = ';' ) OR ( i > LineLength );
+  GetParamValue:= Trim(SubStr);
+end;
+
+function FileSize(FileName:string):Integer;
+var
+FS: TFileStream;
+begin
+  try
+    FS:=TFilestream.Create(FileName, fmOpenRead);
+  except
+  Result := -1;
+  end;
+  if Result <> -1 then Result :=FS.Size;
+  FS.Free;
+end;
 
 function GetLineColor(): TColor;
 var R, G, B: Byte;
@@ -69,6 +197,45 @@ begin
    wStr:= wStr + ' | ' + AddCharR(' ', '0x' + Dec2Numb(Expected, 4, 16),7);
    wStr:= wStr + ' | ' + PF;
    SWLine:= wStr;
+end;
+
+procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
+var StartParamPos, Step: Integer;
+    RawR, RawX: Double;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
+  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  else PhaseShift:= 0;
+end;
+
+function Amplitude(nParam, n: Integer): Double;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Double;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX))
+end;
+
+function PhaseShift(nParam, n: Integer): Double;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Double;
+begin
+  StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  else PhaseShift:= 0;
 end;
 
 procedure FillParams;

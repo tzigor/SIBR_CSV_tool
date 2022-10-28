@@ -6,9 +6,11 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, StrUtils, csvdataset, LConvEncoding,
-  TAGraph, TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Types, TAChartUtils, TADataTools, TAChartExtentLink;
+  ComCtrls, Grids, MaskEdit, CheckLst, ColorBox, ValEdit, ComboEx, DateUtils,
+  StrUtils, csvdataset, LConvEncoding, TAGraph, TASources, TACustomSource,
+  TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Types,
+  TAChartUtils, TADataTools, TAChartExtentLink;
+
 
 type
 
@@ -17,7 +19,9 @@ type
   TCSV = class(TForm)
     App: TPageControl;
     Button1: TButton;
+    Button3: TButton;
     Button4: TButton;
+    Button5: TButton;
     Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
     Chart1LineSeries2: TLineSeries;
@@ -39,22 +43,30 @@ type
     ChartPoints: TCheckBox;
     ChartsLink: TCheckBox;
     DurationT: TLabel;
+    SWHex: TEdit;
+    Label21: TLabel;
+    SWDec: TEdit;
     EndTime: TEdit;
     EstimateFast: TButton;
     FileSizeT: TLabel;
     FullRange: TButton;
     Generate: TButton;
     GroupBox2: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
-    OpenedFile: TLabel;
+    Label20: TLabel;
     Label4: TLabel;
     Label7: TLabel;
     Label8: TLabel;
     Label9: TLabel;
+    OpenedFile: TLabel;
+    Panel1: TPanel;
     PowerResets: TCheckBox;
     DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
     Draw: TButton;
@@ -62,6 +74,9 @@ type
     Label19: TLabel;
     Parameters: TListBox;
     ProgressBar: TProgressBar;
+    StatusLo: TRadioButton;
+    StatusHi: TRadioButton;
+    EStatusLo: TRadioButton;
     RecordRate: TEdit;
     RecordsT: TLabel;
     RunEndT: TLabel;
@@ -70,6 +85,7 @@ type
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     CSVFileSize: TLabel;
     StartTime: TEdit;
+    SWList: TStringGrid;
     TabSheet1: TTabSheet;
     TestDate: TDateTimePicker;
     Duration: TLabel;
@@ -99,10 +115,14 @@ type
     Graphs: TTabSheet;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
     procedure ChartPointsChange(Sender: TObject);
     procedure ChartsLinkChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
       APoint: TPoint);
+    procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
+      aRect: TRect; aState: TGridDrawState);
+    procedure SWbitsClick(Sender: TObject);
     procedure DrawClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Parameters1Change(Sender: TObject);
@@ -120,79 +140,15 @@ type
   public
   end;
 
-type TSelectedParam = record
-    name: String;
-    index: Integer;
-end;
-
-Function Amplitude(nParam, n: Integer): Double;
-function PhaseShift(nParam, n: Integer): Double;
-
-Const LN = #13#10;
 
 var
   CSV: TCSV;
-  CSVFileName, DrawParameter: String;
-  CSVContent: TStringList;
-  DataSource: array of Single;
-  TimeSource: array of TDateTime;
-  ParamList: array of String;
-  SelectedParams: array[0..4] of TSelectedParam;
-  ParameterCount: Integer;
-  ChartHeight: Integer;
-  ShowPR: Boolean;
 
 implementation
 
 {$R *.lfm}
 
 { TCSV }
-
-function GetParamPosition(Param: String): Integer;
-var i: Integer;
-begin
-  for i:= 0 to Length(ParamList)-1 do begin
-     if ParamList[i] = Param then begin
-        GetParamPosition:= i+1;
-        break
-     end
-  end
-end;
-
-function GetParamValue(ParamNum: Integer; TextLine: String): String;
-var LineLength, i, Counter, ParamStart: Integer;
-    SubStr: String;
-begin
-  LineLength:= Length(TextLine);
-  Counter:= 1;
-  SubStr:= '';
-  for i:= 1 to LineLength do begin
-     if ParamNum = Counter then begin
-        ParamStart:= i;
-        break;
-     end;
-     if TextLine[i] = ';' then Counter:= Counter + 1;
-  end;
-  i:= ParamStart;
-  repeat
-    SubStr:= SubStr + TextLine[i];
-    i:= i + 1;
-  until ( TextLine[i] = ';' ) OR ( i > LineLength );
-  GetParamValue:= Trim(SubStr);
-end;
-
-function FileSize(FileName:string):Integer;
-var
-FS: TFileStream;
-begin
-  try
-    FS:=TFilestream.Create(FileName, fmOpenRead);
-  except
-  Result := -1;
-  end;
-  if Result <> -1 then Result :=FS.Size;
-  FS.Free;
-end;
 
 procedure TCSV.GenerateClick(Sender: TObject);
   var WorkingFile, NewCSVFile: TextFile;
@@ -294,39 +250,6 @@ begin
     end else ShowMessage('Plese put correct value of Record Rate in sec. (1...)');
   end else ShowMessage('Open CSV file first.');
 end;
-
-//procedure TCSV.DrawClick(Sender: TObject);
-//var i, counter, shift: Longint;
-//    ParamPos, TimePos: Integer;
-//    wStr:String;
-//    prevDate: TDateTime;
-//begin
-//  counter:= 0;
-//  TimePos:= GetParamPosition('RTCs');
-//  setLength(DataSource, 0);
-//  setLength(DataSource, CSVContent.Count);
-//  setLength(TimeSource, 0);
-//  setLength(TimeSource, CSVContent.Count);
-//  ParamPos:= GetParamPosition(Parameters1.Text);
-//
-//  for i:=shift to CSVContent.Count-1 do begin
-//    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) < 2020 then begin
-//
-//    end;
-//    if Parameters1.ItemIndex < ParameterCount then DataSource[counter]:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]))
-//    else
-//      if Parameters1.ItemIndex - ParameterCount < 16 then DataSource[counter]:= Amplitude(Parameters1.ItemIndex - ParameterCount, i)
-//      else DataSource[counter]:= PhaseShift(Parameters1.ItemIndex - ParameterCount - 16, i);
-//    TimeSource[counter]:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
-//    wStr:= wStr + DateTimeToStr(TimeSource[counter]) + ' - ' + FloatToStr(DataSource[counter]) + LN;
-//    counter:= counter + 1;
-//  end;
-//
-//  ReportText.Text:= wStr;
-//
-//  UserDefinedChartSource1.PointsNumber:= counter;
-//  UserDefinedChartSource1.Reset;
-//end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParams: TSelectedParam);
 var i: Longint;
@@ -447,6 +370,27 @@ begin
   DrawClick(Sender);
 end;
 
+procedure TCSV.Button5Click(Sender: TObject);
+var i, StatusW, w: Integer;
+begin
+  try
+     StatusW:= StrToInt(SWDec.Text);
+  except
+  on Exception : EConvertError do
+     SWDec.Text:= '';
+  end;
+  if SWDec.Text <> '' then begin
+    for i:=0 to 15 do begin
+      w:= expon2(i);
+      if (StatusW and expon2(i)) > 0 then SWList.Cells[0, i]:= '1'
+      else SWList.Cells[0, i]:= '0';
+      if StatusLo.Checked then SWList.Cells[1, i]:= SWLo[i];
+      if StatusHi.Checked then SWList.Cells[1, i]:= SWHi[i];
+      if EStatusLo.Checked then SWList.Cells[1, i]:= ESWLo[i];
+    end;
+  end;
+end;
+
 procedure TCSV.ChartsLinkChange(Sender: TObject);
 begin
    ChartExtentLink1.Enabled:= ChartsLink.Checked;
@@ -468,14 +412,30 @@ begin
     else
 end;
 
-procedure TCSV.Button3Click(Sender: TObject);
-var i, Step: integer;
-    wStr: String;
+procedure TCSV.SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
+  aRect: TRect; aState: TGridDrawState);
 begin
-   for i:=0 to 15 do begin
-      wStr:= wStr + FloatToStr(Amplitude(i,1)) + LN;
-   end;
-   ReportText.Text:= wStr;
+  if SWList.Cells[0,Arow]='1' then begin
+     //SWList.Canvas.Brush.Color:=clRed;
+     SWList.Canvas.Font.Color:=clRed;
+  end
+  else SWList.Canvas.Font.Color:=clGreen;
+  SWList.Canvas.FillRect(aRect);
+  SWList.Canvas.TextOut(aRect.Left,aRect.Top,SWList.Cells[Acol,Arow]);
+end;
+
+procedure TCSV.SWbitsClick(Sender: TObject);
+begin
+
+end;
+
+procedure TCSV.Button3Click(Sender: TObject);
+begin
+  Chart1.ZoomFull;
+  Chart2.ZoomFull;
+  Chart3.ZoomFull;
+  Chart4.ZoomFull;
+  Chart5.ZoomFull;
 end;
 
 procedure TCSV.Parameters1Change(Sender: TObject);
@@ -603,45 +563,6 @@ begin
   if SW <> exptd then PassFail:= 'Failed'
   else PassFail:= 'Passed';
   SWString:= SWLine(SWName, SW, exptd, PassFail);
-end;
-
-procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
-var StartParamPos, Step: Integer;
-    RawR, RawX: Double;
-begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
-  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
-  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
-  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
-  else PhaseShift:= 0;
-end;
-
-function Amplitude(nParam, n: Integer): Double;
-var StartParamPos, Step: Integer;
-    RawR, RawX: Double;
-begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
-  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
-  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX))
-end;
-
-function PhaseShift(nParam, n: Integer): Double;
-var StartParamPos, Step: Integer;
-    RawR, RawX: Double;
-begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
-  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
-  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
-  else PhaseShift:= 0;
 end;
 
 procedure TCSV.ReportClick(Sender: TObject);
