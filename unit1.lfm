@@ -1,15 +1,15 @@
 object CSV: TCSV
-  Left = -1544
-  Height = 678
-  Top = -435
-  Width = 1141
+  Left = -1491
+  Height = 782
+  Top = -585
+  Width = 1289
   HorzScrollBar.Page = 1135
   VertScrollBar.Page = 676
   Anchors = []
   AutoScroll = True
   Caption = 'SIBR Dump Tool v1.0'
-  ClientHeight = 678
-  ClientWidth = 1141
+  ClientHeight = 782
+  ClientWidth = 1289
   Icon.Data = {
     46EB00000000010001008A8A00000100180030EB000016000000280000008A00
     000014010000010018000000000040E000006400000064000000000000000000
@@ -1898,18 +1898,18 @@ object CSV: TCSV
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 678
+    Height = 782
     Top = 0
-    Width = 1141
-    ActivePage = TabSheet1
+    Width = 1289
+    ActivePage = ReportTab
     Align = alClient
     AutoSize = True
-    TabIndex = 3
+    TabIndex = 1
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 650
-      ClientWidth = 1133
+      ClientHeight = 754
+      ClientWidth = 1281
       object GroupBox1: TGroupBox
         Left = 15
         Height = 144
@@ -2315,8 +2315,8 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 650
-      ClientWidth = 1133
+      ClientHeight = 754
+      ClientWidth = 1281
       Enabled = False
       object GroupBox3: TGroupBox
         Left = 201
@@ -2458,16 +2458,18 @@ object CSV: TCSV
         MaxDate = 2958465
         MinDate = -53780
         TabOrder = 5
+        DateSeparator = '-'
         TrailingSeparator = False
         TextForNullDate = 'NULL'
         LeadingZeros = True
         Kind = dtkDate
+        TimeSeparator = ':'
         TimeFormat = tf24
         TimeDisplay = tdHMS
         DateMode = dmComboBox
         Date = 44854
         Time = 0.348367013888492
-        UseDefaultSeparators = True
+        UseDefaultSeparators = False
         HideDateTimeParts = []
         MonthNames = 'Long'
       end
@@ -2475,8 +2477,8 @@ object CSV: TCSV
     object Graphs: TTabSheet
       AutoSize = True
       Caption = 'Graphs'
-      ClientHeight = 650
-      ClientWidth = 1133
+      ClientHeight = 754
+      ClientWidth = 1281
       object Draw: TButton
         Left = 0
         Height = 38
@@ -2562,18 +2564,18 @@ object CSV: TCSV
         Left = 151
         Height = 500
         Top = 26
-        Width = 977
+        Width = 1125
         Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BevelOuter = bvNone
         ClientHeight = 500
-        ClientWidth = 977
+        ClientWidth = 1125
         TabOrder = 7
         object Chart1: TChart
           Left = 0
           Height = 100
           Top = 0
-          Width = 977
+          Width = 1125
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2627,7 +2629,7 @@ object CSV: TCSV
           Left = 0
           Height = 100
           Top = 100
-          Width = 977
+          Width = 1125
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2681,7 +2683,7 @@ object CSV: TCSV
           Left = 0
           Height = 100
           Top = 200
-          Width = 977
+          Width = 1125
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2735,7 +2737,7 @@ object CSV: TCSV
           Left = 0
           Height = 100
           Top = 300
-          Width = 977
+          Width = 1125
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2789,7 +2791,7 @@ object CSV: TCSV
           Left = 0
           Height = 100
           Top = 400
-          Width = 977
+          Width = 1125
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2860,8 +2862,8 @@ object CSV: TCSV
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 650
-      ClientWidth = 1133
+      ClientHeight = 754
+      ClientWidth = 1281
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Pitch = fpVariable
@@ -2993,12 +2995,12 @@ object CSV: TCSV
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
     Filter = '*.csv|*.csv'
-    Left = 96
-    Top = 596
+    Left = 8
+    Top = 648
   end
   object ChartToolset1: TChartToolset
-    Left = 52
-    Top = 600
+    Left = 48
+    Top = 596
     object ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool
       ZoomFactor = 1.1
     end
@@ -3015,7 +3017,13 @@ object CSV: TCSV
     end
   end
   object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
-    Steps = [dtsYear, dtsQuarter, dtsMonth, dtsWeek, dtsDay, dtsHour, dtsMinute, dtsSecond]
+    Params.NiceSteps = '0.2|0.5|1'
+    Params.Options = [aipUseMaxLength, aipUseMinLength]
+    Params.Tolerance = 1
+    DateTimeStepFormat.HourFormat = 'dd hh:nn "h"'
+    DateTimeStepFormat.MinuteFormat = 'hh:nn"m"'
+    DateTimeStepFormat.SecondFormat = 'nn:ss"s"'
+    Steps = [dtsYear, dtsMonth, dtsWeek, dtsDay, dtsHour, dtsMinute, dtsSecond, dtsMillisecond]
     Left = 8
     Top = 596
   end
@@ -3037,7 +3045,12 @@ object CSV: TCSV
         Chart = Chart5
       end>
     Mode = elmOnlyX
-    Left = 52
+    Left = 88
+    Top = 596
+  end
+  object SaveDialog1: TSaveDialog
+    Filter = '.prn|.prn'
+    Left = 48
     Top = 648
   end
 end

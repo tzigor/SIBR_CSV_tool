@@ -43,6 +43,7 @@ type
     ChartPoints: TCheckBox;
     ChartsLink: TCheckBox;
     DurationT: TLabel;
+    SaveDialog1: TSaveDialog;
     SWHex: TEdit;
     Label21: TLabel;
     SWDec: TEdit;
@@ -480,12 +481,14 @@ procedure TCSV.SaveReportClick(Sender: TObject);
 var  ReportFile: TextFile;
      FileName, wStr: String;
 begin
-  FileName:= 'SIB-R xxx Air Test Report.prn';
-  AssignFile(ReportFile, FileName);
-  ReWrite(ReportFile);
-  wStr:= ReportText.Text;
-  Writeln(ReportFile, wStr);
-  CloseFile(ReportFile);
+  SaveDialog1.Filename:= 'SIB-R_#' + SerialNumber.Text + '_' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + '_Air_Test_Report.prn';
+  if SaveDialog1.Execute then begin
+    AssignFile(ReportFile, SaveDialog1.Filename);
+    ReWrite(ReportFile);
+    wStr:= ReportText.Text;
+    Writeln(ReportFile, wStr);
+    CloseFile(ReportFile);
+  end;
 end;
 
 procedure TCSV.OpenCSVFastClick(Sender: TObject);
@@ -614,7 +617,8 @@ begin
   wStr:= '';
 
   wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + LN;
-  wStr:= wStr + 'Test Date: ' + DateToStr(TestDate.Date) + LN;
+  //wStr:= wStr + 'Test Date: ' + DateToStr(TestDate.Date) + LN;
+  wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + LN;
 
   wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
   wStr:= wStr + '                                                   Air Test' + LN;
