@@ -9,7 +9,8 @@ uses
   ComCtrls, Grids, MaskEdit, CheckLst, ColorBox, ValEdit, ComboEx, DateUtils,
   StrUtils, csvdataset, LConvEncoding, TAGraph, TASources, TACustomSource,
   TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Types,
-  TAChartUtils, TADataTools, TAChartExtentLink;
+  TAChartUtils, TADataTools, TAChartExtentLink, TANavigation, TAStyles,
+  TALegendPanel, TAChartLiveView, TAChartCombos;
 
 
 type
@@ -22,8 +23,8 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
-    Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
+    Chart1: TChart;
     Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
     Chart1LineSeries4: TLineSeries;
@@ -37,6 +38,7 @@ type
     ChartPanel: TPanel;
     ChartToolset1: TChartToolset;
     ChartToolset1DataPointClickTool1: TDataPointClickTool;
+    ChartToolset1DataPointHintTool1: TDataPointHintTool;
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
@@ -117,11 +119,21 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Chart1ExtentChanged(ASender: TChart);
+    procedure Chart2ExtentChanged(ASender: TChart);
+    procedure Chart3ExtentChanged(ASender: TChart);
+    procedure Chart4ExtentChanged(ASender: TChart);
+    procedure Chart5ExtentChanged(ASender: TChart);
     procedure ChartPointsChange(Sender: TObject);
     procedure ChartsLinkChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
       APoint: TPoint);
     procedure EStatusLoChange(Sender: TObject);
+    procedure ParametersMouseLeave(Sender: TObject);
+    procedure ParametersMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure ParametersMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -137,9 +149,6 @@ type
     procedure Button2Click(Sender: TObject);
     procedure OpenCSVFastClick(Sender: TObject);
     procedure ReportClick(Sender: TObject);
-    procedure UserDefinedChartSource1GetChartDataItem(
-      ASource: TUserDefinedChartSource; AIndex: Integer;
-      var AItem: TChartDataItem);
   private
   public
   end;
@@ -407,6 +416,41 @@ begin
   end;
 end;
 
+procedure TCSV.Chart1ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Chart1.CurrentExtent;
+  Chart1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Chart2ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Chart2.CurrentExtent;
+  Chart2.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Chart3ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Chart3.CurrentExtent;
+  Chart3.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Chart4ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Chart4.CurrentExtent;
+  Chart4.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Chart5ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Chart5.CurrentExtent;
+  Chart5.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
 procedure TCSV.ChartsLinkChange(Sender: TObject);
 begin
    ChartExtentLink1.Enabled:= ChartsLink.Checked;
@@ -432,6 +476,22 @@ procedure TCSV.EStatusLoChange(Sender: TObject);
   var i: Byte;
 begin
   if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= ESWLo[i];
+end;
+
+procedure TCSV.ParametersMouseLeave(Sender: TObject);
+begin
+  CSV.AutoScroll:= true;
+end;
+
+procedure TCSV.ParametersMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  CSV.AutoScroll:= false;
+end;
+
+procedure TCSV.ParametersMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
 end;
 
 procedure TCSV.StatusHiChange(Sender: TObject);
@@ -500,6 +560,7 @@ var ParamPos, LineLength, Counter: Integer;
 begin
   if OpenDialog1.Execute then
    begin
+      Parameters.Clear;
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Caption:= CSVFileName;
       try
@@ -692,12 +753,6 @@ begin
   ReportText.Text:= wStr;
 end;
 
-procedure TCSV.UserDefinedChartSource1GetChartDataItem(
-  ASource: TUserDefinedChartSource; AIndex: Integer; var AItem: TChartDataItem);
-begin
-  AItem.Y := DataSource[AIndex];
-  AItem.X := TimeSource[AIndex];
-end;
 
 end.
 

@@ -1,15 +1,15 @@
 object CSV: TCSV
-  Left = -1491
-  Height = 782
-  Top = -585
-  Width = 1289
-  HorzScrollBar.Page = 1135
-  VertScrollBar.Page = 676
+  Left = -1470
+  Height = 741
+  Top = -548
+  Width = 1131
+  HorzScrollBar.Page = 1128
+  VertScrollBar.Page = 596
   Anchors = []
   AutoScroll = True
   Caption = 'SIBR Dump Tool v1.0'
-  ClientHeight = 782
-  ClientWidth = 1289
+  ClientHeight = 741
+  ClientWidth = 1131
   Icon.Data = {
     46EB00000000010001008A8A00000100180030EB000016000000280000008A00
     000014010000010018000000000040E000006400000064000000000000000000
@@ -1895,21 +1895,22 @@ object CSV: TCSV
     0000000000000000000000000000000000000000000000000000000000000000
     00000000000000000000
   }
+  Position = poDefaultPosOnly
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 782
+    Height = 741
     Top = 0
-    Width = 1289
-    ActivePage = ReportTab
+    Width = 1131
+    ActivePage = Graphs
     Align = alClient
     AutoSize = True
     TabIndex = 1
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 754
-      ClientWidth = 1281
+      ClientHeight = 713
+      ClientWidth = 1123
       object GroupBox1: TGroupBox
         Left = 15
         Height = 144
@@ -2052,90 +2053,90 @@ object CSV: TCSV
         TabOrder = 1
       end
       object Button2: TButton
-        Left = 640
+        Left = 984
         Height = 32
-        Top = 312
+        Top = 408
         Width = 128
         Caption = 'Close'
         OnClick = Button2Click
         TabOrder = 2
       end
       object GroupBox4: TGroupBox
-        Left = 288
-        Height = 281
+        Left = 696
+        Height = 233
         Top = 8
-        Width = 480
+        Width = 424
         Caption = 'CSV Sizing'
-        ClientHeight = 261
-        ClientWidth = 476
+        ClientHeight = 213
+        ClientWidth = 420
         TabOrder = 3
         object Label11: TLabel
-          Left = 32
+          Left = 8
           Height = 15
-          Top = 18
+          Top = 12
           Width = 60
           Caption = 'Record rate'
           ParentColor = False
         end
         object RecordRate: TEdit
-          Left = 100
+          Left = 76
           Height = 23
-          Top = 14
+          Top = 8
           Width = 36
           TabOrder = 0
           Text = '1'
         end
         object Label12: TLabel
-          Left = 144
+          Left = 120
           Height = 15
-          Top = 18
+          Top = 12
           Width = 17
           Caption = 'sec'
           ParentColor = False
         end
         object Label13: TLabel
-          Left = 32
+          Left = 8
           Height = 15
-          Top = 58
+          Top = 52
           Width = 53
           Caption = 'Start Time'
           ParentColor = False
         end
         object StartTime: TEdit
-          Left = 100
+          Left = 76
           Height = 23
-          Top = 54
+          Top = 48
           Width = 108
           TabOrder = 1
         end
         object Label14: TLabel
-          Left = 32
+          Left = 8
           Height = 15
-          Top = 90
+          Top = 84
           Width = 49
           Caption = 'End Time'
           ParentColor = False
         end
         object EndTime: TEdit
-          Left = 100
+          Left = 76
           Height = 23
-          Top = 86
+          Top = 80
           Width = 108
           TabOrder = 2
         end
         object FullRange: TButton
-          Left = 116
+          Left = 92
           Height = 25
-          Top = 118
+          Top = 112
           Width = 92
           Caption = 'Full range'
           OnClick = FullRangeClick
           TabOrder = 3
         end
         object GroupBox2: TGroupBox
-          Left = 256
+          Left = 200
           Height = 145
-          Top = 8
+          Top = 0
           Width = 213
           Caption = 'Target file'
           ClientHeight = 125
@@ -2265,9 +2266,9 @@ object CSV: TCSV
           end
         end
         object EstimateFast: TButton
-          Left = 256
+          Left = 200
           Height = 32
-          Top = 168
+          Top = 152
           Width = 94
           Caption = 'Estimate'
           Enabled = False
@@ -2275,9 +2276,9 @@ object CSV: TCSV
           TabOrder = 5
         end
         object Generate: TButton
-          Left = 376
+          Left = 322
           Height = 33
-          Top = 168
+          Top = 152
           Width = 91
           Caption = 'Generate'
           Enabled = False
@@ -2287,8 +2288,8 @@ object CSV: TCSV
         object ProgressBar: TProgressBar
           Left = 0
           Height = 16
-          Top = 240
-          Width = 475
+          Top = 192
+          Width = 416
           Step = 1
           TabOrder = 7
         end
@@ -2296,7 +2297,7 @@ object CSV: TCSV
       object Panel1: TPanel
         Left = 8
         Height = 32
-        Top = 312
+        Top = 408
         Width = 624
         BevelOuter = bvNone
         BorderStyle = bsSingle
@@ -2313,10 +2314,543 @@ object CSV: TCSV
         end
       end
     end
+    object Graphs: TTabSheet
+      AutoSize = True
+      Caption = 'Graphs'
+      ClientHeight = 713
+      ClientWidth = 1123
+      object Draw: TButton
+        Left = 0
+        Height = 38
+        Top = 4
+        Width = 140
+        Caption = 'Draw'
+        Font.CharSet = ANSI_CHARSET
+        Font.Height = -16
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        OnClick = DrawClick
+        ParentFont = False
+        TabOrder = 0
+      end
+      object ChartPoints: TCheckBox
+        Left = 245
+        Height = 19
+        Top = 0
+        Width = 85
+        Caption = 'Chart Points'
+        OnChange = ChartPointsChange
+        TabOrder = 1
+      end
+      object Parameters: TListBox
+        Left = 0
+        Height = 520
+        Top = 48
+        Width = 140
+        ItemHeight = 0
+        MultiSelect = True
+        OnMouseLeave = ParametersMouseLeave
+        OnMouseMove = ParametersMouseMove
+        TabOrder = 2
+      end
+      object ChartsLink: TCheckBox
+        Left = 152
+        Height = 19
+        Top = 0
+        Width = 76
+        Caption = 'Charts link'
+        Checked = True
+        OnChange = ChartsLinkChange
+        State = cbChecked
+        TabOrder = 3
+      end
+      object Button1: TButton
+        Left = 1032
+        Height = 25
+        Top = 0
+        Width = 88
+        Caption = 'Delete Lables'
+        OnClick = Button1Click
+        TabOrder = 4
+      end
+      object ChartHeightControl: TTrackBar
+        Left = 820
+        Height = 25
+        Top = 0
+        Width = 100
+        Frequency = 10
+        Max = 500
+        Min = 150
+        PageSize = 100
+        Position = 250
+        TabOrder = 5
+      end
+      object Label19: TLabel
+        Left = 752
+        Height = 15
+        Top = 4
+        Width = 66
+        Caption = 'Chart height'
+        ParentColor = False
+      end
+      object Button4: TButton
+        Left = 920
+        Height = 25
+        Top = 0
+        Width = 75
+        Caption = 'Apply'
+        OnClick = Button4Click
+        TabOrder = 6
+      end
+      object ChartPanel: TPanel
+        Left = 144
+        Height = 400
+        Top = 26
+        Width = 976
+        Anchors = [akTop, akLeft, akRight]
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 400
+        ClientWidth = 976
+        TabOrder = 7
+        object Chart1: TChart
+          Left = 0
+          Height = 80
+          Top = 0
+          Width = 976
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart1ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries1: TLineSeries
+            LinePen.Color = clBlue
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart2: TChart
+          Left = 0
+          Height = 80
+          Top = 80
+          Width = 976
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart2ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries2: TLineSeries
+            LinePen.Color = clBlue
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart3: TChart
+          Left = 0
+          Height = 80
+          Top = 160
+          Width = 976
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart3ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries3: TLineSeries
+            LinePen.Color = clBlue
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart4: TChart
+          Left = 0
+          Height = 80
+          Top = 240
+          Width = 976
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart4ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries4: TLineSeries
+            LinePen.Color = clBlue
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart5: TChart
+          Left = 0
+          Height = 80
+          Top = 320
+          Width = 976
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart5ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries5: TLineSeries
+            LinePen.Color = clBlue
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+      end
+      object PowerResets: TCheckBox
+        Left = 349
+        Height = 19
+        Top = 0
+        Width = 121
+        Caption = 'Show Power Resets'
+        TabOrder = 8
+      end
+      object Button3: TButton
+        Left = 625
+        Height = 25
+        Top = 0
+        Width = 80
+        Caption = 'Unzoom All'
+        OnClick = Button3Click
+        TabOrder = 9
+      end
+    end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 754
-      ClientWidth = 1281
+      ClientHeight = 713
+      ClientWidth = 1123
       Enabled = False
       object GroupBox3: TGroupBox
         Left = 201
@@ -2381,9 +2915,10 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 0
-        Height = 564
+        Height = 623
         Top = 84
         Width = 828
+        Anchors = [akTop, akLeft, akBottom]
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Height = -12
@@ -2474,396 +3009,10 @@ object CSV: TCSV
         MonthNames = 'Long'
       end
     end
-    object Graphs: TTabSheet
-      AutoSize = True
-      Caption = 'Graphs'
-      ClientHeight = 754
-      ClientWidth = 1281
-      object Draw: TButton
-        Left = 0
-        Height = 38
-        Top = 520
-        Width = 140
-        Caption = 'Draw'
-        Font.CharSet = ANSI_CHARSET
-        Font.Height = -16
-        Font.Pitch = fpVariable
-        Font.Quality = fqDraft
-        OnClick = DrawClick
-        ParentFont = False
-        TabOrder = 0
-      end
-      object ChartPoints: TCheckBox
-        Left = 240
-        Height = 19
-        Top = 0
-        Width = 85
-        Caption = 'Chart Points'
-        OnChange = ChartPointsChange
-        TabOrder = 1
-      end
-      object Parameters: TListBox
-        Left = 0
-        Height = 512
-        Top = 4
-        Width = 140
-        ItemHeight = 0
-        MultiSelect = True
-        TabOrder = 2
-      end
-      object ChartsLink: TCheckBox
-        Left = 147
-        Height = 19
-        Top = 0
-        Width = 76
-        Caption = 'Charts link'
-        Checked = True
-        OnChange = ChartsLinkChange
-        State = cbChecked
-        TabOrder = 3
-      end
-      object Button1: TButton
-        Left = 1039
-        Height = 25
-        Top = 0
-        Width = 88
-        Caption = 'Delete Lables'
-        OnClick = Button1Click
-        TabOrder = 4
-      end
-      object ChartHeightControl: TTrackBar
-        Left = 827
-        Height = 25
-        Top = 0
-        Width = 100
-        Frequency = 10
-        Max = 500
-        Min = 150
-        PageSize = 100
-        Position = 250
-        TabOrder = 5
-      end
-      object Label19: TLabel
-        Left = 759
-        Height = 15
-        Top = 4
-        Width = 66
-        Caption = 'Chart height'
-        ParentColor = False
-      end
-      object Button4: TButton
-        Left = 927
-        Height = 25
-        Top = 0
-        Width = 75
-        Caption = 'Apply'
-        OnClick = Button4Click
-        TabOrder = 6
-      end
-      object ChartPanel: TPanel
-        Left = 151
-        Height = 500
-        Top = 26
-        Width = 1125
-        Anchors = [akTop, akLeft, akRight]
-        AutoSize = True
-        BevelOuter = bvNone
-        ClientHeight = 500
-        ClientWidth = 1125
-        TabOrder = 7
-        object Chart1: TChart
-          Left = 0
-          Height = 100
-          Top = 0
-          Width = 1125
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.LabelBrush.Style = bsClear
-            end>
-          BackColor = clWhite
-          Foot.Brush.Color = clBtnFace
-          Foot.Font.Color = clBlue
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries1: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-        object Chart2: TChart
-          Left = 0
-          Height = 100
-          Top = 100
-          Width = 1125
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.LabelBrush.Style = bsClear
-            end>
-          BackColor = clWhite
-          Foot.Brush.Color = clBtnFace
-          Foot.Font.Color = clBlue
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries2: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-        object Chart3: TChart
-          Left = 0
-          Height = 100
-          Top = 200
-          Width = 1125
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.LabelBrush.Style = bsClear
-            end>
-          BackColor = clWhite
-          Foot.Brush.Color = clBtnFace
-          Foot.Font.Color = clBlue
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries3: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-        object Chart4: TChart
-          Left = 0
-          Height = 100
-          Top = 300
-          Width = 1125
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.LabelBrush.Style = bsClear
-            end>
-          BackColor = clWhite
-          Foot.Brush.Color = clBtnFace
-          Foot.Font.Color = clBlue
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries4: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-        object Chart5: TChart
-          Left = 0
-          Height = 100
-          Top = 400
-          Width = 1125
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.LabelBrush.Style = bsClear
-            end>
-          BackColor = clWhite
-          Foot.Brush.Color = clBtnFace
-          Foot.Font.Color = clBlue
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries5: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-      end
-      object PowerResets: TCheckBox
-        Left = 344
-        Height = 19
-        Top = 0
-        Width = 121
-        Caption = 'Show Power Resets'
-        TabOrder = 8
-      end
-      object Button3: TButton
-        Left = 632
-        Height = 25
-        Top = 0
-        Width = 80
-        Caption = 'Unzoom All'
-        OnClick = Button3Click
-        TabOrder = 9
-      end
-    end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 754
-      ClientWidth = 1281
+      ClientHeight = 713
+      ClientWidth = 1123
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Pitch = fpVariable
@@ -3015,15 +3164,20 @@ object CSV: TCSV
       Shift = [ssCtrl, ssLeft]
       OnPointClick = ChartToolset1DataPointClickTool1PointClick
     end
+    object ChartToolset1DataPointHintTool1: TDataPointHintTool
+    end
   end
   object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
-    Params.NiceSteps = '0.2|0.5|1'
-    Params.Options = [aipUseMaxLength, aipUseMinLength]
+    Params.MaxLength = 100
+    Params.MinLength = 50
+    Params.NiceSteps = '1'
+    Params.Options = [aipUseMaxLength]
     Params.Tolerance = 1
-    DateTimeStepFormat.HourFormat = 'dd hh:nn "h"'
+    DateTimeStepFormat.HourFormat = 'dd hh"h":nn"m"'
     DateTimeStepFormat.MinuteFormat = 'hh:nn"m"'
     DateTimeStepFormat.SecondFormat = 'nn:ss"s"'
-    Steps = [dtsYear, dtsMonth, dtsWeek, dtsDay, dtsHour, dtsMinute, dtsSecond, dtsMillisecond]
+    Steps = [dtsYear, dtsMonth, dtsDay, dtsHour, dtsMinute, dtsSecond]
+    SuppressPrevUnit = False
     Left = 8
     Top = 596
   end
