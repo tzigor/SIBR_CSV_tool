@@ -6,11 +6,10 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, CheckLst, ColorBox, ValEdit, ComboEx, DateUtils,
-  StrUtils, csvdataset, LConvEncoding, TAGraph, TASources, TACustomSource,
+  ComCtrls, Grids, MaskEdit, DateUtils,
+  StrUtils, LConvEncoding, TAGraph, TACustomSource,
   TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Types,
-  TAChartUtils, TADataTools, TAChartExtentLink, TANavigation, TAStyles,
-  TALegendPanel, TAChartLiveView, TAChartCombos;
+  TAChartUtils, TADataTools, TAChartExtentLink, LCLType;
 
 
 type
@@ -20,11 +19,14 @@ type
   TCSV = class(TForm)
     App: TPageControl;
     Button1: TButton;
+    Button2: TButton;
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
-    Chart1LineSeries1: TLineSeries;
+    ChartPoints: TCheckBox;
+    Draw: TButton;
     Chart1: TChart;
+    Chart1LineSeries1: TLineSeries;
     Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
     Chart1LineSeries4: TLineSeries;
@@ -36,89 +38,93 @@ type
     ChartExtentLink1: TChartExtentLink;
     ChartHeightControl: TTrackBar;
     ChartPanel: TPanel;
+    ChartsLink: TCheckBox;
     ChartToolset1: TChartToolset;
     ChartToolset1DataPointClickTool1: TDataPointClickTool;
     ChartToolset1DataPointHintTool1: TDataPointHintTool;
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
-    ChartPoints: TCheckBox;
-    ChartsLink: TCheckBox;
+    ComputedChannels: TListBox;
+    CSVFileSize: TLabel;
+    Duration: TLabel;
     DurationT: TLabel;
-    SaveDialog1: TSaveDialog;
-    SWHex: TEdit;
-    Label21: TLabel;
-    SWDec: TEdit;
     EndTime: TEdit;
+    EStatusLo: TRadioButton;
     EstimateFast: TButton;
     FileSizeT: TLabel;
     FullRange: TButton;
     Generate: TButton;
+    Graphs: TTabSheet;
+    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
+    Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
-    Label20: TLabel;
-    Label4: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
-    OpenedFile: TLabel;
-    Panel1: TPanel;
-    PowerResets: TCheckBox;
-    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
-    Draw: TButton;
-    Button2: TButton;
-    Label19: TLabel;
-    Parameters: TListBox;
-    ProgressBar: TProgressBar;
-    StatusLo: TRadioButton;
-    StatusHi: TRadioButton;
-    EStatusLo: TRadioButton;
-    RecordRate: TEdit;
-    RecordsT: TLabel;
-    RunEndT: TLabel;
-    RunStartT: TLabel;
-    SaveReport: TButton;
-    Chart1UserDrawnSeries1: TUserDrawnSeries;
-    CSVFileSize: TLabel;
-    StartTime: TEdit;
-    SWList: TStringGrid;
-    TabSheet1: TTabSheet;
-    TestDate: TDateTimePicker;
-    Duration: TLabel;
-    GroupBox3: TGroupBox;
-    GroupBox1: TGroupBox;
-    Label1: TLabel;
     Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
     Label18: TLabel;
+    Label19: TLabel;
     Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
     Label3: TLabel;
+    Label4: TLabel;
     Label5: TLabel;
     Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    MainTab: TTabSheet;
     OpenCSVFast: TButton;
-    OpenDialog1: TOpenDialog;
+    OpenedFile: TLabel;
+    Panel1: TPanel;
+    PowerResets: TCheckBox;
+    ProgressBar: TProgressBar;
+    RawChannels: TListBox;
+    RecordRate: TEdit;
     Records: TLabel;
+    RecordsT: TLabel;
     Report: TButton;
     ReportEndTime: TEdit;
     ReportStartTime: TEdit;
-    SerialNumber: TEdit;
+    ReportTab: TTabSheet;
     ReportText: TMemo;
     RunEnd: TLabel;
+    RunEndT: TLabel;
     RunStart: TLabel;
-    MainTab: TTabSheet;
-    ReportTab: TTabSheet;
-    Graphs: TTabSheet;
+    RunStartT: TLabel;
+    SaveDialog1: TSaveDialog;
+    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
+    Chart1UserDrawnSeries1: TUserDrawnSeries;
+    OpenDialog1: TOpenDialog;
+    SaveReport: TButton;
+    SelectedChannels: TListBox;
+    SerialNumber: TEdit;
+    StartTime: TEdit;
+    StatusHi: TRadioButton;
+    StatusLo: TRadioButton;
+    SWDec: TEdit;
+    SWHex: TEdit;
+    SWList: TStringGrid;
+    TabSheet1: TTabSheet;
+    TestDate: TDateTimePicker;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure DrawClick(Sender: TObject);
     procedure Chart1ExtentChanged(ASender: TChart);
     procedure Chart2ExtentChanged(ASender: TChart);
     procedure Chart3ExtentChanged(ASender: TChart);
@@ -128,20 +134,18 @@ type
     procedure ChartsLinkChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
       APoint: TPoint);
+    procedure ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
+    procedure ComputedChannelsSelectionChange(Sender: TObject; User: boolean);
     procedure EStatusLoChange(Sender: TObject);
-    procedure ParametersMouseLeave(Sender: TObject);
-    procedure ParametersMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure ParametersMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
+      ARect: TRect; State: TOwnerDrawState);
+    procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
       aRect: TRect; aState: TGridDrawState);
-    procedure SWbitsClick(Sender: TObject);
-    procedure DrawClick(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Parameters1Change(Sender: TObject);
     procedure SaveReportClick(Sender: TObject);
     procedure EstimateFastClick(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
@@ -264,7 +268,7 @@ begin
   end else ShowMessage('Open CSV file first.');
 end;
 
-procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParams: TSelectedParam);
+procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
 var i: Longint;
     ParamPos, TimePos: Integer;
     wStr:String;
@@ -275,9 +279,9 @@ var i: Longint;
 begin
   PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
-  ParamPos:= GetParamPosition(SelectedParams.name);
+  ParamPos:= GetParamPosition(SelectedParamName);
   Chart1LineSeries.Clear;
-  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParams.name;
+  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParamName;
   ChartColor:= GetLineColor;
   Chart1LineSeries.ParentChart.Title.Font.Color:= ChartColor;
   Chart1LineSeries.ParentChart.Height:= ChartHeight;
@@ -288,12 +292,10 @@ begin
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
 
-        if SelectedParams.index < ParameterCount then begin
-           y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
-        end
-        else
-          if SelectedParams.index - ParameterCount < 16 then y:= Amplitude(SelectedParams.index - ParameterCount, i)
-          else y:= PhaseShift(SelectedParams.index - ParameterCount - 16, i);
+      if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
+      else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
+           else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+
         x:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
 
         if PowerReset then begin
@@ -312,44 +314,6 @@ begin
 
   end;
   Chart1LineSeries.ParentChart.Visible:= True;
-end;
-
-procedure TCSV.DrawClick(Sender: TObject);
-var i, counter: Integer;
-    wStr: String;
-begin
-  ShowPR:= PowerResets.Checked;
-  ChartHeight:= ChartHeightControl.Position;
-  ChartPanel.Height:= ChartHeight * Parameters.SelCount;
-  Chart1.Visible:= False;
-  Chart2.Visible:= False;
-  Chart3.Visible:= False;
-  Chart4.Visible:= False;
-  Chart5.Visible:= False;
-  Chart1.ZoomFull;
-  Chart2.ZoomFull;
-  Chart3.ZoomFull;
-  Chart4.ZoomFull;
-  Chart5.ZoomFull;
-  for i:=0 to 4 do SelectedParams[i].name:= '';
-  counter:= 0;
-  if Parameters.SelCount > 0 then begin
-     if Parameters.SelCount < 6 then begin
-        for i:=0 to Parameters.Items.Count - 1 do
-           if Parameters.Selected[i] then begin
-              SelectedParams[counter].name:= Parameters.Items[i];
-              SelectedParams[counter].index:= i;
-              counter:= counter + 1;
-           end;
-           if SelectedParams[0].name <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0]);
-           if SelectedParams[1].name <> '' then DrawChart(Chart1LineSeries2, SelectedParams[1]);
-           if SelectedParams[2].name <> '' then DrawChart(Chart1LineSeries3, SelectedParams[2]);
-           if SelectedParams[3].name <> '' then DrawChart(Chart1LineSeries4, SelectedParams[3]);
-           if SelectedParams[4].name <> '' then DrawChart(Chart1LineSeries5, SelectedParams[4]);
-     end
-     else ShowMessage('Please select 5 parameters maximum.');
-  end
-  else ShowMessage('No parameters selected.');
 end;
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
@@ -416,6 +380,40 @@ begin
   end;
 end;
 
+procedure TCSV.DrawClick(Sender: TObject);
+  var i, counter: Integer;
+    wStr: String;
+begin
+  ShowPR:= PowerResets.Checked;
+  ChartHeight:= ChartHeightControl.Position;
+  ChartPanel.Height:= ChartHeight * RawChannels.SelCount;
+  Chart1.Visible:= False;
+  Chart2.Visible:= False;
+  Chart3.Visible:= False;
+  Chart4.Visible:= False;
+  Chart5.Visible:= False;
+  Chart1.ZoomFull;
+  Chart2.ZoomFull;
+  Chart3.ZoomFull;
+  Chart4.ZoomFull;
+  Chart5.ZoomFull;
+  for i:=0 to 4 do SelectedParams[i]:= '';
+  counter:= 0;
+  if SelectedChannels.Items.Count > 0 then begin
+     for i:=0 to SelectedChannels.Items.Count - 1 do begin
+        SelectedParams[counter]:= SelectedChannels.Items[i];
+        counter:= counter + 1;
+     end;
+     if SelectedParams[0] <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0]);
+     if SelectedParams[1] <> '' then DrawChart(Chart1LineSeries2, SelectedParams[1]);
+     if SelectedParams[2] <> '' then DrawChart(Chart1LineSeries3, SelectedParams[2]);
+     if SelectedParams[3] <> '' then DrawChart(Chart1LineSeries4, SelectedParams[3]);
+     if SelectedParams[4] <> '' then DrawChart(Chart1LineSeries5, SelectedParams[4]);
+     App.ActivePage:= Graphs;
+  end
+  else ShowMessage('No parameters selected.');
+end;
+
 procedure TCSV.Chart1ExtentChanged(ASender: TChart);
   var dr: TDoubleRect;
 begin
@@ -472,26 +470,82 @@ begin
     else
 end;
 
+procedure TCSV.ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
+begin
+   with ComputedChannels do begin
+     if FindPart('AR?T?F', Items[Index]) > 0 then Canvas.Font.Color:= clBlue;
+
+     if (odSelected in State) then begin
+       Canvas.Brush.Color:=clBlue;
+       Canvas.Font.Color:=clWhite;
+     end;
+
+     Canvas.FillRect(ARect);
+     Canvas.TextOut(ARect.Left, ARect.Top, Items[Index]);
+    end
+end;
+
+procedure FillSelectedChannels;
+var i: Integer;
+begin
+  CSV.SelectedChannels.Clear;
+  for i:=0 to CSV.RawChannels.Items.Count - 1 do
+     if CSV.RawChannels.Selected[i] then CSV.SelectedChannels.Items.Add(CSV.RawChannels.Items[i]);
+
+  for i:=0 to CSV.ComputedChannels.Items.Count - 1 do
+     if CSV.ComputedChannels.Selected[i] then CSV.SelectedChannels.Items.Add(CSV.ComputedChannels.Items[i]);
+end;
+
+procedure TCSV.ComputedChannelsSelectionChange(Sender: TObject; User: boolean);
+var
+    Pos: TPoint;
+    i:   Integer;
+begin
+  Pos:= Mouse.CursorPos;
+  Pos:= ComputedChannels.ScreenToClient(Pos);
+  i:= ComputedChannels.GetIndexAtXY(Pos.X, Pos.Y);
+  if ComputedChannels.Selected[i] and (ComputedChannels.SelCount + RawChannels.SelCount > NumOsCharts) then ComputedChannels.Selected[i]:= false
+  else FillSelectedChannels;
+end;
+
+procedure TCSV.RawChannelsSelectionChange(Sender: TObject; User: boolean);
+var
+    Pos: TPoint;
+    i:   Integer;
+begin
+  Pos:= Mouse.CursorPos;
+  Pos:= RawChannels.ScreenToClient(Pos);
+  i:= RawChannels.GetIndexAtXY(Pos.X, Pos.Y);
+  if RawChannels.Selected[i] and (ComputedChannels.SelCount + RawChannels.SelCount > NumOsCharts) then RawChannels.Selected[i]:= false
+  else FillSelectedChannels;
+end;
+
+
 procedure TCSV.EStatusLoChange(Sender: TObject);
   var i: Byte;
 begin
   if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= ESWLo[i];
 end;
 
-procedure TCSV.ParametersMouseLeave(Sender: TObject);
-begin
-  CSV.AutoScroll:= true;
-end;
 
-procedure TCSV.ParametersMouseMove(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
+procedure TCSV.RawChannelsDrawItem(Control: TWinControl; Index: Integer;
+  ARect: TRect; State: TOwnerDrawState);
 begin
-  CSV.AutoScroll:= false;
-end;
+  with RawChannels do begin
+     if FindPart('VR???F??', Items[Index]) > 0 then Canvas.Font.Color:= RGBToColor(0, 100, 0)
+     else if Items[Index] in SystemChannels then Canvas.Font.Color:= clRed
+          else if Items[Index] in VoltChannels then Canvas.Font.Color:= clBlue
+               else Canvas.Font.Color:= clSilver;
 
-procedure TCSV.ParametersMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
+     if (odSelected in State) then begin
+       Canvas.Brush.Color:=clBlue;
+       Canvas.Font.Color:=clWhite;
+     end;
+
+      Canvas.FillRect(ARect);
+      Canvas.TextOut(ARect.Left, ARect.Top, Items[Index]);
+   end
 end;
 
 procedure TCSV.StatusHiChange(Sender: TObject);
@@ -518,11 +572,6 @@ begin
   SWList.Canvas.TextOut(aRect.Left,aRect.Top,SWList.Cells[Acol,Arow]);
 end;
 
-procedure TCSV.SWbitsClick(Sender: TObject);
-begin
-
-end;
-
 procedure TCSV.Button3Click(Sender: TObject);
 begin
   Chart1.ZoomFull;
@@ -530,11 +579,6 @@ begin
   Chart3.ZoomFull;
   Chart4.ZoomFull;
   Chart5.ZoomFull;
-end;
-
-procedure TCSV.Parameters1Change(Sender: TObject);
-begin
-
 end;
 
 procedure TCSV.SaveReportClick(Sender: TObject);
@@ -560,7 +604,7 @@ var ParamPos, LineLength, Counter: Integer;
 begin
   if OpenDialog1.Execute then
    begin
-      Parameters.Clear;
+      RawChannels.Clear;
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Caption:= CSVFileName;
       try
@@ -592,15 +636,15 @@ begin
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then begin
               ParamList[Counter]:= Trim(SubStr);
-              Parameters.Items.Add(Trim(SubStr));
+              RawChannels.Items.Add(Trim(SubStr));
               Counter:= Counter + 1;
               SubStr:= '';
            end
            else SubStr:= SubStr + CSVContent[0][i];
         end;
 
-        for i:= 0 to 15 do Parameters.Items.Add(AmplitudeName(i));
-        for i:= 0 to 15 do Parameters.Items.Add(PhaseShiftName(i));
+        for i:= 0 to 15 do ComputedChannels.Items.Add(AmplitudeName(i));
+        for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
 
         ParamPos:= GetParamPosition('RTCs');
 
@@ -752,7 +796,6 @@ begin
   for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
   ReportText.Text:= wStr;
 end;
-
 
 end.
 
