@@ -21,9 +21,12 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
+    Button7: TButton;
     ChartPoints: TCheckBox;
+    ChartToolset1ZoomMouseWheelTool2: TZoomMouseWheelTool;
+    ChartToolset1ZoomMouseWheelTool3: TZoomMouseWheelTool;
     Draw: TButton;
     Chart1: TChart;
     Chart1LineSeries1: TLineSeries;
@@ -63,6 +66,7 @@ type
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
     GroupBox7: TGroupBox;
+    GroupBox8: TGroupBox;
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
@@ -80,6 +84,8 @@ type
     Label22: TLabel;
     Label23: TLabel;
     Label24: TLabel;
+    Label25: TLabel;
+    Label26: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -93,6 +99,7 @@ type
     Panel1: TPanel;
     PowerResets: TCheckBox;
     ProgressBar: TProgressBar;
+    ReportProgress: TProgressBar;
     RawChannels: TListBox;
     RecordRate: TEdit;
     Records: TLabel;
@@ -120,10 +127,15 @@ type
     SWHex: TEdit;
     SWList: TStringGrid;
     TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
     procedure Button1Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure ChartHeightControlChange(Sender: TObject);
+    procedure ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
+      const APoint: TPoint; var AHint: String);
     procedure DrawClick(Sender: TObject);
     procedure Chart1ExtentChanged(ASender: TChart);
     procedure Chart2ExtentChanged(ASender: TChart);
@@ -138,6 +150,7 @@ type
       ARect: TRect; State: TOwnerDrawState);
     procedure ComputedChannelsSelectionChange(Sender: TObject; User: boolean);
     procedure EStatusLoChange(Sender: TObject);
+    procedure Label25Click(Sender: TObject);
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
@@ -342,11 +355,6 @@ begin
    DeleteLabels(Chart1LineSeries5);
 end;
 
-procedure TCSV.Button4Click(Sender: TObject);
-begin
-  DrawClick(Sender);
-end;
-
 procedure TCSV.Button5Click(Sender: TObject);
 var i, StatusW: Integer;
 begin
@@ -380,13 +388,49 @@ begin
   end;
 end;
 
+procedure TCSV.Button6Click(Sender: TObject);
+var i: Integer;
+begin
+  SelectedChannels.Clear;
+  for i:=0 to CSV.RawChannels.Items.Count - 1 do CSV.RawChannels.Selected[i]:= false;
+  for i:=0 to CSV.ComputedChannels.Items.Count - 1 do CSV.ComputedChannels.Selected[i]:= false;
+end;
+
+procedure TCSV.Button7Click(Sender: TObject);
+begin
+  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 53) div SelectedChannels.Items.Count;
+  Chart1.Height:= ChartHeightControl.Position;
+  Chart2.Height:= ChartHeightControl.Position;
+  Chart3.Height:= ChartHeightControl.Position;
+  Chart4.Height:= ChartHeightControl.Position;
+  Chart5.Height:= ChartHeightControl.Position;
+end;
+
+procedure TCSV.ChartHeightControlChange(Sender: TObject);
+begin
+  Chart1.Height:= ChartHeightControl.Position;
+  Chart2.Height:= ChartHeightControl.Position;
+  Chart3.Height:= ChartHeightControl.Position;
+  Chart4.Height:= ChartHeightControl.Position;
+  Chart5.Height:= ChartHeightControl.Position;
+end;
+
+procedure TCSV.ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
+  const APoint: TPoint; var AHint: String);
+var y: Double;
+    x: TDateTime;
+begin
+   x:= TLineSeries(ATool.Series).GetXValue(ATool.PointIndex);
+   y:= TLineSeries(ATool.Series).GetYValue(ATool.PointIndex);
+   AHint := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
+end;
+
 procedure TCSV.DrawClick(Sender: TObject);
   var i, counter: Integer;
     wStr: String;
 begin
   ShowPR:= PowerResets.Checked;
   ChartHeight:= ChartHeightControl.Position;
-  ChartPanel.Height:= ChartHeight * RawChannels.SelCount;
   Chart1.Visible:= False;
   Chart2.Visible:= False;
   Chart3.Visible:= False;
@@ -528,6 +572,10 @@ begin
   if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= ESWLo[i];
 end;
 
+procedure TCSV.Label25Click(Sender: TObject);
+begin
+
+end;
 
 procedure TCSV.RawChannelsDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
@@ -605,6 +653,9 @@ begin
   if OpenDialog1.Execute then
    begin
       RawChannels.Clear;
+      ComputedChannels.Clear;
+      SelectedChannels.Clear;
+      ReportText.Text:= '';
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Caption:= CSVFileName;
       try
@@ -718,7 +769,8 @@ begin
   TimePos:= GetParamPosition('RTCs');
   StartTimeDT:= StrToDateTime(ReportStartTime.Text);
   EndTimeDT:= StrToDateTime(ReportEndTime.Text);
-
+  ReportProgress.Max:= 46;
+  ReportProgress.Position:= 0;
   wStr:= '';
 
   wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + LN;
@@ -761,6 +813,7 @@ begin
     if (Avarage < SibrParams[j].min) or (Avarage > SibrParams[j].max) or (StdDiviation > SibrParams[j].stdDev) then PassFail:= 'Failed'
     else PassFail:= 'Passed';
     wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ LN;
+    ReportProgress.Position:= ReportProgress.Position + 1;
   end;
   ReportText.Text:= wStr;
 
@@ -792,6 +845,7 @@ begin
     PSStdDiviation:= Sqrt(PSStdDiviation/(CSVContent.Count-1));
     wStr:= wStr +ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + LN;
     PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PassFail) + LN;
+    ReportProgress.Position:= ReportProgress.Position + 1;
   end;
   for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
   ReportText.Text:= wStr;

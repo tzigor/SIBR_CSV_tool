@@ -1,15 +1,15 @@
 object CSV: TCSV
-  Left = -1367
-  Height = 688
-  Top = -600
-  Width = 1396
-  HorzScrollBar.Page = 1024
+  Left = -1543
+  Height = 890
+  Top = -590
+  Width = 1343
+  HorzScrollBar.Page = 897
   VertScrollBar.Page = 668
   Anchors = []
   AutoScroll = True
-  Caption = 'SIBR Dump Tool v1.0'
-  ClientHeight = 688
-  ClientWidth = 1396
+  Caption = 'SIBR Dump Tool v1.1'
+  ClientHeight = 890
+  ClientWidth = 1343
   Icon.Data = {
     46EB00000000010001008A8A00000100180030EB000016000000280000008A00
     000014010000010018000000000040E000006400000064000000000000000000
@@ -1899,9 +1899,9 @@ object CSV: TCSV
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 688
+    Height = 890
     Top = 0
-    Width = 1396
+    Width = 1343
     ActivePage = MainTab
     Align = alClient
     AutoSize = True
@@ -1914,8 +1914,8 @@ object CSV: TCSV
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 660
-      ClientWidth = 1388
+      ClientHeight = 862
+      ClientWidth = 1335
       object GroupBox1: TGroupBox
         Left = 8
         Height = 144
@@ -2054,16 +2054,27 @@ object CSV: TCSV
         Top = 160
         Width = 131
         Caption = 'Open CSV'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clSilver
+        Font.Height = -16
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
         OnClick = OpenCSVFastClick
+        ParentFont = False
         TabOrder = 1
       end
       object Button2: TButton
-        Left = 888
+        Left = 760
         Height = 32
         Top = 608
         Width = 128
         Caption = 'Close'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
         OnClick = Button2Click
+        ParentFont = False
         TabOrder = 2
       end
       object GroupBox4: TGroupBox
@@ -2081,13 +2092,23 @@ object CSV: TCSV
           Top = 12
           Width = 60
           Caption = 'Record rate'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
         end
         object RecordRate: TEdit
           Left = 76
           Height = 23
           Top = 8
           Width = 36
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
           TabOrder = 0
           Text = '1'
         end
@@ -2097,7 +2118,12 @@ object CSV: TCSV
           Top = 12
           Width = 17
           Caption = 'sec'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
         end
         object Label13: TLabel
           Left = 8
@@ -2105,13 +2131,23 @@ object CSV: TCSV
           Top = 52
           Width = 53
           Caption = 'Start Time'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
         end
         object StartTime: TEdit
           Left = 76
           Height = 23
           Top = 48
           Width = 108
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
           TabOrder = 1
         end
         object Label14: TLabel
@@ -2120,13 +2156,23 @@ object CSV: TCSV
           Top = 84
           Width = 49
           Caption = 'End Time'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
           ParentColor = False
+          ParentFont = False
         end
         object EndTime: TEdit
           Left = 76
           Height = 23
           Top = 80
           Width = 108
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
           TabOrder = 2
         end
         object FullRange: TButton
@@ -2303,11 +2349,16 @@ object CSV: TCSV
         Left = 16
         Height = 32
         Top = 608
-        Width = 856
+        Width = 728
         BevelOuter = bvNone
         BorderStyle = bsSingle
         ClientHeight = 28
-        ClientWidth = 852
+        ClientWidth = 724
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 4
         object OpenedFile: TLabel
           Left = 8
@@ -2322,10 +2373,10 @@ object CSV: TCSV
         Left = 256
         Height = 592
         Top = 8
-        Width = 760
+        Width = 632
         Caption = 'Graph'
         ClientHeight = 572
-        ClientWidth = 756
+        ClientWidth = 628
         Color = clWhite
         ParentBackground = False
         ParentColor = False
@@ -2356,7 +2407,7 @@ object CSV: TCSV
           Width = 74
           Caption = 'Raw Channels'
           Font.CharSet = ANSI_CHARSET
-          Font.Color = clBlue
+          Font.Color = clNavy
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
@@ -2369,7 +2420,7 @@ object CSV: TCSV
           Width = 109
           Caption = 'Computed Channels'
           Font.CharSet = ANSI_CHARSET
-          Font.Color = clBlue
+          Font.Color = clNavy
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
@@ -2400,7 +2451,7 @@ object CSV: TCSV
           Width = 101
           Caption = 'Selected Channels'
           Font.CharSet = ANSI_CHARSET
-          Font.Color = clBlue
+          Font.Color = clNavy
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           Font.Style = [fsBold]
@@ -2415,6 +2466,7 @@ object CSV: TCSV
           Font.CharSet = ANSI_CHARSET
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
+          Font.Style = [fsBold]
           ItemHeight = 0
           ParentFont = False
           TabOrder = 2
@@ -2442,12 +2494,21 @@ object CSV: TCSV
           Caption = 'Show Power Resets'
           TabOrder = 4
         end
+        object Button6: TButton
+          Left = 321
+          Height = 25
+          Top = 535
+          Width = 103
+          Caption = 'Uncheck All'
+          OnClick = Button6Click
+          TabOrder = 5
+        end
       end
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 660
-      ClientWidth = 1388
+      ClientHeight = 862
+      ClientWidth = 1335
       object ChartsLink: TCheckBox
         Left = 8
         Height = 19
@@ -2469,19 +2530,20 @@ object CSV: TCSV
         TabOrder = 1
       end
       object ChartHeightControl: TTrackBar
-        Left = 432
+        Left = 656
         Height = 25
-        Top = 4
-        Width = 168
+        Top = 0
+        Width = 136
         Frequency = 10
         Max = 500
-        Min = 150
+        Min = 100
+        OnChange = ChartHeightControlChange
         PageSize = 100
         Position = 250
         TabOrder = 2
       end
       object Label19: TLabel
-        Left = 360
+        Left = 592
         Height = 15
         Top = 4
         Width = 66
@@ -2493,31 +2555,22 @@ object CSV: TCSV
         ParentColor = False
         ParentFont = False
       end
-      object Button4: TButton
-        Left = 600
-        Height = 25
-        Top = 0
-        Width = 75
-        Caption = 'Apply'
-        OnClick = Button4Click
-        TabOrder = 3
-      end
       object ChartPanel: TPanel
         Left = 0
         Height = 400
         Top = 26
-        Width = 1381
+        Width = 1311
         Anchors = [akTop, akLeft, akRight]
         AutoSize = True
         BevelOuter = bvNone
         ClientHeight = 400
-        ClientWidth = 1381
-        TabOrder = 4
+        ClientWidth = 1311
+        TabOrder = 3
         object Chart1: TChart
           Left = 0
           Height = 80
           Top = 0
-          Width = 1381
+          Width = 1311
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2600,7 +2653,7 @@ object CSV: TCSV
           Left = 0
           Height = 80
           Top = 80
-          Width = 1381
+          Width = 1311
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2683,7 +2736,7 @@ object CSV: TCSV
           Left = 0
           Height = 80
           Top = 160
-          Width = 1381
+          Width = 1311
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2766,7 +2819,7 @@ object CSV: TCSV
           Left = 0
           Height = 80
           Top = 240
-          Width = 1381
+          Width = 1311
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2849,7 +2902,7 @@ object CSV: TCSV
           Left = 0
           Height = 80
           Top = 320
-          Width = 1381
+          Width = 1311
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -2930,28 +2983,37 @@ object CSV: TCSV
         end
       end
       object Button3: TButton
-        Left = 248
+        Left = 424
         Height = 25
         Top = 0
         Width = 80
         Caption = 'Unzoom All'
         OnClick = Button3Click
-        TabOrder = 5
+        TabOrder = 4
       end
       object ChartPoints: TCheckBox
-        Left = 112
+        Left = 96
         Height = 19
         Top = 0
         Width = 85
         Caption = 'Chart Points'
         OnChange = ChartPointsChange
+        TabOrder = 5
+      end
+      object Button7: TButton
+        Left = 328
+        Height = 25
+        Top = 0
+        Width = 91
+        Caption = 'Fit to window'
+        OnClick = Button7Click
         TabOrder = 6
       end
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 660
-      ClientWidth = 1388
+      ClientHeight = 862
+      ClientWidth = 1335
       Enabled = False
       object GroupBox3: TGroupBox
         Left = 201
@@ -3016,9 +3078,9 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 0
-        Height = 570
-        Top = 84
-        Width = 828
+        Height = 760
+        Top = 96
+        Width = 888
         Anchors = [akTop, akLeft, akBottom]
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
@@ -3031,7 +3093,7 @@ object CSV: TCSV
         TabOrder = 0
       end
       object Report: TButton
-        Left = 633
+        Left = 688
         Height = 32
         Top = 44
         Width = 96
@@ -3040,7 +3102,7 @@ object CSV: TCSV
         TabOrder = 1
       end
       object SaveReport: TButton
-        Left = 733
+        Left = 792
         Height = 33
         Top = 44
         Width = 95
@@ -3068,6 +3130,11 @@ object CSV: TCSV
         Height = 23
         Top = 12
         Width = 108
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 4
       end
       object Label18: TLabel
@@ -3093,6 +3160,11 @@ object CSV: TCSV
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
         TabOrder = 5
         DateSeparator = '-'
         TrailingSeparator = False
@@ -3109,11 +3181,19 @@ object CSV: TCSV
         HideDateTimeParts = []
         MonthNames = 'Long'
       end
+      object ReportProgress: TProgressBar
+        Left = -4
+        Height = 12
+        Top = 80
+        Width = 891
+        Step = 1
+        TabOrder = 6
+      end
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 660
-      ClientWidth = 1388
+      ClientHeight = 862
+      ClientWidth = 1335
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Pitch = fpVariable
@@ -3241,6 +3321,49 @@ object CSV: TCSV
         end
       end
     end
+    object TabSheet2: TTabSheet
+      Caption = 'Help'
+      ClientHeight = 862
+      ClientWidth = 1335
+      object GroupBox8: TGroupBox
+        Left = 8
+        Height = 144
+        Top = 8
+        Width = 881
+        Caption = 'Chart Navigation'
+        ClientHeight = 124
+        ClientWidth = 877
+        TabOrder = 0
+        object Label25: TLabel
+          Left = 8
+          Height = 90
+          Top = 8
+          Width = 130
+          Caption = 'Vertical & horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+          OnClick = Label25Click
+        end
+        object Label26: TLabel
+          Left = 160
+          Height = 90
+          Top = 8
+          Width = 298
+          Caption = '- SHIFT + mousewheel'#13#10'- CTRL + mousewheel'#13#10'- ALT + mousewheel'#13#10'- by left button'#13#10'- by right button'#13#10'- Move cursor on datapoint and click CTRL +  left button'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+          OnClick = Label25Click
+        end
+      end
+    end
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
@@ -3252,7 +3375,9 @@ object CSV: TCSV
     Left = 296
     Top = 632
     object ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool
+      Shift = [ssAlt]
       ZoomFactor = 1.1
+      ZoomRatio = 0.90909
     end
     object ChartToolset1PanDragTool1: TPanDragTool
       Shift = [ssLeft]
@@ -3266,6 +3391,16 @@ object CSV: TCSV
       OnPointClick = ChartToolset1DataPointClickTool1PointClick
     end
     object ChartToolset1DataPointHintTool1: TDataPointHintTool
+      ActiveCursor = crCross
+      OnHint = ChartToolset1DataPointHintTool1Hint
+    end
+    object ChartToolset1ZoomMouseWheelTool2: TZoomMouseWheelTool
+      Shift = [ssCtrl]
+      ZoomRatio = 1.1
+    end
+    object ChartToolset1ZoomMouseWheelTool3: TZoomMouseWheelTool
+      Shift = [ssShift]
+      ZoomFactor = 1.1
     end
   end
   object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
