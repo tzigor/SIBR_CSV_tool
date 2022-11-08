@@ -19,7 +19,7 @@ type TSibrParam = record
 end;
 
 Const LN = #13#10;
-      NumOsCharts: Byte = 5;
+      NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
 
@@ -81,13 +81,17 @@ var
   DataSource: array of Single;
   TimeSource: array of TDateTime;
   ParamList: array of String;
-  SelectedParams: array[0..4] of String[30];
+  SelectedParams: array[0..7] of String[30];
   ParameterCount: Integer;
   ChartHeight: Integer;
   ShowPR: Boolean;
   SibrParams: array of TSibrParam;
   AdditionalParams: array[0..31] of Single;
   SelectedCount: Byte;
+  hrsPlus: Integer;
+  ChartPointIndex: Longint;
+  LabelSticked: Boolean;
+  StartZone, EndZone: TDateTime;
 
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
