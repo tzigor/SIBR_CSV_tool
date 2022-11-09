@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, lazutf8sysutils,
-  StrUtils, LConvEncoding, TAGraph, TACustomSource,
+  ComCtrls, Grids, MaskEdit, DateUtils, lazutf8sysutils, Clipbrd,
+  StrUtils, LConvEncoding, TAGraph, TACustomSource, LazSysUtils,
   TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Types,
   TAChartUtils, TADataTools, TAChartExtentLink, LCLType;
 
@@ -17,9 +17,13 @@ type
 
   TCSV = class(TForm)
     App: TPageControl;
+    Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
     Button5: TButton;
     Button6: TButton;
+    Button7: TButton;
     Chart1LineSeries6: TLineSeries;
     Chart1LineSeries7: TLineSeries;
     Chart1LineSeries8: TLineSeries;
@@ -54,6 +58,9 @@ type
     CSVFileSize: TLabel;
     Duration: TLabel;
     DurationT: TLabel;
+    OpenedFile: TEdit;
+    ExtentDuration: TStaticText;
+    GroupBox9: TGroupBox;
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
@@ -63,8 +70,8 @@ type
     Label29: TLabel;
     Label30: TLabel;
     Label31: TLabel;
+    Label32: TLabel;
     LeftExtent: TStaticText;
-    ExtentDuration: TStaticText;
     RightExtent: TStaticText;
     ZoneDuration: TLabel;
     LocalTime: TEdit;
@@ -112,8 +119,6 @@ type
     Label9: TLabel;
     MainTab: TTabSheet;
     OpenCSVFast: TButton;
-    OpenedFile: TLabel;
-    Panel1: TPanel;
     PowerResets: TCheckBox;
     ProgressBar: TProgressBar;
     ReportProgress: TProgressBar;
@@ -146,8 +151,12 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
+    procedure Button1Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
     procedure ChartHeightControlChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
       APoint: TPoint);
@@ -406,12 +415,41 @@ begin
   end;
 end;
 
+procedure TCSV.Button1Click(Sender: TObject);
+begin
+  ReportStartTime.Caption:= RunStart.Caption;
+  ReportEndTime.Caption:= RunEnd.Caption;
+end;
+
+procedure TCSV.Button3Click(Sender: TObject);
+begin
+  if StartZone = EndZone then ShowMessage('Time zone is not defined')
+  else begin
+    ReportStartTime.Caption:= DateTimeToStr(StartZone);
+    ReportEndTime.Caption:= DateTimeToStr(EndZone);
+  end;
+end;
+
+procedure TCSV.Button4Click(Sender: TObject);
+begin
+  if StartZone = EndZone then ShowMessage('Time zone is not defined')
+  else begin
+    StartTime.Text:= DateTimeToStr(StartZone);
+    EndTime.Text:= DateTimeToStr(EndZone);
+  end;
+end;
+
 procedure TCSV.Button6Click(Sender: TObject);
 var i: Integer;
 begin
   SelectedChannels.Clear;
   for i:=0 to CSV.RawChannels.Items.Count - 1 do CSV.RawChannels.Selected[i]:= false;
   for i:=0 to CSV.ComputedChannels.Items.Count - 1 do CSV.ComputedChannels.Selected[i]:= false;
+end;
+
+procedure TCSV.Button7Click(Sender: TObject);
+begin
+  Clipboard.AsText := OpenedFile.Text;
 end;
 
 procedure TCSV.ChartHeightControlChange(Sender: TObject);
@@ -473,14 +511,35 @@ begin
   end;
 end;
 
+function SWHint(SW: Integer; SWDecr: array of String70; DT: TDateTime): String;
+var i: Integer;
+    wStr: String;
+    zero: Boolean;
+begin
+   wStr:= DateTimeToStr(DT) + LN;
+   zero:= true;
+   for i:=0 to 15 do begin
+     if (SW and expon2(i)) > 0 then begin
+       wStr:= wStr + '1 - ' + SWDecr[i] + LN;
+       zero:= false;
+     end;
+   end;
+   if zero then SWHint:= wStr + '0'
+   else SWHint:= wStr;
+end;
+
 procedure TCSV.ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
   const APoint: TPoint; var AHint: String);
 var y: Double;
     x: TDateTime;
+
 begin
    x:= TLineSeries(ATool.Series).GetXValue(ATool.PointIndex);
    y:= TLineSeries(ATool.Series).GetYValue(ATool.PointIndex);
-   AHint := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
+   if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.HI' then AHint:= SWHint(Round(y), SWHi, x)
+   else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.LO' then AHint:= SWHint(Round(y), SWLo, x)
+        else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'ESTATUS.SIBR.LO' then AHint:= SWHint(Round(y), ESWLo, x)
+             else AHint:= FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
 end;
 
 procedure TCSV.DrawClick(Sender: TObject);
@@ -541,8 +600,8 @@ begin
   Chart1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
   StartZone:= dr.a.X;
   EndZone:= dr.b.X;
-  LeftExtent.Caption:= FormatDateTime('hh:mm:ss', StartZone);
-  RightExtent.Caption:= FormatDateTime('hh:mm:ss', EndZone);
+  LeftExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', StartZone);
+  RightExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', EndZone);
   ExtentDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
 end;
 
@@ -649,11 +708,17 @@ end;
 procedure TCSV.EStatusLoChange(Sender: TObject);
   var i: Byte;
 begin
-  if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= ESWLo[i];
+  CurrentSW:= 'ESTATUS.SIBR.HI';
+  if SWList.Cells[0, 0] <>'' then
+    for i:=0 to 15 do begin
+      SWList.Cells[1, i]:= ESWLo[i];
+      SWList.Cells[0, i]:= SWList.Cells[0, i];
+    end;
 end;
 
 procedure TCSV.FormCreate(Sender: TObject);
 begin
+  CurrentSW:= 'STATUS.SIBR.LO';
   LocalTime.Text:= IntToStr(HoursBetween(nowUTC(), now()));
   try
     hrsPlus:= StrToInt(LocalTime.Text);
@@ -697,7 +762,7 @@ end;
 
 procedure TCSV.Image4Click(Sender: TObject);
 begin
-  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 53) div SelectedChannels.Items.Count;
+  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 60) div SelectedChannels.Items.Count;
   Chart1.Height:= ChartHeightControl.Position;
   Chart2.Height:= ChartHeightControl.Position;
   Chart3.Height:= ChartHeightControl.Position;
@@ -742,21 +807,32 @@ end;
 procedure TCSV.StatusHiChange(Sender: TObject);
 var i: Byte;
 begin
-  if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= SWHi[i];
+  CurrentSW:= 'STATUS.SIBR.HI';
+  if SWList.Cells[0, 0] <>'' then
+    for i:=0 to 15 do begin
+      SWList.Cells[1, i]:= SWHi[i];
+      SWList.Cells[0, i]:= SWList.Cells[0, i];
+    end;
 end;
 
 procedure TCSV.StatusLoChange(Sender: TObject);
 var i: Byte;
 begin
-  if SWList.Cells[0, 0] <>'' then for i:=0 to 15 do SWList.Cells[1, i]:= SWLo[i];
+  CurrentSW:= 'STATUS.SIBR.LO';
+  if SWList.Cells[0, 0] <>'' then
+    for i:=0 to 15 do begin
+      SWList.Cells[1, i]:= SWLo[i];
+      SWList.Cells[0, i]:= SWList.Cells[0, i]
+   end;
 end;
 
 procedure TCSV.SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
   aRect: TRect; aState: TGridDrawState);
 begin
-  if SWList.Cells[0,Arow]='1' then begin
+  if SWList.Cells[0, Arow]='1' then begin
      //SWList.Canvas.Brush.Color:=clRed;
-     SWList.Canvas.Font.Color:=clRed;
+     if (CurrentSW = 'ESTATUS.SIBR.HI') and (Arow = 5) then SWList.Canvas.Font.Color:=clBlue
+     else SWList.Canvas.Font.Color:=clRed;
   end
   else SWList.Canvas.Font.Color:=clGreen;
   SWList.Canvas.FillRect(aRect);
@@ -807,7 +883,7 @@ begin
       SelectedChannels.Clear;
       ReportText.Text:= '';
       CSVFileName:= OpenDialog1.FileName;
-      OpenedFile.Caption:= CSVFileName;
+      OpenedFile.Text:= CSVFileName;
       try
         Generate.Enabled:= False;
         ProgressBar.Position:= 0;

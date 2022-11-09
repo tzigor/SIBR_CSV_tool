@@ -18,12 +18,14 @@ type TSibrParam = record
     k, m: Integer;
 end;
 
+type String70 = String[70];
+
 Const LN = #13#10;
       NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
 
-Const SWLo: array of String[70] = (
+Const SWLo: array of String70 = (
       '+24V_CTRL out of range ±30%',
       '+20V_SONDE out of range ±30%',
       '+20VP out of range ±10%',
@@ -40,7 +42,7 @@ Const SWLo: array of String[70] = (
       'SPI-Flash error',
       'I2C0 bus error',
       'I2C0 bus multiple error');
-      SWHi: array of String[70] = (
+      SWHi: array of String70 = (
       'SPI0 bus error',
       'SPI1 bus error',
       'NAND Flash initialisation error',
@@ -57,7 +59,7 @@ Const SWLo: array of String[70] = (
       'Low signal of any receivers',
       'Reserved',
       'PIPE DETECTOR. Low signal of both receivers');
-      ESWLo: array of String[70] = (
+      ESWLo: array of String70 = (
       'Data exchange error with transmitter - addr 1',
       'Data exchange error with transmitter - addr 2',
       'Data exchange error with transmitter - addr 3',
@@ -92,6 +94,7 @@ var
   ChartPointIndex: Longint;
   LabelSticked: Boolean;
   StartZone, EndZone: TDateTime;
+  CurrentSW: String;
 
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
