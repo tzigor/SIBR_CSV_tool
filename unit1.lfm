@@ -1,15 +1,14 @@
 object CSV: TCSV
-  Left = -1499
-  Height = 676
-  Top = -593
-  Width = 912
-  HorzScrollBar.Page = 904
-  VertScrollBar.Page = 669
+  Left = -1395
+  Height = 663
+  Top = -581
+  Width = 899
   Anchors = []
-  AutoScroll = True
   Caption = 'SIBR Dump Tool v1.2 Portable'
-  ClientHeight = 676
-  ClientWidth = 912
+  ClientHeight = 663
+  ClientWidth = 899
+  Constraints.MinHeight = 663
+  Constraints.MinWidth = 899
   Icon.Data = {
     46EB00000000010001008A8A00000100180030EB000016000000280000008A00
     000014010000010018000000000040E000006400000064000000000000000000
@@ -1900,27 +1899,26 @@ object CSV: TCSV
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 676
+    Height = 663
     Top = 0
-    Width = 912
-    ActivePage = MainTab
+    Width = 899
+    ActivePage = Graphs
     Align = alClient
-    AutoSize = True
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 648
-      ClientWidth = 904
+      ClientHeight = 635
+      ClientWidth = 891
       object GroupBox1: TGroupBox
-        Left = 8
+        Left = 0
         Height = 144
-        Top = 8
+        Top = 0
         Width = 232
         Caption = 'CSV file'
         ClientHeight = 124
@@ -2050,9 +2048,9 @@ object CSV: TCSV
         end
       end
       object OpenCSVFast: TButton
-        Left = 109
+        Left = 101
         Height = 32
-        Top = 160
+        Top = 152
         Width = 131
         Caption = 'Open CSV'
         Font.CharSet = ANSI_CHARSET
@@ -2065,9 +2063,9 @@ object CSV: TCSV
         TabOrder = 1
       end
       object Button2: TButton
-        Left = 784
+        Left = 776
         Height = 32
-        Top = 609
+        Top = 601
         Width = 112
         Caption = 'Close'
         Font.CharSet = ANSI_CHARSET
@@ -2079,9 +2077,9 @@ object CSV: TCSV
         TabOrder = 2
       end
       object GroupBox4: TGroupBox
-        Left = 8
+        Left = 0
         Height = 400
-        Top = 200
+        Top = 192
         Width = 232
         Caption = 'CSV Sizing'
         ClientHeight = 380
@@ -2356,9 +2354,9 @@ object CSV: TCSV
         end
       end
       object GroupBox7: TGroupBox
-        Left = 264
+        Left = 256
         Height = 592
-        Top = 8
+        Top = 0
         Width = 632
         Caption = 'Graph'
         ClientHeight = 572
@@ -2743,10 +2741,10 @@ object CSV: TCSV
           TabOrder = 3
         end
         object Button6: TButton
-          Left = 321
+          Left = 320
           Height = 25
           Top = 535
-          Width = 103
+          Width = 87
           Caption = 'Uncheck All'
           OnClick = Button6Click
           TabOrder = 4
@@ -2778,9 +2776,9 @@ object CSV: TCSV
         end
       end
       object OpenedFile: TEdit
-        Left = 80
+        Left = 72
         Height = 23
-        Top = 609
+        Top = 601
         Width = 696
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
@@ -2791,9 +2789,9 @@ object CSV: TCSV
         Text = 'File:'
       end
       object Button7: TButton
-        Left = 8
+        Left = 0
         Height = 25
-        Top = 608
+        Top = 600
         Width = 64
         Caption = 'Copy'
         OnClick = Button7Click
@@ -2802,12 +2800,12 @@ object CSV: TCSV
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 648
-      ClientWidth = 904
+      ClientHeight = 635
+      ClientWidth = 891
       object ChartsLink: TCheckBox
-        Left = 0
+        Left = 8
         Height = 19
-        Top = 4
+        Top = 7
         Width = 76
         Caption = 'Charts link'
         Checked = True
@@ -2818,7 +2816,7 @@ object CSV: TCSV
       object ChartHeightControl: TTrackBar
         Left = 360
         Height = 25
-        Top = 0
+        Top = 7
         Width = 136
         Frequency = 10
         Max = 500
@@ -2831,7 +2829,7 @@ object CSV: TCSV
       object Label19: TLabel
         Left = 288
         Height = 15
-        Top = 4
+        Top = 11
         Width = 66
         Caption = 'Chart height'
         Font.CharSet = ANSI_CHARSET
@@ -2841,105 +2839,160 @@ object CSV: TCSV
         ParentColor = False
         ParentFont = False
       end
-      object ChartPanel: TPanel
-        Left = -4
-        Height = 600
-        Top = 32
-        Width = 888
-        Anchors = [akTop, akLeft, akRight]
-        AutoSize = True
-        BevelOuter = bvNone
-        ClientHeight = 600
-        ClientWidth = 888
+      object ChartPoints: TCheckBox
+        Left = 96
+        Height = 19
+        Top = 7
+        Width = 85
+        Caption = 'Chart Points'
+        OnChange = ChartPointsChange
         TabOrder = 2
-        object Chart1: TChart
-          Left = 0
-          Height = 75
-          Top = 0
-          Width = 888
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Intervals.NiceSteps = '0.1|0.5|1.0'
-              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
-              Intervals.Tolerance = 1
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.Margins.Left = 0
-              Title.Margins.Top = 0
-              Title.Margins.Right = 0
-              Title.Margins.Bottom = 0
-              Title.Distance = 0
-              Title.Caption = 'Date'
-              Title.LabelBrush.Style = bsClear
-              Title.PositionOnMarks = True
-            end>
-          BackColor = clWhite
-          Foot.Alignment = taLeftJustify
-          Foot.Margins.Left = 80
-          Foot.Margins.Top = 0
-          Foot.Margins.Bottom = 0
-          Foot.Brush.Color = clWhite
-          Foot.Font.CharSet = ANSI_CHARSET
-          Foot.Font.Color = clBlack
-          Foot.Font.Height = -12
-          Foot.Font.Name = 'Segoe UI'
-          Foot.Font.Pitch = fpVariable
-          Foot.Font.Quality = fqDraft
-          Foot.Font.Style = [fsBold]
-          Foot.Margin = 0
-          Foot.Text.Strings = (
-            'May-01 11:00'
-          )
-          Foot.Visible = True
-          Title.Alignment = taRightJustify
-          Title.Margins.Top = 0
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Margin = 0
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          OnExtentChanged = Chart1ExtentChanged
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries1: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
+      end
+      object Image3: TImage
+        Left = 224
+        Height = 25
+        Hint = 'Unzoom all'
+        Top = 8
+        Width = 25
+        OnClick = Image3Click
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B477261706869639803000089504E47
+          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
+          097048597300000EC400000EC401952B0E1B000003234944415478DAAD956B48
+          544114C767E63E345757AF464FB4B224C9A8A80F5988F6307C046A84492C21E6
+          87D46263A9704B59F281B69A82A1D08382125324147B7C2882A88454CA92B00C
+          C52C4D8B6AD75D1074EFDC99E6AA98C95EC9C77C9B3B777E73CEFF7FCE0CB458
+          2C3A9D0E210416300821232323D06AB5262626EAF5FA85B09C4E675353132C2D
+          2D35180C92242D8465B7DB6B6A6ADCB32805B20C7EDB816D18B2A9E44B032420
+          8A00C239B246C7C0CB1654DBC0B5BF8736BBBADBCF976EDB4C0FC52B07A288B7
+          EEBF59363B28A9E46FD773C30E36831052160B218C48BD968063C98AD988572C
+          9B95A5F7951C4EC0215050CE5FAFE658826B0369DC7EB2358CF23CEDE8440F9F
+          A0BE7EC8DC4E4E206579B2BF9F366BD4259DCC163C3DC1E36788E5181D49F2B3
+          715828E539F55745011FBB616139FFE009E2386039834D27148ED360112A1D34
+          88EC7CB6E021D2E40425299EC4EC213CFF77C3C020483B2D36B7C28D1BE8FD6A
+          57D06AAD1CF55256367FA77E722BC7D1D414A53C1F7B88FF98DBF008A59B0440
+          C1DDAB727C34D1D4BEE206672E602CC8044A8C25251679E5F29945D0FB05C6A6
+          88FD83A0D08CCF64299AAC17AFD0E1E3C2D818601131459606B8A9A6C11F20E6
+          88D8F31965A5E1B23CACC91AFC0E0C99E2F62D24C78467D83435BA7B61DC51F1
+          DB1028BA804D19DA711102BE0CC0654BA9CECB3D88E955DB8832CE09AC32EAAE
+          C9B1FBB4F59ABDE31888D5579A51686D87FE12B877D315BE834E89A0C9C20A78
+          FD0EB2F2D91C4A3D3DC6BF60D0D503738BF9A7CF11A16A3344ED2695C53878CD
+          24CE3D8B655AD7882C56C12583889D24721761B89637F05933C7ECA374321204
+          E9DE0872A508AF0B5271EE59ACC42B6F7197ABF85FB6E9FDA82EF978035F1F30
+          30A47E577188B2932A0A7148301D1ED6C8D1E5026D6F616D23D7D68ED89DC394
+          92C6EF899424C5DF8F9EBDA84A36816327458693CA4B38C0CF369BF63206ECAA
+          70385596DE87B22A1104D5810F9FE0A9F302CB7A0A976BC299A9BFE6E0E37443
+          3B19CE3C151D351B1563FACFF9B026715DD098237474C2C055B4CA2A6F0AB1CD
+          93358163B6F67D85AC67D7AFA50EC7B8F68BF90E2DE2FBF8076F10E988D59AF7
+          C50000001B74455874536F667477617265004172747765617665722046726565
+          20372E30B0E96D7E0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object Image4: TImage
+        Left = 192
+        Height = 25
+        Hint = 'Fit to window'
+        Top = 8
+        Width = 25
+        OnClick = Image4Click
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963B002000089504E47
+          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
+          097048597300000EC400000EC401952B0E1B0000023B4944415478DA63ACABAB
+          E3E6E666626262A000FCFBF7EFEBD7AF8C9D9D9DFEFEFE7C7C7C9498F5E9D3A7
+          8D1B37327677774747470B0A0A5262D6FBF7EF972E5D0A358B9F5FE0D2E5FFCF
+          5FB0906A8A8CCC5F6D4D868F1F3F20CC626412080A67B97C9585839D0483BEFF
+          F86FA8FF6FCDB23FFFFE21B9EBDF7F414F3F365DDD7FE9C97F8934E8FFFFFFBD
+          13BE3D7828B07DD32F26460CB3DC5CFF36D7FD616464C4AEF9DB37C66D3B985F
+          BD01B2FF8A89FCF570CBAFF97BEA8C2859663D7DC69A98C67CE112E3E7CF7FA5
+          24BF6F5D5F3043825CB3FEFE633A729435BF84F1CEDD7F22C2DFB66E289C2D45
+          8E59C0D0F97FE3165B7EF1BFE7CF994C4D180F1CFAB6655DE12C5C66F9B3B9BB
+          FC6DC265D6D76F4C29997F6EDDFED9D7C9C1CFC7B86ADDDF829C8236362C6671
+          72094C99CEA0ADF9C7D5198B41C01CC6F8EFDFFFDD7BFF484AB0EAE932002D03
+          E61A0686FCE22F58CCE2E212983CEDC7858B3F18B08595B626477E2E3B17274A
+          9E059A9657F419A71FBF7FFBA7A9F107CDA0EB37595858FEEED8F45B5C8C8568
+          B3FCD85C9CFE34D4A09BD5D4C6BA75FBBF1D9B7E898BB3926016D678AC6B62D9
+          BCF5EFA859D8CC72F9DB5C8F1EF6F5CD40B340612F86118FD8D317C42C0E8EBF
+          3656E865CED1E32C9F3EFD9D3AF1E79E7D6C3F7E20E50486FF7BF7012DE64637
+          8B9D5DA0A296E9C44956066CC0D0E04F68D0CF960ECE6FDFD0AB186BAB7F6D8D
+          7F7EFC40324B4040E0FB0F86EFDFB197109C1CFFD9D9193E7F66FCFB0F5D8A8B
+          938183E3FF870FE0329A9AF51015EB4700F7F50D977100A0750000001B744558
+          74536F66747761726500417274776561766572204672656520372E30B0E96D7E
+          0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object Image5: TImage
+        Left = 256
+        Height = 25
+        Hint = 'Delete labels'
+        Top = 7
+        Width = 25
+        OnClick = Image5Click
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B477261706869637B04000089504E47
+          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
+          097048597300000EC400000EC401952B0E1B000004064944415478DAADD56D4C
+          5B551807F0FFB9ED4526B6E365914DDC32A79911B3E98281390359A6C1319660
+          32053340CD64D3E05BC75C8156CBDBB6500A94926DC20756E6A0319D23B40C14
+          8799890C1243B22046B768044610015DD786377BDB7B3CB7ED041BDA7DD0F3E9
+          E69E9BDF799EE73EE71CA2D3E9A2A2A2388EC37F18A228CECFCF13BD5E9F9595
+          A5542AEFF9351B412F39DF600F2E97CB66B31183C1909B9B1B1313134AF17ABD
+          FDFDFD9D9D9D33333341530A85222D2D8D85E276BBDBDBDBEF61793C1EA69C39
+          5BB2277D322E2E785610D0DB73FFBEBDE5070FE65A2C9670165BCD6AB5B6983F
+          FAB074FAC50CC864FE30B1B888C848C8E5A0147D5FA1C994D6D8D8C2960C69F9
+          C26EBBD0A6D396FFB97B0F381FF4DB24CE3692E1EBFC93DB84C2F7E9C64D18F9
+          1E159A9406E3A776BB7D758B41E7CFB75A2F96979D743CFB1CFC3FD9ED86E638
+          E7987DF9C081ECEEEE2EF97D6D8606EF8D1B612D06B5B69A1954597D67E72E10
+          12787FFB36F25E89AE28B32527270F0D0D1597EC6FBFE49CFE3DB4E583584465
+          55FA3B293B4156B4DDD2120A0BE41B1F52E5E4BC6AB7DB7EBC59DD744EF8E5E7
+          10D6D2D292D96CB6D9AB586A41102B333CF86904FA1A7E663A267E83B348FDD7
+          B6A742D46B6161A1A9E993DE2B3555D5AE6792415863DE0271836E05589AF3E0
+          9A0139E6F231E7669D85C83552FAC3D751A14D3135ACB02222221A1B4DDF5EAB
+          3F6598DFFEB4AF46B7C0BF0E4412A195622D64A721AF84B80B8205885D0EF6F3
+          CF70D1F282C9D4DCD1D12159D9D9D966F3B9C1EF0C276B169E48BC5B6C17F86C
+          705789A7944201F909423753A10574872F4C695761F01ACA3531870B8CE9E9E9
+          81BE4F4A4AD268F38D672603110516057701FC5B84E50511341E420BA5BB0310
+          EBD86FBEC6A98A75F979952C2DB6B103566262A2A136CF6C71C4AFFF77BFCE80
+          7F8970832C5308A7A9F80670B7F57B7B5057BDFECD4327584E3CCF3B1C8E8095
+          9999A9D3956CDA7259AD1597CF0B0A3200FE35427E9508EF61EAD1034A09FAE2
+          328C3509EF144A078C9C6D2560D962413A9D4EB5FA832D5BAF947E4C956B2508
+          37A5DA734384C681FC01ACA1422D8443E8EE91A0A2A3F52C02997F8B0659D1D1
+          D1A3A3A3C5C5AA471FEF933805646AC88D1077C053065E47C83015F6C29683FA
+          2606D56566EEFF070AB6587F514AC7C6C68A4B548F3CD657AA15636B20B34268
+          067D1E5C2FE800BA4418AF3EAC52D5AD8C6875CBD72F747C7CBC54736C43C297
+          DA77C5B839D0ED000FAF806E3B8CB5C1A985B3FCDCC4C484567B5C19DBADABF4
+          3E182F15BBAB130D86846345AB43212D3F373535A5D3694472A9E06DCFC830AC
+          96CD4755868C8C8C55A170969F9B9D9D35991A467E18503CB0EEC891F7525353
+          C3DC55012BCC3DC40EFBC5C545D68A91EC480E3B02F7D0FF783FFE0D53854997
+          F78E02550000001B74455874536F667477617265004172747765617665722046
+          72656520372E30B0E96D7E0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object ScrollBox1: TScrollBox
+        Left = 0
+        Height = 584
+        Top = 48
+        Width = 889
+        HorzScrollBar.Page = 1
+        HorzScrollBar.Visible = False
+        VertScrollBar.Page = 584
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoSize = True
+        BorderStyle = bsNone
+        ClientHeight = 584
+        ClientWidth = 872
+        TabOrder = 4
         object Chart2: TChart
           Left = 0
           Height = 75
           Top = 75
-          Width = 888
+          Width = 872
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3022,7 +3075,7 @@ object CSV: TCSV
           Left = 0
           Height = 75
           Top = 150
-          Width = 888
+          Width = 872
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3105,7 +3158,7 @@ object CSV: TCSV
           Left = 0
           Height = 75
           Top = 225
-          Width = 888
+          Width = 872
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3188,7 +3241,7 @@ object CSV: TCSV
           Left = 0
           Height = 75
           Top = 300
-          Width = 888
+          Width = 872
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3267,177 +3320,11 @@ object CSV: TCSV
             Pointer.VertSize = 2
           end
         end
-        object Chart6: TChart
-          Left = 0
-          Height = 75
-          Top = 525
-          Width = 888
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Intervals.NiceSteps = '0.1|0.5|1.0'
-              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
-              Intervals.Tolerance = 1
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.Margins.Left = 0
-              Title.Margins.Top = 0
-              Title.Margins.Right = 0
-              Title.Margins.Bottom = 0
-              Title.Distance = 0
-              Title.Caption = 'Date'
-              Title.LabelBrush.Style = bsClear
-              Title.PositionOnMarks = True
-            end>
-          BackColor = clWhite
-          Foot.Alignment = taLeftJustify
-          Foot.Margins.Left = 80
-          Foot.Margins.Top = 0
-          Foot.Margins.Bottom = 0
-          Foot.Brush.Color = clWhite
-          Foot.Font.CharSet = ANSI_CHARSET
-          Foot.Font.Color = clBlack
-          Foot.Font.Height = -12
-          Foot.Font.Name = 'Segoe UI'
-          Foot.Font.Pitch = fpVariable
-          Foot.Font.Quality = fqDraft
-          Foot.Font.Style = [fsBold]
-          Foot.Margin = 0
-          Foot.Text.Strings = (
-            'May-01 11:00'
-          )
-          Foot.Visible = True
-          Title.Alignment = taRightJustify
-          Title.Margins.Top = 0
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Margin = 0
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries6: TLineSeries
-            LinePen.Color = 33023
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
-        object Chart7: TChart
-          Left = 0
-          Height = 75
-          Top = 450
-          Width = 888
-          AxisList = <          
-            item
-              Grid.Color = clSilver
-              LabelSize = 50
-              Marks.LabelBrush.Style = bsClear
-              Minors = <>
-              Title.LabelFont.Orientation = 900
-              Title.LabelBrush.Style = bsClear
-            end          
-            item
-              Grid.Color = clSilver
-              Intervals.NiceSteps = '0.1|0.5|1.0'
-              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
-              Intervals.Tolerance = 1
-              Alignment = calBottom
-              Marks.Format = '%2:s'
-              Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
-              Minors = <>
-              Title.Margins.Left = 0
-              Title.Margins.Top = 0
-              Title.Margins.Right = 0
-              Title.Margins.Bottom = 0
-              Title.Distance = 0
-              Title.Caption = 'Date'
-              Title.LabelBrush.Style = bsClear
-              Title.PositionOnMarks = True
-            end>
-          BackColor = clWhite
-          Foot.Alignment = taLeftJustify
-          Foot.Margins.Left = 80
-          Foot.Margins.Top = 0
-          Foot.Margins.Bottom = 0
-          Foot.Brush.Color = clWhite
-          Foot.Font.CharSet = ANSI_CHARSET
-          Foot.Font.Color = clBlack
-          Foot.Font.Height = -12
-          Foot.Font.Name = 'Segoe UI'
-          Foot.Font.Pitch = fpVariable
-          Foot.Font.Quality = fqDraft
-          Foot.Font.Style = [fsBold]
-          Foot.Margin = 0
-          Foot.Text.Strings = (
-            'May-01 11:00'
-          )
-          Foot.Visible = True
-          Title.Alignment = taRightJustify
-          Title.Margins.Top = 0
-          Title.Brush.Color = clBtnFace
-          Title.Font.CharSet = ANSI_CHARSET
-          Title.Font.Color = clBlue
-          Title.Font.Height = -12
-          Title.Font.Name = 'Segoe UI'
-          Title.Font.Pitch = fpVariable
-          Title.Font.Quality = fqDraft
-          Title.Margin = 0
-          Title.Text.Strings = (
-            'TAChart'
-          )
-          Title.Visible = True
-          Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
-          Align = alTop
-          Color = clDefault
-          Visible = False
-          object Chart1LineSeries7: TLineSeries
-            LinePen.Color = clNavy
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
-        end
         object Chart8: TChart
           Left = 0
           Height = 75
-          Top = 375
-          Width = 888
+          Top = 525
+          Width = 872
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3516,150 +3403,264 @@ object CSV: TCSV
             Pointer.VertSize = 2
           end
         end
-      end
-      object ChartPoints: TCheckBox
-        Left = 88
-        Height = 19
-        Top = 4
-        Width = 85
-        Caption = 'Chart Points'
-        OnChange = ChartPointsChange
-        TabOrder = 3
-      end
-      object Image3: TImage
-        Left = 216
-        Height = 25
-        Hint = 'Unzoom all'
-        Top = 4
-        Width = 25
-        OnClick = Image3Click
-        ParentShowHint = False
-        Picture.Data = {
-          1754506F727461626C654E6574776F726B477261706869639803000089504E47
-          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
-          097048597300000EC400000EC401952B0E1B000003234944415478DAAD956B48
-          544114C767E63E345757AF464FB4B224C9A8A80F5988F6307C046A84492C21E6
-          87D46263A9704B59F281B69A82A1D08382125324147B7C2882A88454CA92B00C
-          C52C4D8B6AD75D1074EFDC99E6AA98C95EC9C77C9B3B777E73CEFF7FCE0CB458
-          2C3A9D0E210416300821232323D06AB5262626EAF5FA85B09C4E675353132C2D
-          2D35180C92242D8465B7DB6B6A6ADCB32805B20C7EDB816D18B2A9E44B032420
-          8A00C239B246C7C0CB1654DBC0B5BF8736BBBADBCF976EDB4C0FC52B07A288B7
-          EEBF59363B28A9E46FD773C30E36831052160B218C48BD968063C98AD988572C
-          9B95A5F7951C4EC0215050CE5FAFE658826B0369DC7EB2358CF23CEDE8440F9F
-          A0BE7EC8DC4E4E206579B2BF9F366BD4259DCC163C3DC1E36788E5181D49F2B3
-          715828E539F55745011FBB616139FFE009E2386039834D27148ED360112A1D34
-          88EC7CB6E021D2E40425299EC4EC213CFF77C3C020483B2D36B7C28D1BE8FD6A
-          57D06AAD1CF55256367FA77E722BC7D1D414A53C1F7B88FF98DBF008A59B0440
-          C1DDAB727C34D1D4BEE206672E602CC8044A8C25251679E5F29945D0FB05C6A6
-          88FD83A0D08CCF64299AAC17AFD0E1E3C2D818601131459606B8A9A6C11F20E6
-          88D8F31965A5E1B23CACC91AFC0E0C99E2F62D24C78467D83435BA7B61DC51F1
-          DB1028BA804D19DA711102BE0CC0654BA9CECB3D88E955DB8832CE09AC32EAAE
-          C9B1FBB4F59ABDE31888D5579A51686D87FE12B877D315BE834E89A0C9C20A78
-          FD0EB2F2D91C4A3D3DC6BF60D0D503738BF9A7CF11A16A3344ED2695C53878CD
-          24CE3D8B655AD7882C56C12583889D24721761B89637F05933C7ECA374321204
-          E9DE0872A508AF0B5271EE59ACC42B6F7197ABF85FB6E9FDA82EF978035F1F30
-          30A47E577188B2932A0A7148301D1ED6C8D1E5026D6F616D23D7D68ED89DC394
-          92C6EF899424C5DF8F9EBDA84A36816327458693CA4B38C0CF369BF63206ECAA
-          70385596DE87B22A1104D5810F9FE0A9F302CB7A0A976BC299A9BFE6E0E37443
-          3B19CE3C151D351B1563FACFF9B026715DD098237474C2C055B4CA2A6F0AB1CD
-          93358163B6F67D85AC67D7AFA50EC7B8F68BF90E2DE2FBF8076F10E988D59AF7
-          C50000001B74455874536F667477617265004172747765617665722046726565
-          20372E30B0E96D7E0000000049454E44AE426082
-        }
-        ShowHint = True
-      end
-      object Image4: TImage
-        Left = 184
-        Height = 25
-        Hint = 'Fit to window'
-        Top = 4
-        Width = 25
-        OnClick = Image4Click
-        ParentShowHint = False
-        Picture.Data = {
-          1754506F727461626C654E6574776F726B47726170686963B002000089504E47
-          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
-          097048597300000EC400000EC401952B0E1B0000023B4944415478DA63ACABAB
-          E3E6E666626262A000FCFBF7EFEBD7AF8C9D9D9DFEFEFE7C7C7C9498F5E9D3A7
-          8D1B37327677774747470B0A0A5262D6FBF7EF972E5D0A358B9F5FE0D2E5FFCF
-          5FB0906A8A8CCC5F6D4D868F1F3F20CC626412080A67B97C9585839D0483BEFF
-          F86FA8FF6FCDB23FFFFE21B9EBDF7F414F3F365DDD7FE9C97F8934E8FFFFFFBD
-          13BE3D7828B07DD32F26460CB3DC5CFF36D7FD616464C4AEF9DB37C66D3B985F
-          BD01B2FF8A89FCF570CBAFF97BEA8C2859663D7DC69A98C67CE112E3E7CF7FA5
-          24BF6F5D5F3043825CB3FEFE633A729435BF84F1CEDD7F22C2DFB66E289C2D45
-          8E59C0D0F97FE3165B7EF1BFE7CF994C4D180F1CFAB6655DE12C5C66F9B3B9BB
-          FC6DC265D6D76F4C29997F6EDDFED9D7C9C1CFC7B86ADDDF829C8236362C6671
-          72094C99CEA0ADF9C7D5198B41C01CC6F8EFDFFFDD7BFF484AB0EAE932002D03
-          E61A0686FCE22F58CCE2E212983CEDC7858B3F18B08595B626477E2E3B17274A
-          9E059A9657F419A71FBF7FFBA7A9F107CDA0EB37595858FEEED8F45B5C8C8568
-          B3FCD85C9CFE34D4A09BD5D4C6BA75FBBF1D9B7E898BB3926016D678AC6B62D9
-          BCF5EFA859D8CC72F9DB5C8F1EF6F5CD40B340612F86118FD8D317C42C0E8EBF
-          3656E865CED1E32C9F3EFD9D3AF1E79E7D6C3F7E20E50486FF7BF7012DE64637
-          8B9D5DA0A296E9C44956066CC0D0E04F68D0CF960ECE6FDFD0AB186BAB7F6D8D
-          7F7EFC40324B4040E0FB0F86EFDFB197109C1CFFD9D9193E7F66FCFB0F5D8A8B
-          938183E3FF870FE0329A9AF51015EB4700F7F50D977100A0750000001B744558
-          74536F66747761726500417274776561766572204672656520372E30B0E96D7E
-          0000000049454E44AE426082
-        }
-        ShowHint = True
-      end
-      object Image5: TImage
-        Left = 248
-        Height = 25
-        Hint = 'Delete labels'
-        Top = 4
-        Width = 25
-        OnClick = Image5Click
-        ParentShowHint = False
-        Picture.Data = {
-          1754506F727461626C654E6574776F726B477261706869637B04000089504E47
-          0D0A1A0A0000000D49484452000000190000001908020000004B8B1234000000
-          097048597300000EC400000EC401952B0E1B000004064944415478DAADD56D4C
-          5B551807F0FFB9ED4526B6E365914DDC32A79911B3E98281390359A6C1319660
-          32053340CD64D3E05BC75C8156CBDBB6500A94926DC20756E6A0319D23B40C14
-          8799890C1243B22046B768044610015DD786377BDB7B3CB7ED041BDA7DD0F3E9
-          E69E9BDF799EE73EE71CA2D3E9A2A2A2388EC37F18A228CECFCF13BD5E9F9595
-          A5542AEFF9351B412F39DF600F2E97CB66B31183C1909B9B1B1313134AF17ABD
-          FDFDFD9D9D9D33333341530A85222D2D8D85E276BBDBDBDBEF61793C1EA69C39
-          5BB2277D322E2E785610D0DB73FFBEBDE5070FE65A2C9670165BCD6AB5B6983F
-          FAB074FAC50CC864FE30B1B888C848C8E5A0147D5FA1C994D6D8D8C2960C69F9
-          C26EBBD0A6D396FFB97B0F381FF4DB24CE3692E1EBFC93DB84C2F7E9C64D18F9
-          1E159A9406E3A776BB7D758B41E7CFB75A2F96979D743CFB1CFC3FD9ED86E638
-          E7987DF9C081ECEEEE2EF97D6D8606EF8D1B612D06B5B69A1954597D67E72E10
-          12787FFB36F25E89AE28B32527270F0D0D1597EC6FBFE49CFE3DB4E583584465
-          55FA3B293B4156B4DDD2120A0BE41B1F52E5E4BC6AB7DB7EBC59DD744EF8E5E7
-          10D6D2D292D96CB6D9AB586A41102B333CF86904FA1A7E663A267E83B348FDD7
-          B6A742D46B6161A1A9E993DE2B3555D5AE6792415863DE0271836E05589AF3E0
-          9A0139E6F231E7669D85C83552FAC3D751A14D3135ACB02222221A1B4DDF5EAB
-          3F6598DFFEB4AF46B7C0BF0E4412A195622D64A721AF84B80B8205885D0EF6F3
-          CF70D1F282C9D4DCD1D12159D9D9D966F3B9C1EF0C276B169E48BC5B6C17F86C
-          705789A7944201F909423753A10574872F4C695761F01ACA3531870B8CE9E9E9
-          81BE4F4A4AD268F38D672603110516057701FC5B84E50511341E420BA5BB0310
-          EBD86FBEC6A98A75F979952C2DB6B103566262A2A136CF6C71C4AFFF77BFCE80
-          7F8970832C5308A7A9F80670B7F57B7B5057BDFECD4327584E3CCF3B1C8E8095
-          9999A9D3956CDA7259AD1597CF0B0A3200FE35427E9508EF61EAD1034A09FAE2
-          328C3509EF144A078C9C6D2560D962413A9D4EB5FA832D5BAF947E4C956B2508
-          37A5DA734384C681FC01ACA1422D8443E8EE91A0A2A3F52C02997F8B0659D1D1
-          D1A3A3A3C5C5AA471FEF933805646AC88D1077C053065E47C83015F6C29683FA
-          2606D56566EEFF070AB6587F514AC7C6C68A4B548F3CD657AA15636B20B34268
-          067D1E5C2FE800BA4418AF3EAC52D5AD8C6875CBD72F747C7CBC54736C43C297
-          DA77C5B839D0ED000FAF806E3B8CB5C1A985B3FCDCC4C484567B5C19DBADABF4
-          3E182F15BBAB130D86846345AB43212D3F373535A5D3694472A9E06DCFC830AC
-          96CD4755868C8C8C55A170969F9B9D9D35991A467E18503CB0EEC891F7525353
-          C3DC55012BCC3DC40EFBC5C545D68A91EC480E3B02F7D0FF783FFE0D53854997
-          F78E02550000001B74455874536F667477617265004172747765617665722046
-          72656520372E30B0E96D7E0000000049454E44AE426082
-        }
-        ShowHint = True
+        object Chart7: TChart
+          Left = 0
+          Height = 75
+          Top = 450
+          Width = 872
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart5ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries7: TLineSeries
+            LinePen.Color = clNavy
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart6: TChart
+          Left = 0
+          Height = 75
+          Top = 375
+          Width = 872
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart5ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries6: TLineSeries
+            LinePen.Color = 33023
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
+        object Chart1: TChart
+          Left = 0
+          Height = 75
+          Top = 0
+          Width = 872
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              LabelSize = 50
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelFont.Orientation = 900
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.NiceSteps = '0.1|0.5|1.0'
+              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.Tolerance = 1
+              Alignment = calBottom
+              Marks.Format = '%2:s'
+              Marks.LabelBrush.Style = bsClear
+              Marks.Source = DateTimeIntervalChartSource1
+              Marks.Style = smsLabel
+              Minors = <>
+              Title.Margins.Left = 0
+              Title.Margins.Top = 0
+              Title.Margins.Right = 0
+              Title.Margins.Bottom = 0
+              Title.Distance = 0
+              Title.Caption = 'Date'
+              Title.LabelBrush.Style = bsClear
+              Title.PositionOnMarks = True
+            end>
+          BackColor = clWhite
+          Foot.Alignment = taLeftJustify
+          Foot.Margins.Left = 80
+          Foot.Margins.Top = 0
+          Foot.Margins.Bottom = 0
+          Foot.Brush.Color = clWhite
+          Foot.Font.CharSet = ANSI_CHARSET
+          Foot.Font.Color = clBlack
+          Foot.Font.Height = -12
+          Foot.Font.Name = 'Segoe UI'
+          Foot.Font.Pitch = fpVariable
+          Foot.Font.Quality = fqDraft
+          Foot.Font.Style = [fsBold]
+          Foot.Margin = 0
+          Foot.Text.Strings = (
+            'May-01 11:00'
+          )
+          Foot.Visible = True
+          Title.Alignment = taRightJustify
+          Title.Margins.Top = 0
+          Title.Brush.Color = clBtnFace
+          Title.Font.CharSet = ANSI_CHARSET
+          Title.Font.Color = clBlue
+          Title.Font.Height = -12
+          Title.Font.Name = 'Segoe UI'
+          Title.Font.Pitch = fpVariable
+          Title.Font.Quality = fqDraft
+          Title.Margin = 0
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Title.Visible = True
+          Toolset = ChartToolset1
+          OnExtentChanged = Chart1ExtentChanged
+          Align = alTop
+          Color = clDefault
+          Visible = False
+          object Chart1LineSeries1: TLineSeries
+            LinePen.Color = clFuchsia
+            Marks.Format = '%2:s'
+            Marks.LinkPen.Color = clRed
+            Marks.Style = smsLabel
+            Pointer.Brush.Color = clBlue
+            Pointer.HorizSize = 2
+            Pointer.Pen.Color = clFuchsia
+            Pointer.Style = psCircle
+            Pointer.VertSize = 2
+          end
+        end
       end
       object GroupBox9: TGroupBox
         Left = 504
         Height = 48
-        Top = 0
+        Top = -7
         Width = 280
         ClientHeight = 28
         ClientWidth = 276
-        TabOrder = 4
+        TabOrder = 3
         object Label29: TLabel
           Left = 4
           Height = 15
@@ -3757,8 +3758,8 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 648
-      ClientWidth = 904
+      ClientHeight = 635
+      ClientWidth = 891
       Enabled = False
       object GroupBox3: TGroupBox
         Left = 201
@@ -3864,7 +3865,7 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 0
-        Height = 528
+        Height = 536
         Top = 96
         Width = 888
         Anchors = [akTop, akLeft, akBottom]
@@ -3978,8 +3979,8 @@ object CSV: TCSV
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 648
-      ClientWidth = 904
+      ClientHeight = 635
+      ClientWidth = 891
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Pitch = fpVariable
@@ -4109,16 +4110,16 @@ object CSV: TCSV
     end
     object TabSheet2: TTabSheet
       Caption = 'Help'
-      ClientHeight = 648
-      ClientWidth = 904
+      ClientHeight = 635
+      ClientWidth = 891
       object GroupBox8: TGroupBox
         Left = 8
         Height = 144
         Top = 8
-        Width = 881
+        Width = 873
         Caption = 'Chart Navigation'
         ClientHeight = 124
-        ClientWidth = 877
+        ClientWidth = 869
         TabOrder = 0
         object Label25: TLabel
           Left = 8

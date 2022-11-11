@@ -24,29 +24,28 @@ type
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
-    Chart1LineSeries6: TLineSeries;
-    Chart1LineSeries7: TLineSeries;
-    Chart1LineSeries8: TLineSeries;
-    Chart6: TChart;
-    Chart7: TChart;
-    Chart8: TChart;
-    ChartPoints: TCheckBox;
-    ChartToolset1DataPointClickTool2: TDataPointClickTool;
-    ChartToolset1ZoomMouseWheelTool2: TZoomMouseWheelTool;
-    ChartToolset1ZoomMouseWheelTool3: TZoomMouseWheelTool;
-    Chart1: TChart;
-    Chart1LineSeries1: TLineSeries;
     Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
     Chart1LineSeries4: TLineSeries;
     Chart1LineSeries5: TLineSeries;
+    Chart1LineSeries6: TLineSeries;
+    Chart1LineSeries7: TLineSeries;
+    Chart1LineSeries8: TLineSeries;
+    Chart1LineSeries1: TLineSeries;
     Chart2: TChart;
     Chart3: TChart;
     Chart4: TChart;
     Chart5: TChart;
+    Chart6: TChart;
+    Chart7: TChart;
+    Chart8: TChart;
+    Chart1: TChart;
+    ChartPoints: TCheckBox;
+    ChartToolset1DataPointClickTool2: TDataPointClickTool;
+    ChartToolset1ZoomMouseWheelTool2: TZoomMouseWheelTool;
+    ChartToolset1ZoomMouseWheelTool3: TZoomMouseWheelTool;
     ChartExtentLink1: TChartExtentLink;
     ChartHeightControl: TTrackBar;
-    ChartPanel: TPanel;
     ChartsLink: TCheckBox;
     ChartToolset1: TChartToolset;
     ChartToolset1DataPointClickTool1: TDataPointClickTool;
@@ -73,6 +72,7 @@ type
     Label32: TLabel;
     LeftExtent: TStaticText;
     RightExtent: TStaticText;
+    ScrollBox1: TScrollBox;
     ZoneDuration: TLabel;
     LocalTime: TEdit;
     EndTime: TEdit;
@@ -316,51 +316,6 @@ begin
   end else ShowMessage('Open CSV file first.');
 end;
 
-procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
-var i: Longint;
-    ParamPos, TimePos: Integer;
-    wStr:String;
-    PowerReset: boolean;
-    y: Single;
-    x: TDateTime;
-    ChartColor: TColor;
-begin
-  PowerReset:= false;
-  TimePos:= GetParamPosition('RTCs');
-  ParamPos:= GetParamPosition(SelectedParamName);
-  Chart1LineSeries.Clear;
-  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParamName;
-  Chart1LineSeries.ParentChart.Title.Font.Color:= Chart1LineSeries.SeriesColor;
-  Chart1LineSeries.ParentChart.Height:= ChartHeight;
-  Chart1LineSeries.Pointer.Pen.Color:= Chart1LineSeries.SeriesColor;
-  Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
-
-  for i:=1 to CSVContent.Count-1 do begin
-    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-
-      if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
-      else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
-           else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
-
-        x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-
-        if PowerReset then begin
-          if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
-          else Chart1LineSeries.AddXY(x, y);
-          PowerReset:= false;
-        end
-        else begin
-          Chart1LineSeries.AddXY(x, y);
-        end;
-
-    end
-    else begin
-      if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
-    end;
-
-  end;
-  Chart1LineSeries.ParentChart.Visible:= True;
-end;
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
 begin
@@ -542,6 +497,61 @@ begin
              else AHint:= FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
 end;
 
+procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
+var i: Longint;
+    ParamPos, TimePos: Integer;
+    wStr:String;
+    PowerReset: boolean;
+    y: Single;
+    x: TDateTime;
+    ChartColor: TColor;
+begin
+  PowerReset:= false;
+  TimePos:= GetParamPosition('RTCs');
+  ParamPos:= GetParamPosition(SelectedParamName);
+  Chart1LineSeries.Clear;
+  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParamName;
+  Chart1LineSeries.ParentChart.Title.Font.Color:= Chart1LineSeries.SeriesColor;
+  Chart1LineSeries.ParentChart.Height:= ChartHeight;
+  Chart1LineSeries.Pointer.Pen.Color:= Chart1LineSeries.SeriesColor;
+  Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
+
+  for i:=1 to CSVContent.Count-1 do begin
+    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
+
+      if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
+      else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
+           else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+
+        x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+
+        if PowerReset then begin
+          if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+          else Chart1LineSeries.AddXY(x, y);
+          PowerReset:= false;
+        end
+        else begin
+          Chart1LineSeries.AddXY(x, y);
+        end;
+
+    end
+    else begin
+      if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
+    end;
+
+  end;
+  Chart1LineSeries.ParentChart.Visible:= True;
+end;
+
+procedure SetHorizontalExtent(Chart: TChart);
+var Ext: TDoubleRect;
+begin
+   Ext := Chart.GetFullExtent;
+   Ext.coords[1]:= ChartsCurrentExtent.coords[1];
+   Ext.coords[3]:= ChartsCurrentExtent.coords[3];
+   Chart.LogicalExtent:= Ext;
+end;
+
 procedure TCSV.DrawClick(Sender: TObject);
   var i, counter: Integer;
     wStr: String;
@@ -555,16 +565,18 @@ begin
        hrsPlus:= HoursBetween(nowUTC(), now());
     end;
   end;
+  DrawClicked:= true;
+  ReDraw:= true;
   ShowPR:= PowerResets.Checked;
   ChartHeight:= ChartHeightControl.Position;
-  Chart1.Visible:= False;
-  Chart2.Visible:= False;
-  Chart3.Visible:= False;
-  Chart4.Visible:= False;
-  Chart5.Visible:= False;
-  Chart6.Visible:= False;
-  Chart7.Visible:= False;
-  Chart8.Visible:= False;
+  //Chart1.Visible:= False;
+  //Chart2.Visible:= False;
+  //Chart3.Visible:= False;
+  //Chart4.Visible:= False;
+  //Chart5.Visible:= False;
+  //Chart6.Visible:= False;
+  //Chart7.Visible:= False;
+  //Chart8.Visible:= False;
   Chart1.ZoomFull;
   Chart2.ZoomFull;
   Chart3.ZoomFull;
@@ -589,6 +601,17 @@ begin
      if SelectedParams[6] <> '' then DrawChart(Chart1LineSeries7, SelectedParams[6]);
      if SelectedParams[7] <> '' then DrawChart(Chart1LineSeries8, SelectedParams[7]);
      App.ActivePage:= Graphs;
+     if ChartsLink.Checked and Not NewChart and DrawClicked then begin
+        SetHorizontalExtent(Chart1);
+        SetHorizontalExtent(Chart2);
+        SetHorizontalExtent(Chart3);
+        SetHorizontalExtent(Chart4);
+        SetHorizontalExtent(Chart5);
+        SetHorizontalExtent(Chart6);
+        SetHorizontalExtent(Chart7);
+        SetHorizontalExtent(Chart8);
+     end;
+     NewChart:= false;
   end
   else ShowMessage('No parameters selected.');
 end;
@@ -596,6 +619,8 @@ end;
 procedure TCSV.Chart1ExtentChanged(ASender: TChart);
   var dr: TDoubleRect;
 begin
+  if Not ReDraw and DrawClicked then ChartsCurrentExtent:= Chart1.CurrentExtent;
+  ReDraw:= false;
   dr:= Chart1.CurrentExtent;
   Chart1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
   StartZone:= dr.a.X;
@@ -762,7 +787,7 @@ end;
 
 procedure TCSV.Image4Click(Sender: TObject);
 begin
-  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 60) div SelectedChannels.Items.Count;
+  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 90) div SelectedChannels.Items.Count;
   Chart1.Height:= ChartHeightControl.Position;
   Chart2.Height:= ChartHeightControl.Position;
   Chart3.Height:= ChartHeightControl.Position;
@@ -878,6 +903,7 @@ begin
       Chart6.Visible:= False;
       Chart7.Visible:= False;
       Chart8.Visible:= False;
+      NewChart:= true;
       RawChannels.Clear;
       ComputedChannels.Clear;
       SelectedChannels.Clear;

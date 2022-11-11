@@ -95,6 +95,9 @@ var
   LabelSticked: Boolean;
   StartZone, EndZone: TDateTime;
   CurrentSW: String;
+  ChartsCurrentExtent: TDoubleRect;
+  NewChart: Boolean;
+  Redraw, DrawClicked: Boolean;
 
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
