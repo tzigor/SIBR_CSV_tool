@@ -53,12 +53,14 @@ type
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
+    Label33: TLabel;
     mVolts: TCheckBox;
     ComputedChannels: TListBox;
     CSVFileSize: TLabel;
     Duration: TLabel;
     DurationT: TLabel;
     Label27: TLabel;
+    TabSheet3: TTabSheet;
     ToolTime: TLabel;
     LocalTime: TSpinEdit;
     OpenedFile: TEdit;

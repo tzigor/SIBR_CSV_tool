@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = -1391
+  Left = -1383
   Height = 663
-  Top = -591
+  Top = -519
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.2 Portable'
+  Caption = 'SIBR Dump Tool v1.2.1 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1902,14 +1902,14 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = ReportTab
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -4172,6 +4172,24 @@ object CSV: TCSV
           ParentColor = False
           ParentFont = False
         end
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'Release Notes'
+      ClientHeight = 635
+      ClientWidth = 891
+      object Label33: TLabel
+        Left = 8
+        Height = 45
+        Top = 8
+        Width = 240
+        Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentColor = False
+        ParentFont = False
       end
     end
   end
