@@ -90,7 +90,7 @@ var
   SibrParams: array of TSibrParam;
   AdditionalParams: array[0..31] of Single;
   SelectedCount: Byte;
-  hrsPlus: Integer;
+  hrsPlus, prevHrsPlus: Integer;
   ChartPointIndex: Longint;
   LabelSticked: Boolean;
   StartZone, EndZone: TDateTime;
@@ -98,6 +98,7 @@ var
   ChartsCurrentExtent: TDoubleRect;
   NewChart: Boolean;
   Redraw, DrawClicked: Boolean;
+  AmplsInmVolts: Boolean;
 
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
@@ -113,8 +114,15 @@ procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer
 function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
 function expon2(n: Integer): Integer;
+function DateTimePlusLocal(DateTime: String): String;
 
 implementation
+
+function DateTimePlusLocal(DateTime: String): String;
+begin
+  if DateTime<>'' then DateTimePlusLocal:= DateTimeToStr(IncHour(StrToDateTime(DateTime), hrsPlus - prevHrsPlus))
+  else DateTimePlusLocal:= '';
+end;
 
 function expon2(n: Integer): Integer;
 var i, exp: Integer;
@@ -219,7 +227,8 @@ begin
   else Step:= ((nParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
+  if AmplsInmVolts then Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX)) * 5000 / 4294967295
+  else Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
   if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
   else PhaseShift:= 0;
 end;
@@ -233,7 +242,8 @@ begin
   else Step:= ((nParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX))
+  if AmplsInmVolts then Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX)) * 5000 / 4294967295
+  else Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
 end;
 
 function PhaseShift(nParam, n: Integer): Double;

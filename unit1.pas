@@ -9,7 +9,7 @@ uses
   ComCtrls, Grids, MaskEdit, DateUtils, lazutf8sysutils, Clipbrd,
   StrUtils, LConvEncoding, TAGraph, TACustomSource, LazSysUtils,
   TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Types,
-  TAChartUtils, TADataTools, TAChartExtentLink, LCLType;
+  TAChartUtils, TADataTools, TAChartExtentLink, LCLType, Spin;
 
 type
 
@@ -53,10 +53,14 @@ type
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
+    mVolts: TCheckBox;
     ComputedChannels: TListBox;
     CSVFileSize: TLabel;
     Duration: TLabel;
     DurationT: TLabel;
+    Label27: TLabel;
+    ToolTime: TLabel;
+    LocalTime: TSpinEdit;
     OpenedFile: TEdit;
     ExtentDuration: TStaticText;
     GroupBox9: TGroupBox;
@@ -74,7 +78,6 @@ type
     RightExtent: TStaticText;
     ScrollBox1: TScrollBox;
     ZoneDuration: TLabel;
-    LocalTime: TEdit;
     EndTime: TEdit;
     EStatusLo: TRadioButton;
     EstimateFast: TButton;
@@ -82,7 +85,7 @@ type
     FullRange: TButton;
     Generate: TButton;
     Graphs: TTabSheet;
-    GroupBox1: TGroupBox;
+    CSVFileBox: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -109,7 +112,6 @@ type
     Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
-    Label27: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -187,6 +189,8 @@ type
     procedure Image3Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
     procedure Image5Click(Sender: TObject);
+    procedure LocalTimeChange(Sender: TObject);
+    procedure mVoltsChange(Sender: TObject);
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
@@ -543,6 +547,49 @@ begin
   Chart1LineSeries.ParentChart.Visible:= True;
 end;
 
+procedure ChartsVisible(visible: Boolean);
+begin
+  CSV.Chart1.Visible:= visible;
+  CSV.Chart2.Visible:= visible;
+  CSV.Chart3.Visible:= visible;
+  CSV.Chart4.Visible:= visible;
+  CSV.Chart5.Visible:= visible;
+  CSV.Chart6.Visible:= visible;
+  CSV.Chart7.Visible:= visible;
+  CSV.Chart8.Visible:= visible;
+end;
+
+procedure ResetZoom;
+begin
+  CSV.Chart1.ZoomFull;
+  CSV.Chart2.ZoomFull;
+  CSV.Chart3.ZoomFull;
+  CSV.Chart4.ZoomFull;
+  CSV.Chart5.ZoomFull;
+  CSV.Chart6.ZoomFull;
+  CSV.Chart7.ZoomFull;
+  CSV.Chart8.ZoomFull;
+end;
+
+procedure ResetSeries;
+begin
+  CSV.Chart1LineSeries1.Clear;
+  CSV.Chart1LineSeries2.Clear;
+  CSV.Chart1LineSeries3.Clear;
+  CSV.Chart1LineSeries4.Clear;
+  CSV.Chart1LineSeries5.Clear;
+  CSV.Chart1LineSeries6.Clear;
+  CSV.Chart1LineSeries7.Clear;
+  CSV.Chart1LineSeries8.Clear;
+end;
+
+procedure ResetCharts;
+begin
+  ResetSeries;
+  ResetZoom;
+  ChartsVisible(false);
+end;
+
 procedure SetHorizontalExtent(Chart: TChart);
 var Ext: TDoubleRect;
 begin
@@ -552,39 +599,17 @@ begin
    Chart.LogicalExtent:= Ext;
 end;
 
+// ***************** DRAW ******************************************************
 procedure TCSV.DrawClick(Sender: TObject);
   var i, counter: Integer;
     wStr: String;
 begin
   LabelSticked:= false;
-  try
-    hrsPlus:= StrToInt(LocalTime.Text);
-  except
-    on E: EConvertError do begin
-       LocalTime.Text:= IntToStr(HoursBetween(nowUTC(), now()));
-       hrsPlus:= HoursBetween(nowUTC(), now());
-    end;
-  end;
   DrawClicked:= true;
   ReDraw:= true;
   ShowPR:= PowerResets.Checked;
   ChartHeight:= ChartHeightControl.Position;
-  //Chart1.Visible:= False;
-  //Chart2.Visible:= False;
-  //Chart3.Visible:= False;
-  //Chart4.Visible:= False;
-  //Chart5.Visible:= False;
-  //Chart6.Visible:= False;
-  //Chart7.Visible:= False;
-  //Chart8.Visible:= False;
-  Chart1.ZoomFull;
-  Chart2.ZoomFull;
-  Chart3.ZoomFull;
-  Chart4.ZoomFull;
-  Chart5.ZoomFull;
-  Chart6.ZoomFull;
-  Chart7.ZoomFull;
-  Chart8.ZoomFull;
+  ResetCharts;
   for i:=0 to NumOsCharts - 1 do SelectedParams[i]:= '';
   counter:= 0;
   if SelectedChannels.Items.Count > 0 then begin
@@ -601,6 +626,7 @@ begin
      if SelectedParams[6] <> '' then DrawChart(Chart1LineSeries7, SelectedParams[6]);
      if SelectedParams[7] <> '' then DrawChart(Chart1LineSeries8, SelectedParams[7]);
      App.ActivePage:= Graphs;
+     if NewChart then ChartsCurrentExtent:= Chart1.GetFullExtent;
      if ChartsLink.Checked and Not NewChart and DrawClicked then begin
         SetHorizontalExtent(Chart1);
         SetHorizontalExtent(Chart2);
@@ -743,16 +769,12 @@ end;
 
 procedure TCSV.FormCreate(Sender: TObject);
 begin
+  AmplsInmVolts:= false;
   CurrentSW:= 'STATUS.SIBR.LO';
-  LocalTime.Text:= IntToStr(HoursBetween(nowUTC(), now()));
-  try
-    hrsPlus:= StrToInt(LocalTime.Text);
-  except
-    on E: EConvertError do begin
-       LocalTime.Text:= IntToStr(HoursBetween(nowUTC(), now()));
-       hrsPlus:= HoursBetween(nowUTC(), now());
-    end;
-  end;
+  LocalTime.Value:= HoursBetween(nowUTC(), now());
+  hrsPlus:= LocalTime.Value;
+  prevHrsPlus:= hrsPlus;
+  ToolTime.Caption:= 'Tool time + ' + IntToStr(hrsPlus) + ' hours';
 end;
 
 procedure TCSV.Image1Click(Sender: TObject);
@@ -775,14 +797,7 @@ end;
 
 procedure TCSV.Image3Click(Sender: TObject);
 begin
-  Chart1.ZoomFull;
-  Chart2.ZoomFull;
-  Chart3.ZoomFull;
-  Chart4.ZoomFull;
-  Chart5.ZoomFull;
-  Chart6.ZoomFull;
-  Chart7.ZoomFull;
-  Chart8.ZoomFull;
+  ResetZoom
 end;
 
 procedure TCSV.Image4Click(Sender: TObject);
@@ -810,6 +825,25 @@ begin
    DeleteLabels(Chart1LineSeries8);
 end;
 
+procedure TCSV.LocalTimeChange(Sender: TObject);
+begin
+  NewChart:= true;
+  hrsPlus:= LocalTime.Value;
+  ToolTime.Caption:= 'Tool time + ' + IntToStr(hrsPlus) + ' hours';
+  RunStart.Caption:= DateTimePlusLocal(RunStart.Caption);
+  RunEnd.Caption:= DateTimePlusLocal(RunEnd.Caption);
+  StartTime.Text:= DateTimePlusLocal(StartTime.Text);
+  EndTime.Text:= DateTimePlusLocal(EndTime.Text);
+  ReportStartTime.Text:= DateTimePlusLocal(ReportStartTime.Text);
+  ReportEndTime.Text:= DateTimePlusLocal(ReportEndTime.Text);
+  prevHrsPlus:= hrsPlus;
+end;
+
+procedure TCSV.mVoltsChange(Sender: TObject);
+begin
+  AmplsInmVolts:= mVolts.Checked;
+end;
+
 procedure TCSV.RawChannelsDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 begin
@@ -819,10 +853,10 @@ begin
           else if Items[Index] in VoltChannels then Canvas.Font.Color:= clBlue
                else Canvas.Font.Color:= clSilver;
 
-     if (odSelected in State) then begin
-       Canvas.Brush.Color:=clBlue;
-       Canvas.Font.Color:=clWhite;
-     end;
+      if (odSelected in State) then begin
+        Canvas.Brush.Color:=clBlue;
+        Canvas.Font.Color:=clWhite;
+      end;
 
       Canvas.FillRect(ARect);
       Canvas.TextOut(ARect.Left, ARect.Top, Items[Index]);
@@ -887,22 +921,7 @@ var ParamPos, LineLength, Counter: Integer;
 begin
   if OpenDialog1.Execute then
    begin
-      Chart1LineSeries1.Clear;
-      Chart1LineSeries2.Clear;
-      Chart1LineSeries3.Clear;
-      Chart1LineSeries4.Clear;
-      Chart1LineSeries5.Clear;
-      Chart1LineSeries6.Clear;
-      Chart1LineSeries7.Clear;
-      Chart1LineSeries8.Clear;
-      Chart1.Visible:= False;
-      Chart2.Visible:= False;
-      Chart3.Visible:= False;
-      Chart4.Visible:= False;
-      Chart5.Visible:= False;
-      Chart6.Visible:= False;
-      Chart7.Visible:= False;
-      Chart8.Visible:= False;
+      ResetCharts;
       NewChart:= true;
       RawChannels.Clear;
       ComputedChannels.Clear;
@@ -950,6 +969,7 @@ begin
         for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
 
         ParamPos:= GetParamPosition('RTCs');
+        hrsPlus:= LocalTime.Value;
 
         for i:=1 to CSVContent.Count-1 do begin
             FSize:= FSize + Length(CSVContent[i]);
@@ -957,7 +977,7 @@ begin
                if YearOf(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i])))) <> 1970 then begin
                   StartRunDT:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i]))), hrsPlus);
                   RunStart.Caption:= DateTimeToStr(StartRunDT);
-                  StartTime.Text:= DateTimeToStr(StartRunDT);
+                  StartTime.Text:= RunStart.Caption;
                   StartRun:= true;
                end
             end
@@ -1053,6 +1073,7 @@ begin
     ParamPos:= GetParamPosition(SibrParams[j].name);
     Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[1]));
     MinValue:= Value; MaxValue:= Value;
+    meanCount:= 0;
     for i:=1 to CSVContent.Count-1 do begin
        CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
        if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
