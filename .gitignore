@@ -2,3 +2,9 @@
 /lib
 SIBR_CSV_tool.exe
 SIBR_CSV_tool.dbg
+Rename_Tool.exe
+Rename_Tool.ini
+/Report Controller/Report_Controller.exe
+/Report Controller/Report_Controller.dbg
+/Report Controller/backup
+/Report Controller/lib

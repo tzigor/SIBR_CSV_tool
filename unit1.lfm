@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = -1383
+  Left = -1355
   Height = 663
-  Top = -519
+  Top = -502
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.2.1 Portable'
@@ -2750,7 +2750,7 @@ object CSV: TCSV
         object PowerResets: TCheckBox
           Left = 480
           Height = 19
-          Top = 55
+          Top = 64
           Width = 121
           Caption = 'Show Power Resets'
           TabOrder = 3
@@ -2796,7 +2796,9 @@ object CSV: TCSV
           Top = 88
           Width = 134
           Caption = 'Amplitudes in mVolts'
+          Checked = True
           OnChange = mVoltsChange
+          State = cbChecked
           TabOrder = 6
         end
       end
@@ -3412,7 +3414,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
+          OnExtentChanged = Chart8ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3495,7 +3497,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
+          OnExtentChanged = Chart7ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3578,7 +3580,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
+          OnExtentChanged = Chart6ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False

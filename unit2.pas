@@ -10,15 +10,25 @@ uses
   TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
   DateTimePicker, Types, TAChartUtils;
 
+type String70 = String[70];
+type ShortString = String[24];
+
 type TSibrParam = record
-    name: String;
+    name: ShortString;
     min: Single;
     max: Single;
     stdDev: Single;
-    k, m: Integer;
+    k, m: Byte;
 end;
 
-type String70 = String[70];
+type TSibrReportParam = record
+    name: ShortString;
+    min: Double;
+    max: Double;
+    mean: Double;
+    stdDev: Single;
+    k, m: Byte;
+end;
 
 Const LN = #13#10;
       NumOsCharts: Byte = 8;
@@ -83,12 +93,12 @@ var
   DataSource: array of Single;
   TimeSource: array of TDateTime;
   ParamList: array of String;
-  SelectedParams: array[0..7] of String[30];
+  SelectedParams: array[0..7] of ShortString;
   ParameterCount: Integer;
   ChartHeight: Integer;
   ShowPR: Boolean;
   SibrParams: array of TSibrParam;
-  AdditionalParams: array[0..31] of Single;
+  AdditionalParams: array[0..31] of ShortString;
   SelectedCount: Byte;
   hrsPlus, prevHrsPlus: Integer;
   ChartPointIndex: Longint;
@@ -99,6 +109,7 @@ var
   NewChart: Boolean;
   Redraw, DrawClicked: Boolean;
   AmplsInmVolts: Boolean;
+  ReportParams: array[0..62] of TSibrReportParam;
 
 procedure FillParams;
 function AmplitudeName(n: Integer):String;
@@ -344,7 +355,7 @@ begin
   SibrParams[11].max:= 1;
   SibrParams[11].stdDev:= 0.02;
   SibrParams[11].k:= 7;
-  SibrParams[11].m:= 6;
+  SibrParams[11].m:= 3;
 
   SibrParams[12].name:= 'ADC_VOFST';
   SibrParams[12].min:= -1;
@@ -358,14 +369,14 @@ begin
   SibrParams[13].max:= 4;
   SibrParams[13].stdDev:= 0.02;
   SibrParams[13].k:= 7;
-  SibrParams[13].m:= 6;
+  SibrParams[13].m:= 3;
 
   SibrParams[14].name:= 'I24';
   SibrParams[14].min:= 0;
   SibrParams[14].max:= 1;
   SibrParams[14].stdDev:= 0.02;
   SibrParams[14].k:= 7;
-  SibrParams[14].m:= 6;
+  SibrParams[14].m:= 3;
 
   SibrParams[15].name:= 'V_24V_CTRL';
   SibrParams[15].min:= 17;
@@ -463,7 +474,7 @@ begin
   SibrParams[28].max:= 0.5;
   SibrParams[28].stdDev:= 0.02;
   SibrParams[28].k:= 7;
-  SibrParams[28].m:= 6;
+  SibrParams[28].m:= 3;
 
   SibrParams[29].name:= 'I_1.8V';
   SibrParams[29].min:= 0.02;

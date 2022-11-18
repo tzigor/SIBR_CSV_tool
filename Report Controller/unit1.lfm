@@ -1,0 +1,369 @@
+object MainForm: TMainForm
+  Left = -1494
+  Height = 681
+  Top = -589
+  Width = 1319
+  HorzScrollBar.Page = 1312
+  VertScrollBar.Page = 677
+  AutoScroll = True
+  Caption = 'Report Controller v1.0'
+  ClientHeight = 681
+  ClientWidth = 1319
+  Color = clWhite
+  OnCreate = FormCreate
+  OnResize = FormResize
+  LCLVersion = '2.2.4.0'
+  object PageControl1: TPageControl
+    Left = 0
+    Height = 681
+    Top = 0
+    Width = 1319
+    ActivePage = Main
+    Align = alClient
+    TabIndex = 0
+    TabOrder = 0
+    object Main: TTabSheet
+      Caption = 'Main'
+      ClientHeight = 653
+      ClientWidth = 1311
+      object AddReport: TButton
+        Left = 8
+        Height = 32
+        Top = 8
+        Width = 104
+        Caption = 'Add Report'
+        OnClick = AddReportClick
+        TabOrder = 0
+      end
+      object LoadFolder: TButton
+        Left = 120
+        Height = 32
+        Top = 8
+        Width = 168
+        Caption = 'Load Reports from Folder'
+        OnClick = LoadFolderClick
+        TabOrder = 1
+      end
+      object ReportGrid: TStringGrid
+        Left = 8
+        Height = 544
+        Top = 64
+        Width = 896
+        DefaultColWidth = 70
+        MouseWheelOption = mwGrid
+        Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goSmoothScroll]
+        RowCount = 64
+        TabOrder = 2
+        OnDrawCell = ReportGridDrawCell
+        OnHeaderClick = ReportGridHeaderClick
+      end
+      object AvarageGrid: TStringGrid
+        Left = 912
+        Height = 544
+        Top = 64
+        Width = 392
+        DefaultColWidth = 70
+        MouseWheelOption = mwGrid
+        RowCount = 64
+        TabOrder = 3
+      end
+      object CloseBtn: TButton
+        Left = 1197
+        Height = 33
+        Top = 616
+        Width = 107
+        Caption = 'Close'
+        OnClick = CloseBtnClick
+        TabOrder = 4
+      end
+      object Label1: TLabel
+        Left = 16
+        Height = 15
+        Top = 45
+        Width = 102
+        Caption = 'Reports parameters'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clNavy
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentColor = False
+        ParentFont = False
+      end
+      object Label2: TLabel
+        Left = 952
+        Height = 15
+        Top = 45
+        Width = 105
+        Caption = 'Avarage parameters'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clNavy
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentColor = False
+        ParentFont = False
+      end
+      object SelectedParam: TLabel
+        Left = 392
+        Height = 15
+        Top = 8
+        Width = 12
+        Caption = '    '
+        ParentColor = False
+      end
+      object FileList: TComboBox
+        Left = 632
+        Height = 23
+        Top = 8
+        Width = 376
+        ItemHeight = 15
+        TabOrder = 5
+        Text = 'FileList'
+      end
+      object Button1: TButton
+        Left = 1184
+        Height = 32
+        Top = 8
+        Width = 91
+        Caption = 'Clear'
+        OnClick = Button1Click
+        TabOrder = 6
+      end
+      object Label3: TLabel
+        Left = 304
+        Height = 15
+        Top = 8
+        Width = 84
+        Caption = 'Selected Param:'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clNavy
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object Graph: TTabSheet
+      Caption = 'Graph'
+      ClientHeight = 653
+      ClientWidth = 1311
+      object Chart1: TChart
+        Left = 0
+        Height = 136
+        Top = 0
+        Width = 1311
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.Count = 1
+            Intervals.MaxLength = 10
+            Intervals.MinLength = 1
+            Intervals.NiceSteps = '0'
+            Intervals.Options = [aipUseNiceSteps]
+            Intervals.Tolerance = 1
+            Visible = False
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Alignment = taRightJustify
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        Align = alTop
+        Color = clWhite
+        object Chart1LineSeries1: TLineSeries
+          LinePen.Color = clBlue
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clBlue
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+          Pointer.Visible = True
+          ShowPoints = True
+        end
+        object Chart1LineSeries5: TLineSeries
+          LinePen.Color = clTeal
+          LinePen.Style = psDash
+        end
+      end
+      object Chart2: TChart
+        Left = 0
+        Height = 136
+        Top = 136
+        Width = 1311
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.Count = 1
+            Intervals.MaxLength = 10
+            Intervals.MinLength = 1
+            Intervals.NiceSteps = '0'
+            Intervals.Options = [aipUseNiceSteps]
+            Intervals.Tolerance = 1
+            Visible = False
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Alignment = taRightJustify
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        Align = alTop
+        Color = clWhite
+        object Chart1LineSeries2: TLineSeries
+          LinePen.Color = clRed
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clBlue
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+          Pointer.Visible = True
+          ShowPoints = True
+        end
+        object Chart2LineSeries1: TLineSeries
+          LinePen.Color = clTeal
+          LinePen.Style = psDash
+        end
+      end
+      object Chart3: TChart
+        Left = 0
+        Height = 136
+        Top = 272
+        Width = 1311
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.Count = 1
+            Intervals.MaxLength = 10
+            Intervals.MinLength = 1
+            Intervals.NiceSteps = '0'
+            Intervals.Options = [aipUseNiceSteps]
+            Intervals.Tolerance = 1
+            Visible = False
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Alignment = taRightJustify
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        Align = alTop
+        Color = clWhite
+        object Chart1LineSeries3: TLineSeries
+          LinePen.Color = 35840
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clBlue
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+          Pointer.Visible = True
+          ShowPoints = True
+        end
+        object Chart3LineSeries1: TLineSeries
+          LinePen.Color = clTeal
+          LinePen.Style = psDash
+        end
+      end
+      object Chart4: TChart
+        Left = 0
+        Height = 136
+        Top = 408
+        Width = 1311
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.Count = 1
+            Intervals.MaxLength = 10
+            Intervals.MinLength = 1
+            Intervals.NiceSteps = '0'
+            Intervals.Options = [aipUseNiceSteps]
+            Intervals.Tolerance = 1
+            Visible = False
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Alignment = taRightJustify
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        Align = alTop
+        Color = clWhite
+        object Chart1LineSeries4: TLineSeries
+          LinePen.Color = 12976326
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clBlue
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+          Pointer.Visible = True
+          ShowPoints = True
+        end
+        object Chart4LineSeries1: TLineSeries
+          LinePen.Color = clTeal
+          LinePen.Style = psDash
+        end
+      end
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.rpt'
+    Filter = '*.rpt|*.rpt'
+    Left = 1040
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    Left = 1072
+  end
+  object ChartToolset1: TChartToolset
+    Left = 1104
+    object ChartToolset1DataPointHintTool1: TDataPointHintTool
+      OnHint = ChartToolset1DataPointHintTool1Hint
+    end
+  end
+end
