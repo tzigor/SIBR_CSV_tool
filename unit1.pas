@@ -53,6 +53,7 @@ type
     ChartToolset1PanDragTool1: TPanDragTool;
     ChartToolset1ZoomDragTool1: TZoomDragTool;
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
+    RPTOnly: TCheckBox;
     Label33: TLabel;
     mVolts: TCheckBox;
     ComputedChannels: TListBox;
@@ -852,7 +853,7 @@ end;
 
 procedure TCSV.LocalTimeChange(Sender: TObject);
 begin
-  NewChart:= true;
+NewChart:= true;
   hrsPlus:= LocalTime.Value;
   ToolTime.Caption:= 'Tool time + ' + IntToStr(hrsPlus) + ' hours';
   RunStart.Caption:= DateTimePlusLocal(RunStart.Caption);
@@ -932,13 +933,15 @@ begin
   SaveDialog1.Filename:= 'SIB-R_#' + SerialNumber.Text + '_' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + '_Air_Test_Report.prn';
   if SaveDialog1.Execute then begin
     AssignFile(ReportFile, SaveDialog1.Filename);
-    try
-      ReWrite(ReportFile);
-      wStr:= ReportText.Text;
-      Writeln(ReportFile, wStr);
-      CloseFile(ReportFile);
-    except
-      on E: EInOutError do ShowMessage('File write error: ' + E.ClassName + '/' + E.Message)
+    if not RPTOnly.Checked then begin
+      try
+        ReWrite(ReportFile);
+        wStr:= ReportText.Text;
+        Writeln(ReportFile, wStr);
+        CloseFile(ReportFile);
+      except
+        on E: EInOutError do ShowMessage('File write error: ' + E.ClassName + '/' + E.Message)
+      end;
     end;
     FileName:= StringReplace(SaveDialog1.Filename, '.prn', '', [rfReplaceAll, rfIgnoreCase]) + '.rpt';
     AssignFile(DatReportFile, FileName);

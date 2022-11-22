@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = -1494
+  Left = -1503
   Height = 681
-  Top = -589
+  Top = -596
   Width = 1319
   HorzScrollBar.Page = 1312
   VertScrollBar.Page = 677
@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Color = clWhite
   OnCreate = FormCreate
   OnResize = FormResize
+  Position = poDefaultPosOnly
   LCLVersion = '2.2.4.0'
   object PageControl1: TPageControl
     Left = 0
@@ -80,8 +81,8 @@ object MainForm: TMainForm
         Left = 16
         Height = 15
         Top = 45
-        Width = 102
-        Caption = 'Reports parameters'
+        Width = 97
+        Caption = 'Report parameters'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
         Font.Pitch = fpVariable
@@ -90,7 +91,7 @@ object MainForm: TMainForm
         ParentFont = False
       end
       object Label2: TLabel
-        Left = 952
+        Left = 920
         Height = 15
         Top = 45
         Width = 105
