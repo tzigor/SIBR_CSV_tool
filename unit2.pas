@@ -126,6 +126,7 @@ function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
 function expon2(n: Integer): Integer;
 function DateTimePlusLocal(DateTime: String): String;
+function GetReportAmpl(Param: String): Double;
 
 implementation
 
@@ -268,6 +269,15 @@ begin
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
   if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
   else PhaseShift:= 0;
+end;
+
+function GetReportAmpl(Param: String): Double;
+var i, NumReportParams: integer;
+begin
+  NumReportParams:= Length(ReportParams);
+  for i:=0 to NumReportParams - 1 do begin
+     if ReportParams[i].name = Param then GetReportAmpl:= ReportParams[i].mean;
+  end;
 end;
 
 procedure FillParams;

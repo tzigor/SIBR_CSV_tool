@@ -156,7 +156,14 @@ begin
 end;
 
 procedure TMainForm.Button1Click(Sender: TObject);
+var i: integer;
 begin
+  for i:=0 to NumOfParameters-1 do begin
+    AvarageParams[i].mean:= 0;
+    AvarageParams[i].min:= 0;
+    AvarageParams[i].max:= 0;
+    AvarageParams[i].stdDev:= 0;
+  end;
   ReportGrid.Clean;
   ReportGrid.ColCount:= 5;
   AvarageGrid.Clean;

@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = -1453
+  Left = -1496
   Height = 663
-  Top = -594
+  Top = -587
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.2.1 Portable'
@@ -2524,6 +2524,7 @@ object CSV: TCSV
           Top = 352
           Width = 140
           AntialiasingMode = amOff
+          OnClick = Image2Click
           OnMouseDown = Image2MouseDown
           OnMouseUp = Image2MouseUp
           Picture.Data = {
@@ -3893,9 +3894,9 @@ object CSV: TCSV
         end
       end
       object ReportText: TMemo
-        Left = 0
-        Height = 536
-        Top = 96
+        Left = 1
+        Height = 504
+        Top = 128
         Width = 888
         Anchors = [akTop, akLeft, akBottom]
         Font.CharSet = ANSI_CHARSET
@@ -3911,16 +3912,16 @@ object CSV: TCSV
       object Report: TButton
         Left = 688
         Height = 32
-        Top = 44
+        Top = 73
         Width = 96
         Caption = 'Report'
         OnClick = ReportClick
         TabOrder = 1
       end
       object SaveReport: TButton
-        Left = 792
+        Left = 793
         Height = 33
-        Top = 44
+        Top = 72
         Width = 95
         Caption = 'Save'
         OnClick = SaveReportClick
@@ -3998,9 +3999,9 @@ object CSV: TCSV
         MonthNames = 'Long'
       end
       object ReportProgress: TProgressBar
-        Left = -4
+        Left = -6
         Height = 12
-        Top = 80
+        Top = 112
         Width = 891
         Step = 1
         TabOrder = 6
@@ -4012,6 +4013,55 @@ object CSV: TCSV
         Width = 69
         Caption = '.RPT only'
         TabOrder = 7
+      end
+      object TestType: TComboBox
+        Left = 624
+        Height = 23
+        Top = 8
+        Width = 148
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ItemHeight = 15
+        ParentFont = False
+        TabOrder = 8
+        Text = 'TestType'
+      end
+      object Label34: TLabel
+        Left = 5
+        Height = 15
+        Top = 88
+        Width = 54
+        Caption = 'Comment'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clNavy
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentColor = False
+        ParentFont = False
+      end
+      object Comment: TEdit
+        Left = 84
+        Height = 23
+        Top = 85
+        Width = 532
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        TabOrder = 9
+      end
+      object ShowTool: TButton
+        Left = 793
+        Height = 25
+        Top = 40
+        Width = 95
+        Caption = 'Show tool'
+        Enabled = False
+        OnClick = ShowToolClick
+        TabOrder = 10
       end
     end
     object TabSheet1: TTabSheet
