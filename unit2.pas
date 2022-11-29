@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
   TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Types, TAChartUtils;
+  DateTimePicker, Types, TAChartUtils, uComplex, Math;
 
 type String70 = String[70];
 type ShortString = String[24];
@@ -30,7 +30,7 @@ type TSibrReportParam = record
     k, m: Byte;
 end;
 
-Const LN = #13#10;
+Const Line = #13#10;
       NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
@@ -127,6 +127,7 @@ function PhaseShift(nParam, n: Integer): Double;
 function expon2(n: Integer): Integer;
 function DateTimePlusLocal(DateTime: String): String;
 function GetReportAmpl(Param: String): Double;
+function ComplexAmplitude(nParam, n: Integer): complex;
 
 implementation
 
@@ -243,6 +244,18 @@ begin
   else Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
   if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
   else PhaseShift:= 0;
+end;
+
+function ComplexAmplitude(nParam, n: Integer): complex;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Real;
+begin
+  StartParamPos:= GetParamPosition('VR1T1F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  ComplexAmplitude:= cinit(RawR, RawX);
 end;
 
 function Amplitude(nParam, n: Integer): Double;

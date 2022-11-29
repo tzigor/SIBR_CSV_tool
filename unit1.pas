@@ -6,10 +6,11 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, lazutf8sysutils, Clipbrd,
-  StrUtils, LConvEncoding, TAGraph, TACustomSource, LazSysUtils,
-  TASeries, TATools, TAIntervalSources, DateTimePicker, Unit2, Unit4, Types,
-  TAChartUtils, TADataTools, TAChartExtentLink, LCLType, Spin;
+  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils,
+  LConvEncoding, TAGraph, TACustomSource, LazSysUtils, TASeries, TATools,
+  TAIntervalSources, DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils,
+  TADataTools, TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
+  IniPropStorage, uComplex, Math;
 
 type
 
@@ -24,6 +25,9 @@ type
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
+    AutoFit: TCheckBox;
+    Button8: TButton;
+    IniPropStorage1: TIniPropStorage;
     ShowTool: TButton;
     Chart1LineSeries2: TLineSeries;
     Chart1LineSeries3: TLineSeries;
@@ -74,7 +78,7 @@ type
     Image1: TImage;
     Image2: TImage;
     Image3: TImage;
-    Image4: TImage;
+    FitToWin: TImage;
     Image5: TImage;
     Label28: TLabel;
     Label29: TLabel;
@@ -166,6 +170,9 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure Label33Click(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
     procedure Chart6ExtentChanged(ASender: TChart);
     procedure Chart7ExtentChanged(ASender: TChart);
@@ -199,7 +206,7 @@ type
     procedure Image2MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image3Click(Sender: TObject);
-    procedure Image4Click(Sender: TObject);
+    procedure FitToWinClick(Sender: TObject);
     procedure Image5Click(Sender: TObject);
     procedure LocalTimeChange(Sender: TObject);
     procedure mVoltsChange(Sender: TObject);
@@ -425,6 +432,63 @@ begin
   Clipboard.AsText := OpenedFile.Text;
 end;
 
+procedure TCSV.Button8Click(Sender: TObject);
+var x, y: complex;
+    r: double;
+    probe, A16L, A22L, A34L: real;
+
+begin
+   x:= 1.7552 + 0.9589*i;
+   y:= cmod(x);
+   Y:= carg(x);
+   r:= angle(x.re, x.im);
+   //ShowMessage(cstr(y, 0, 3));
+   //ShowMessage(FloatToStr(power(2, 0.5)));
+   //ShowMessage(FloatToStr(Exp(Ln(2)*0.5)));  // 2^0.5
+   //ShowMessage(FloatToStr(r));
+
+   //ShowMessage(cstr(ComplexAmplitude(3, 1),12, 3));
+   // F1 - 400 KHz
+   VT1R1:= ComplexAmplitude(0, 1);
+   VT1R2:= ComplexAmplitude(1, 1);
+   VT2R1:= ComplexAmplitude(4, 1);
+   VT2R2:= ComplexAmplitude(5, 1);
+   VT3R1:= ComplexAmplitude(8, 1);
+   VT3R2:= ComplexAmplitude(9, 1);
+
+   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs');
+   A16L:= probe2sig(probe, 1, 1, 'abs');
+   ShowMessage(FloatToStr(probe));
+
+   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs');
+   A22L:= probe2sig(probe, 1, 2, 'abs');
+   ShowMessage(FloatToStr(probe));
+
+   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs');
+   A34L:= probe2sig(probe, 1, 3, 'abs');
+   ShowMessage(FloatToStr(probe));
+
+   ShowMessage(FloatToStr(A16L) + ' ' + FloatToStr(A22L) + ' ' + FloatToStr(A34L));
+
+   // F2 - 2 MHz
+   VT1R1:= ComplexAmplitude(2, 1);
+   VT1R2:= ComplexAmplitude(3, 1);
+   VT2R1:= ComplexAmplitude(6, 1);
+   VT2R2:= ComplexAmplitude(7, 1);
+   VT3R1:= ComplexAmplitude(10, 1);
+   VT3R2:= ComplexAmplitude(11, 1);
+end;
+
+procedure TCSV.FormResize(Sender: TObject);
+begin
+  if AutoFit.Checked then FitToWinClick(Sender);
+end;
+
+procedure TCSV.Label33Click(Sender: TObject);
+begin
+
+end;
+
 procedure TCSV.ShowToolClick(Sender: TObject);
 begin
   Tool.Show;
@@ -449,7 +513,7 @@ begin
   if ChartLineSerie.Count > 0 then begin
      x:= ChartLineSerie.GetXValue(ChartPointIndex);
      y:= ChartLineSerie.GetYValue(ChartPointIndex);
-     ChartLineSerie.ListSource.Item[ChartPointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
+     ChartLineSerie.ListSource.Item[ChartPointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x);
      ChartLineSerie.ParentChart.Repaint;
   end;
 end;
@@ -481,7 +545,7 @@ begin
         ChartPointIndex:= PointIndex;
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x)
+        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
         else ListSource.Item[PointIndex]^.Text := '';
         ParentChart.Repaint;
         LabelSticked:= true;
@@ -494,11 +558,11 @@ var i: Integer;
     wStr: String;
     zero: Boolean;
 begin
-   wStr:= DateTimeToStr(DT) + LN;
+   wStr:= DateTimeToStr(DT) + Line;
    zero:= true;
    for i:=0 to 15 do begin
      if (SW and expon2(i)) > 0 then begin
-       wStr:= wStr + '1 - ' + SWDecr[i] + LN;
+       wStr:= wStr + '1 - ' + SWDecr[i] + Line;
        zero:= false;
      end;
    end;
@@ -517,7 +581,7 @@ begin
    if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.HI' then AHint:= SWHint(Round(y), SWHi, x)
    else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.LO' then AHint:= SWHint(Round(y), SWLo, x)
         else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'ESTATUS.SIBR.LO' then AHint:= SWHint(Round(y), ESWLo, x)
-             else AHint:= FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x);
+             else AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x);
 end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
@@ -653,6 +717,7 @@ begin
         SetHorizontalExtent(Chart7);
         SetHorizontalExtent(Chart8);
      end;
+     if AutoFit.Checked then FitToWinClick(Sender);
      NewChart:= false;
   end
   else ShowMessage('No parameters selected.');
@@ -735,7 +800,7 @@ begin
       with TLineSeries(Series) do begin
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + LN + DateTimeToStr(x)
+        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
         else ListSource.Item[PointIndex]^.Text := '';
         ParentChart.Repaint;
       end;
@@ -849,7 +914,7 @@ begin
   ResetZoom
 end;
 
-procedure TCSV.Image4Click(Sender: TObject);
+procedure TCSV.FitToWinClick(Sender: TObject);
 begin
   if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 90) div SelectedChannels.Items.Count;
   Chart1.Height:= ChartHeightControl.Position;
@@ -1146,27 +1211,27 @@ begin
       ParamCount:= 0;
       ZoneDuration.Caption:= IntToStr(MinutesBetween(StartTimeDT, EndTimeDT)) + ' min';
 
-      wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + LN;
-      wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + LN;
-      wStr:= wStr +  'Test Duration: ' + ZoneDuration.Caption + LN;
-      wStr:= wStr +  'Test Comment: ' + Comment.Text + LN;
+      wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + Line;
+      wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + Line;
+      wStr:= wStr +  'Test Duration: ' + ZoneDuration.Caption + Line;
+      wStr:= wStr +  'Test Comment: ' + Comment.Text + Line;
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
-      wStr:= wStr + '                                                   ' + TestType.Text + LN;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+      wStr:= wStr + '                                                   ' + TestType.Text + Line;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
-      wStr:= wStr + 'Status Word     Dec   Hex    Bin              | Exptd   | Result' + LN;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+      wStr:= wStr + 'Status Word     Dec   Hex    Bin              | Exptd   | Result' + Line;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
 
-      wStr:= wStr +  SWString('STATUS.SIBR.LO', 0, TimePos, StartTimeDT, EndTimeDT) + LN;
-      wStr:= wStr +  SWString('STATUS.SIBR.HI', 0, TimePos, StartTimeDT, EndTimeDT) + LN;
-      wStr:= wStr +  SWString('ESTATUS.SIBR.LO', 32, TimePos, StartTimeDT, EndTimeDT) + LN + LN;
+      wStr:= wStr +  SWString('STATUS.SIBR.LO', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
+      wStr:= wStr +  SWString('STATUS.SIBR.HI', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
+      wStr:= wStr +  SWString('ESTATUS.SIBR.LO', 32, TimePos, StartTimeDT, EndTimeDT) + Line + Line;
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
-      wStr:= wStr + '                                                                |              Tolerances              |' + LN;
-      wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + LN;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + LN;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+      wStr:= wStr + '                                                                |              Tolerances              |' + Line;
+      wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + Line;
+      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
       Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
       for j:=0 to 30 do begin
         ParamPos:= GetParamPosition(SibrParams[j].name);
@@ -1202,7 +1267,7 @@ begin
         ReportParams[ParamCount].k:= SibrParams[j].k;
         ReportParams[ParamCount].m:= SibrParams[j].m;
         ParamCount:= ParamCount + 1;
-        wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ LN;
+        wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ Line;
         ReportProgress.Position:= ReportProgress.Position + 1;
       end;
       ReportText.Text:= wStr;
@@ -1258,8 +1323,8 @@ begin
         ReportParams[ParamCount].m:= SibrParams[J+46].m;
         ParamCount:= ParamCount + 1;
 
-        wStr:= wStr + ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + LN;
-        PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PassFail) + LN;
+        wStr:= wStr + ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + Line;
+        PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PassFail) + Line;
         ReportProgress.Position:= ReportProgress.Position + 1;
       end;
       for i:= 0 to 15 do wStr:= wStr + PSStrings[i];

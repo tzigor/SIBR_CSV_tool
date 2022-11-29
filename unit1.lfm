@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = -1496
+  Left = -1501
   Height = 663
-  Top = -587
+  Top = -595
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.2.1 Portable'
+  Caption = 'SIBR Dump Tool v1.2.2 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1895,7 +1895,9 @@ object CSV: TCSV
     00000000000000000000
   }
   OnCreate = FormCreate
+  OnResize = FormResize
   Position = poDefaultPosOnly
+  SessionProperties = 'AutoFit.Checked;ChartPoints.Checked;ChartsLink.Checked;mVolts.Checked;PowerResets.Checked;ChartHeightControl.Position'
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
@@ -2797,12 +2799,29 @@ object CSV: TCSV
           Left = 480
           Height = 19
           Top = 88
-          Width = 134
-          Caption = 'Amplitudes in mVolts'
+          Width = 122
+          Caption = 'Amplitudes in volts'
           Checked = True
           OnChange = mVoltsChange
           State = cbChecked
           TabOrder = 6
+        end
+        object AutoFit: TCheckBox
+          Left = 480
+          Height = 19
+          Top = 112
+          Width = 60
+          Caption = 'Auto fit'
+          TabOrder = 7
+        end
+        object Button8: TButton
+          Left = 539
+          Height = 25
+          Top = 384
+          Width = 75
+          Caption = 'Button8'
+          OnClick = Button8Click
+          TabOrder = 8
         end
       end
       object OpenedFile: TEdit
@@ -2920,13 +2939,13 @@ object CSV: TCSV
         }
         ShowHint = True
       end
-      object Image4: TImage
+      object FitToWin: TImage
         Left = 192
         Height = 25
         Hint = 'Fit to window'
         Top = 8
         Width = 25
-        OnClick = Image4Click
+        OnClick = FitToWinClick
         ParentShowHint = False
         Picture.Data = {
           1754506F727461626C654E6574776F726B47726170686963B002000089504E47
@@ -4242,16 +4261,17 @@ object CSV: TCSV
       ClientWidth = 891
       object Label33: TLabel
         Left = 8
-        Height = 45
+        Height = 90
         Top = 8
-        Width = 240
-        Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'
+        Width = 448
+        Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'#13#10#13#10'Version 1.2.2'#13#10'- Amplitudes on antennas visualisation added (buttton [Show tool] in Report section)'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentColor = False
         ParentFont = False
+        OnClick = Label33Click
       end
     end
   end
@@ -4345,6 +4365,14 @@ object CSV: TCSV
   object SaveDialog1: TSaveDialog
     Filter = '.prn|.prn'
     Left = 544
+    Top = 632
+  end
+  object IniPropStorage1: TIniPropStorage
+    StoredValues = <    
+      item
+      end>
+    IniFileName = 'SIBR Dump Tool.ini'
+    Left = 592
     Top = 632
   end
 end
