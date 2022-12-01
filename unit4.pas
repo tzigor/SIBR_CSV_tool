@@ -15,20 +15,21 @@ type
     Button1: TButton;
     Image6: TImage;
     Image8: TImage;
+    Warning: TLabel;
     StaticText1: TStaticText;
     StaticText2: TStaticText;
-    T1R1F1: TStaticText;
-    T1R1F2: TStaticText;
-    T1R2F1: TStaticText;
-    T1R2F2: TStaticText;
-    T2R1F1: TStaticText;
-    T2R1F2: TStaticText;
-    T2R2F1: TStaticText;
-    T2R2F2: TStaticText;
-    T3R1F1: TStaticText;
-    T3R1F2: TStaticText;
-    T3R2F1: TStaticText;
-    T3R2F2: TStaticText;
+    AR1T1F1: TStaticText;
+    AR1T1F2: TStaticText;
+    AR2T1F1: TStaticText;
+    AR2T1F2: TStaticText;
+    AR1T2F1: TStaticText;
+    AR1T2F2: TStaticText;
+    AR2T2F1: TStaticText;
+    AR2T2F2: TStaticText;
+    AR1T3F1: TStaticText;
+    AR1T3F2: TStaticText;
+    AR2T3F1: TStaticText;
+    AR2T3F2: TStaticText;
     procedure Button1Click(Sender: TObject);
   private
 

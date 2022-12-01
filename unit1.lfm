@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = -1501
+  Left = -1502
   Height = 663
-  Top = -595
+  Top = -596
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.2.2 Portable'
@@ -2814,13 +2814,13 @@ object CSV: TCSV
           Caption = 'Auto fit'
           TabOrder = 7
         end
-        object Button8: TButton
-          Left = 539
-          Height = 25
-          Top = 384
-          Width = 75
-          Caption = 'Button8'
-          OnClick = Button8Click
+        object ShowSondes: TButton
+          Left = 320
+          Height = 32
+          Top = 400
+          Width = 140
+          Caption = 'Show Sondes'
+          OnClick = ShowSondesClick
           TabOrder = 8
         end
       end
@@ -3805,6 +3805,444 @@ object CSV: TCSV
         end
       end
     end
+    object SondesChart: TTabSheet
+      Caption = 'Sondes'
+      ClientHeight = 635
+      ClientWidth = 891
+      object Sondes: TChart
+        Left = 0
+        Height = 312
+        Top = 0
+        Width = 891
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            LabelSize = 50
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.NiceSteps = '0.1|0.5|1.0'
+            Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+            Intervals.Tolerance = 1
+            Alignment = calBottom
+            Marks.Format = '%2:s'
+            Marks.LabelBrush.Style = bsClear
+            Marks.Source = DateTimeIntervalChartSource1
+            Marks.Style = smsLabel
+            Minors = <>
+            Title.Margins.Left = 0
+            Title.Margins.Top = 0
+            Title.Margins.Right = 0
+            Title.Margins.Bottom = 0
+            Title.Distance = 0
+            Title.Caption = 'Date'
+            Title.LabelBrush.Style = bsClear
+            Title.PositionOnMarks = True
+          end>
+        BackColor = clWhite
+        Foot.Alignment = taLeftJustify
+        Foot.Margins.Left = 80
+        Foot.Margins.Top = 0
+        Foot.Margins.Bottom = 0
+        Foot.Brush.Color = clWhite
+        Foot.Font.CharSet = ANSI_CHARSET
+        Foot.Font.Color = clBlack
+        Foot.Font.Height = -12
+        Foot.Font.Name = 'Segoe UI'
+        Foot.Font.Pitch = fpVariable
+        Foot.Font.Quality = fqDraft
+        Foot.Font.Style = [fsBold]
+        Foot.Margin = 0
+        Foot.Text.Strings = (
+          'May-01 11:00'
+        )
+        Foot.Visible = True
+        Legend.Frame.Color = clScrollBar
+        Legend.UseSidebar = False
+        Legend.Visible = True
+        Title.Alignment = taRightJustify
+        Title.Margins.Top = 0
+        Title.Brush.Color = clBtnFace
+        Title.Font.CharSet = ANSI_CHARSET
+        Title.Font.Color = clBlue
+        Title.Font.Height = -12
+        Title.Font.Name = 'Segoe UI'
+        Title.Font.Pitch = fpVariable
+        Title.Font.Quality = fqDraft
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        OnExtentChanged = Chart1ExtentChanged
+        Align = alTop
+        Color = clDefault
+        Visible = False
+        object SondesLineSeries1: TLineSeries
+          Title = ' A16L '
+          LinePen.Color = clBlue
+          Marks.Format = '%2:s'
+          Marks.LinkPen.Color = clRed
+          Marks.Style = smsLabel
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clFuchsia
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+        end
+        object SondesLineSeries2: TLineSeries
+          Title = ' A22L '
+          LinePen.Color = clRed
+        end
+        object SondesLineSeries3: TLineSeries
+          Title = ' A34L '
+          LinePen.Color = 4227072
+        end
+        object SondesLineSeries4: TLineSeries
+          Title = ' A16H '
+          LinePen.Color = 13959381
+        end
+        object SondesLineSeries5: TLineSeries
+          Title = ' A22H '
+          LinePen.Color = 27090
+        end
+        object SondesLineSeries6: TLineSeries
+          Title = ' A34H '
+          LinePen.Color = 4473924
+        end
+      end
+      object Sondes1: TChart
+        Left = 0
+        Height = 312
+        Top = 312
+        Width = 891
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            LabelSize = 50
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.NiceSteps = '0.1|0.5|1.0'
+            Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+            Intervals.Tolerance = 1
+            Alignment = calBottom
+            Marks.Format = '%2:s'
+            Marks.LabelBrush.Style = bsClear
+            Marks.Source = DateTimeIntervalChartSource1
+            Marks.Style = smsLabel
+            Minors = <>
+            Title.Margins.Left = 0
+            Title.Margins.Top = 0
+            Title.Margins.Right = 0
+            Title.Margins.Bottom = 0
+            Title.Distance = 0
+            Title.Caption = 'Date'
+            Title.LabelBrush.Style = bsClear
+            Title.PositionOnMarks = True
+          end>
+        BackColor = clWhite
+        Foot.Alignment = taLeftJustify
+        Foot.Margins.Left = 80
+        Foot.Margins.Top = 0
+        Foot.Margins.Bottom = 0
+        Foot.Brush.Color = clWhite
+        Foot.Font.CharSet = ANSI_CHARSET
+        Foot.Font.Color = clBlack
+        Foot.Font.Height = -12
+        Foot.Font.Name = 'Segoe UI'
+        Foot.Font.Pitch = fpVariable
+        Foot.Font.Quality = fqDraft
+        Foot.Font.Style = [fsBold]
+        Foot.Margin = 0
+        Foot.Text.Strings = (
+          'May-01 11:00'
+        )
+        Foot.Visible = True
+        Legend.Frame.Color = clScrollBar
+        Legend.UseSidebar = False
+        Legend.Visible = True
+        Title.Alignment = taRightJustify
+        Title.Margins.Top = 0
+        Title.Brush.Color = clBtnFace
+        Title.Font.CharSet = ANSI_CHARSET
+        Title.Font.Color = clBlue
+        Title.Font.Height = -12
+        Title.Font.Name = 'Segoe UI'
+        Title.Font.Pitch = fpVariable
+        Title.Font.Quality = fqDraft
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        OnExtentChanged = Chart1ExtentChanged
+        Align = alTop
+        Color = clDefault
+        Visible = False
+        object SondesLineSeries7: TLineSeries
+          Title = ' P16L '
+          LinePen.Color = clBlue
+          Marks.Format = '%2:s'
+          Marks.LinkPen.Color = clRed
+          Marks.Style = smsLabel
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clFuchsia
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+        end
+        object SondesLineSeries8: TLineSeries
+          Title = ' P22L '
+          LinePen.Color = clRed
+        end
+        object SondesLineSeries9: TLineSeries
+          Title = ' P34L '
+          LinePen.Color = 4227072
+        end
+        object SondesLineSeries10: TLineSeries
+          Title = ' P16H '
+          LinePen.Color = 13959381
+        end
+        object SondesLineSeries11: TLineSeries
+          Title = ' P22H '
+          LinePen.Color = 27090
+        end
+        object SondesLineSeries12: TLineSeries
+          Title = ' P34H '
+          LinePen.Color = 4473924
+        end
+      end
+    end
+    object CSondes: TTabSheet
+      Caption = 'C Sondes'
+      ClientHeight = 635
+      ClientWidth = 891
+      object Sondes2: TChart
+        Left = 0
+        Height = 312
+        Top = 0
+        Width = 891
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            LabelSize = 50
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.NiceSteps = '0.1|0.5|1.0'
+            Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+            Intervals.Tolerance = 1
+            Alignment = calBottom
+            Marks.Format = '%2:s'
+            Marks.LabelBrush.Style = bsClear
+            Marks.Source = DateTimeIntervalChartSource1
+            Marks.Style = smsLabel
+            Minors = <>
+            Title.Margins.Left = 0
+            Title.Margins.Top = 0
+            Title.Margins.Right = 0
+            Title.Margins.Bottom = 0
+            Title.Distance = 0
+            Title.Caption = 'Date'
+            Title.LabelBrush.Style = bsClear
+            Title.PositionOnMarks = True
+          end>
+        BackColor = clWhite
+        Foot.Alignment = taLeftJustify
+        Foot.Margins.Left = 80
+        Foot.Margins.Top = 0
+        Foot.Margins.Bottom = 0
+        Foot.Brush.Color = clWhite
+        Foot.Font.CharSet = ANSI_CHARSET
+        Foot.Font.Color = clBlack
+        Foot.Font.Height = -12
+        Foot.Font.Name = 'Segoe UI'
+        Foot.Font.Pitch = fpVariable
+        Foot.Font.Quality = fqDraft
+        Foot.Font.Style = [fsBold]
+        Foot.Margin = 0
+        Foot.Text.Strings = (
+          'May-01 11:00'
+        )
+        Foot.Visible = True
+        Legend.Frame.Color = clScrollBar
+        Legend.UseSidebar = False
+        Legend.Visible = True
+        Title.Alignment = taRightJustify
+        Title.Margins.Top = 0
+        Title.Brush.Color = clBtnFace
+        Title.Font.CharSet = ANSI_CHARSET
+        Title.Font.Color = clBlue
+        Title.Font.Height = -12
+        Title.Font.Name = 'Segoe UI'
+        Title.Font.Pitch = fpVariable
+        Title.Font.Quality = fqDraft
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        OnExtentChanged = Chart1ExtentChanged
+        Align = alTop
+        Color = clDefault
+        Visible = False
+        object SondesLineSeries13: TLineSeries
+          Title = ' A16L '
+          LinePen.Color = clBlue
+          Marks.Format = '%2:s'
+          Marks.LinkPen.Color = clRed
+          Marks.Style = smsLabel
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clFuchsia
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+        end
+        object SondesLineSeries14: TLineSeries
+          Title = ' A22L '
+          LinePen.Color = clRed
+        end
+        object SondesLineSeries15: TLineSeries
+          Title = ' A34L '
+          LinePen.Color = 4227072
+        end
+        object SondesLineSeries16: TLineSeries
+          Title = ' A16H '
+          LinePen.Color = 13959381
+        end
+        object SondesLineSeries17: TLineSeries
+          Title = ' A22H '
+          LinePen.Color = 27090
+        end
+        object SondesLineSeries18: TLineSeries
+          Title = ' A34H '
+          LinePen.Color = 4473924
+        end
+      end
+      object Sondes3: TChart
+        Left = 0
+        Height = 312
+        Top = 312
+        Width = 891
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            LabelSize = 50
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Intervals.NiceSteps = '0.1|0.5|1.0'
+            Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+            Intervals.Tolerance = 1
+            Alignment = calBottom
+            Marks.Format = '%2:s'
+            Marks.LabelBrush.Style = bsClear
+            Marks.Source = DateTimeIntervalChartSource1
+            Marks.Style = smsLabel
+            Minors = <>
+            Title.Margins.Left = 0
+            Title.Margins.Top = 0
+            Title.Margins.Right = 0
+            Title.Margins.Bottom = 0
+            Title.Distance = 0
+            Title.Caption = 'Date'
+            Title.LabelBrush.Style = bsClear
+            Title.PositionOnMarks = True
+          end>
+        BackColor = clWhite
+        Foot.Alignment = taLeftJustify
+        Foot.Margins.Left = 80
+        Foot.Margins.Top = 0
+        Foot.Margins.Bottom = 0
+        Foot.Brush.Color = clWhite
+        Foot.Font.CharSet = ANSI_CHARSET
+        Foot.Font.Color = clBlack
+        Foot.Font.Height = -12
+        Foot.Font.Name = 'Segoe UI'
+        Foot.Font.Pitch = fpVariable
+        Foot.Font.Quality = fqDraft
+        Foot.Font.Style = [fsBold]
+        Foot.Margin = 0
+        Foot.Text.Strings = (
+          'May-01 11:00'
+        )
+        Foot.Visible = True
+        Legend.Frame.Color = clScrollBar
+        Legend.UseSidebar = False
+        Legend.Visible = True
+        Title.Alignment = taRightJustify
+        Title.Margins.Top = 0
+        Title.Brush.Color = clBtnFace
+        Title.Font.CharSet = ANSI_CHARSET
+        Title.Font.Color = clBlue
+        Title.Font.Height = -12
+        Title.Font.Name = 'Segoe UI'
+        Title.Font.Pitch = fpVariable
+        Title.Font.Quality = fqDraft
+        Title.Margin = 0
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Title.Visible = True
+        Toolset = ChartToolset1
+        OnExtentChanged = Chart1ExtentChanged
+        Align = alTop
+        Color = clDefault
+        Visible = False
+        object SondesLineSeries19: TLineSeries
+          Title = ' P16L '
+          LinePen.Color = clBlue
+          Marks.Format = '%2:s'
+          Marks.LinkPen.Color = clRed
+          Marks.Style = smsLabel
+          Pointer.Brush.Color = clBlue
+          Pointer.HorizSize = 2
+          Pointer.Pen.Color = clFuchsia
+          Pointer.Style = psCircle
+          Pointer.VertSize = 2
+        end
+        object SondesLineSeries20: TLineSeries
+          Title = ' P22L '
+          LinePen.Color = clRed
+        end
+        object SondesLineSeries21: TLineSeries
+          Title = ' P34L '
+          LinePen.Color = 4227072
+        end
+        object SondesLineSeries22: TLineSeries
+          Title = ' P16H '
+          LinePen.Color = 13959381
+        end
+        object SondesLineSeries23: TLineSeries
+          Title = ' P22H '
+          LinePen.Color = 27090
+        end
+        object SondesLineSeries24: TLineSeries
+          Title = ' P34H '
+          LinePen.Color = 4473924
+        end
+      end
+    end
     object ReportTab: TTabSheet
       Caption = 'Reports'
       ClientHeight = 635
@@ -4271,7 +4709,49 @@ object CSV: TCSV
         Font.Quality = fqDraft
         ParentColor = False
         ParentFont = False
-        OnClick = Label33Click
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'TabSheet4'
+      ClientHeight = 635
+      ClientWidth = 891
+      object Chart9: TChart
+        Left = 8
+        Height = 472
+        Top = 8
+        Width = 880
+        AxisList = <        
+          item
+            Grid.Color = clSilver
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelFont.Orientation = 900
+            Title.LabelBrush.Style = bsClear
+          end        
+          item
+            Grid.Color = clSilver
+            Alignment = calBottom
+            Marks.LabelBrush.Style = bsClear
+            Minors = <>
+            Title.LabelBrush.Style = bsClear
+          end>
+        Title.Text.Strings = (
+          'TAChart'
+        )
+        Anchors = [akTop, akLeft, akRight]
+        Color = clWhite
+        object Chart9LineSeries1: TLineSeries
+          LinePen.Color = clBlue
+        end
+      end
+      object Button8: TButton
+        Left = 400
+        Height = 33
+        Top = 504
+        Width = 128
+        Caption = 'Button8'
+        OnClick = Button8Click
+        TabOrder = 1
       end
     end
   end
@@ -4373,6 +4853,18 @@ object CSV: TCSV
       end>
     IniFileName = 'SIBR Dump Tool.ini'
     Left = 592
+    Top = 632
+  end
+  object ChartExtentLink2: TChartExtentLink
+    LinkedCharts = <    
+      item
+        Chart = Sondes
+      end    
+      item
+        Chart = Sondes1
+      end>
+    Mode = elmOnlyX
+    Left = 664
     Top = 632
   end
 end

@@ -6,10 +6,10 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils,
-  LConvEncoding, TAGraph, TACustomSource, LazSysUtils, TASeries, TATools,
-  TAIntervalSources, DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils,
-  TADataTools, TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
+  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
+  TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
+  DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils, TADataTools,
+  TAChartExtentLink, TALegendPanel, SpinEx, SynHighlighterCpp, LCLType, Spin,
   IniPropStorage, uComplex, Math;
 
 type
@@ -27,6 +27,15 @@ type
     Button7: TButton;
     AutoFit: TCheckBox;
     Button8: TButton;
+    Chart9: TChart;
+    Chart9LineSeries1: TLineSeries;
+    ShowSondes: TButton;
+    ChartExtentLink2: TChartExtentLink;
+    Sondes1: TChart;
+    Sondes2: TChart;
+    Sondes3: TChart;
+    SondesLineSeries1: TLineSeries;
+    Sondes: TChart;
     IniPropStorage1: TIniPropStorage;
     ShowTool: TButton;
     Chart1LineSeries2: TLineSeries;
@@ -60,6 +69,32 @@ type
     ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool;
     Comment: TEdit;
     Label34: TLabel;
+    SondesLineSeries10: TLineSeries;
+    SondesLineSeries11: TLineSeries;
+    SondesLineSeries12: TLineSeries;
+    SondesLineSeries13: TLineSeries;
+    SondesLineSeries14: TLineSeries;
+    SondesLineSeries15: TLineSeries;
+    SondesLineSeries16: TLineSeries;
+    SondesLineSeries17: TLineSeries;
+    SondesLineSeries18: TLineSeries;
+    SondesLineSeries19: TLineSeries;
+    SondesLineSeries2: TLineSeries;
+    SondesLineSeries20: TLineSeries;
+    SondesLineSeries21: TLineSeries;
+    SondesLineSeries22: TLineSeries;
+    SondesLineSeries23: TLineSeries;
+    SondesLineSeries24: TLineSeries;
+    SondesLineSeries3: TLineSeries;
+    SondesLineSeries4: TLineSeries;
+    SondesLineSeries5: TLineSeries;
+    SondesLineSeries6: TLineSeries;
+    SondesChart: TTabSheet;
+    SondesLineSeries7: TLineSeries;
+    SondesLineSeries8: TLineSeries;
+    SondesLineSeries9: TLineSeries;
+    TabSheet4: TTabSheet;
+    CSondes: TTabSheet;
     TestType: TComboBox;
     RPTOnly: TCheckBox;
     Label33: TLabel;
@@ -171,8 +206,8 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
-    procedure Label33Click(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
     procedure Chart6ExtentChanged(ASender: TChart);
     procedure Chart7ExtentChanged(ASender: TChart);
@@ -433,60 +468,23 @@ begin
 end;
 
 procedure TCSV.Button8Click(Sender: TObject);
-var x, y: complex;
-    r: double;
-    probe, A16L, A22L, A34L: real;
-
+var x, y: real;
+    i: Integer;
 begin
-   x:= 1.7552 + 0.9589*i;
-   y:= cmod(x);
-   Y:= carg(x);
-   r:= angle(x.re, x.im);
-   //ShowMessage(cstr(y, 0, 3));
-   //ShowMessage(FloatToStr(power(2, 0.5)));
-   //ShowMessage(FloatToStr(Exp(Ln(2)*0.5)));  // 2^0.5
-   //ShowMessage(FloatToStr(r));
-
-   //ShowMessage(cstr(ComplexAmplitude(3, 1),12, 3));
-   // F1 - 400 KHz
-   VT1R1:= ComplexAmplitude(0, 1);
-   VT1R2:= ComplexAmplitude(1, 1);
-   VT2R1:= ComplexAmplitude(4, 1);
-   VT2R2:= ComplexAmplitude(5, 1);
-   VT3R1:= ComplexAmplitude(8, 1);
-   VT3R2:= ComplexAmplitude(9, 1);
-
-   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs');
-   A16L:= probe2sig(probe, 1, 1, 'abs');
-   ShowMessage(FloatToStr(probe));
-
-   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs');
-   A22L:= probe2sig(probe, 1, 2, 'abs');
-   ShowMessage(FloatToStr(probe));
-
-   probe:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs');
-   A34L:= probe2sig(probe, 1, 3, 'abs');
-   ShowMessage(FloatToStr(probe));
-
-   ShowMessage(FloatToStr(A16L) + ' ' + FloatToStr(A22L) + ' ' + FloatToStr(A34L));
-
-   // F2 - 2 MHz
-   VT1R1:= ComplexAmplitude(2, 1);
-   VT1R2:= ComplexAmplitude(3, 1);
-   VT2R1:= ComplexAmplitude(6, 1);
-   VT2R2:= ComplexAmplitude(7, 1);
-   VT3R1:= ComplexAmplitude(10, 1);
-   VT3R2:= ComplexAmplitude(11, 1);
+  Chart9LineSeries1.Clear;
+  x:= -1.5;
+  for i:=1 to 1000 do begin
+     y:= probe2sig(x, 1, 1, 'abs');
+     Chart9LineSeries1.AddXY(x, y);
+     x:= x + 0.001;
+  end;
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
 begin
   if AutoFit.Checked then FitToWinClick(Sender);
-end;
-
-procedure TCSV.Label33Click(Sender: TObject);
-begin
-
+  Sondes.Height:= (CSV.Height - 50) div 2;
+  Sondes1.Height:= (CSV.Height - 50) div 2;
 end;
 
 procedure TCSV.ShowToolClick(Sender: TObject);
@@ -584,11 +582,108 @@ begin
              else AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x);
 end;
 
+procedure SondesVisible(visible: Boolean);
+begin
+  CSV.Sondes.Visible:= visible;
+  CSV.Sondes1.Visible:= visible;
+end;
+
+procedure ResetZoomSondes;
+begin
+  CSV.Sondes.ZoomFull;
+  CSV.Sondes1.ZoomFull;
+end;
+
+procedure ResetSondesSeries;
+begin
+  CSV.SondesLineSeries1.Clear;
+  CSV.SondesLineSeries2.Clear;
+  CSV.SondesLineSeries3.Clear;
+  CSV.SondesLineSeries4.Clear;
+  CSV.SondesLineSeries5.Clear;
+  CSV.SondesLineSeries6.Clear;
+  CSV.SondesLineSeries7.Clear;
+  CSV.SondesLineSeries8.Clear;
+  CSV.SondesLineSeries9.Clear;
+  CSV.SondesLineSeries10.Clear;
+  CSV.SondesLineSeries11.Clear;
+  CSV.SondesLineSeries12.Clear;
+
+  CSV.SondesLineSeries13.Clear;
+  CSV.SondesLineSeries14.Clear;
+  CSV.SondesLineSeries15.Clear;
+  CSV.SondesLineSeries16.Clear;
+  CSV.SondesLineSeries17.Clear;
+  CSV.SondesLineSeries18.Clear;
+  CSV.SondesLineSeries19.Clear;
+  CSV.SondesLineSeries20.Clear;
+  CSV.SondesLineSeries21.Clear;
+  CSV.SondesLineSeries22.Clear;
+  CSV.SondesLineSeries23.Clear;
+  CSV.SondesLineSeries24.Clear;
+end;
+
+procedure ResetSondes;
+begin
+  ResetSondesSeries;
+  ResetZoomSondes;
+  SondesVisible(false);
+end;
+procedure TCSV.ShowSondesClick(Sender: TObject);
+var y: Double;
+    x: TDateTime;
+    i, TimePos: Integer;
+begin
+  ResetSondes;
+  TimePos:= GetParamPosition('RTCs');
+  Sondes.Title.Text[0]:='Amplitudes';
+  Sondes1.Title.Text[0]:='Phases';
+  Sondes2.Title.Text[0]:='Amplitudes';
+  Sondes3.Title.Text[0]:='Phases';
+  for i:=1 to CSVContent.Count-1 do begin
+    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
+       x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+       SondesLineSeries1.AddXY(x, GetConductivity('A16L', i, 0));
+       SondesLineSeries2.AddXY(x, GetConductivity('A22L', i, 0));
+       SondesLineSeries3.AddXY(x, GetConductivity('A34L', i, 0));
+       SondesLineSeries4.AddXY(x, GetConductivity('A16H', i, 0));
+       SondesLineSeries5.AddXY(x, GetConductivity('A22H', i, 0));
+       SondesLineSeries6.AddXY(x, GetConductivity('A34H', i, 0));
+       SondesLineSeries7.AddXY(x, GetConductivity('P16L', i, 0));
+       SondesLineSeries8.AddXY(x, GetConductivity('P22L', i, 0));
+       SondesLineSeries9.AddXY(x, GetConductivity('P34L', i, 0));
+       SondesLineSeries10.AddXY(x, GetConductivity('P16H', i, 0));
+       SondesLineSeries11.AddXY(x, GetConductivity('P22H', i, 0));
+       SondesLineSeries12.AddXY(x, GetConductivity('P34H', i, 0));
+
+       SondesLineSeries13.AddXY(x, GetConductivity('A16L', i, 1));
+       SondesLineSeries14.AddXY(x, GetConductivity('A22L', i, 1));
+       SondesLineSeries15.AddXY(x, GetConductivity('A34L', i, 1));
+       SondesLineSeries16.AddXY(x, GetConductivity('A16H', i, 1));
+       SondesLineSeries17.AddXY(x, GetConductivity('A22H', i, 1));
+       SondesLineSeries18.AddXY(x, GetConductivity('A34H', i, 1));
+       SondesLineSeries19.AddXY(x, GetConductivity('P16L', i, 1));
+       SondesLineSeries20.AddXY(x, GetConductivity('P22L', i, 1));
+       SondesLineSeries21.AddXY(x, GetConductivity('P34L', i, 1));
+       SondesLineSeries22.AddXY(x, GetConductivity('P16H', i, 1));
+       SondesLineSeries23.AddXY(x, GetConductivity('P22H', i, 1));
+       SondesLineSeries24.AddXY(x, GetConductivity('P34H', i, 1));
+    end;
+  end;
+  Sondes.Height:= (CSV.Height - 50) div 2;
+  Sondes1.Height:= (CSV.Height - 50) div 2;
+  Sondes.Visible:= True;
+  Sondes1.Visible:= True;
+  Sondes2.Visible:= True;
+  Sondes3.Visible:= True;
+  App.ActivePage:= SondesChart;
+end;
+
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
 var i: Longint;
     ParamPos, TimePos: Integer;
     PowerReset: boolean;
-    y: Single;
+    y: Double;
     x: TDateTime;
 begin
   PowerReset:= false;
@@ -604,20 +699,22 @@ begin
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
 
-      if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
-      else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
-           else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+       if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 1)
+       else
+          if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
+          else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
+               else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
 
-        x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+            x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
 
-        if PowerReset then begin
-          if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
-          else Chart1LineSeries.AddXY(x, y);
-          PowerReset:= false;
-        end
-        else begin
-          Chart1LineSeries.AddXY(x, y);
-        end;
+            if PowerReset then begin
+              if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+              else Chart1LineSeries.AddXY(x, y);
+              PowerReset:= false;
+            end
+            else begin
+              Chart1LineSeries.AddXY(x, y);
+            end;
 
     end
     else begin
@@ -958,32 +1055,32 @@ begin
   AmplsInmVolts:= mVolts.Checked;
   with Tool do
     if mVolts.Checked then begin
-      T1R1F1.Width:= 40;
-      T1R2F1.Width:= 40;
-      T2R1F1.Width:= 40;
-      T2R2F1.Width:= 40;
-      T3R1F1.Width:= 40;
-      T3R2F1.Width:= 40;
-      T1R1F2.Width:= 40;
-      T1R2F2.Width:= 40;
-      T2R1F2.Width:= 40;
-      T2R2F2.Width:= 40;
-      T3R1F2.Width:= 40;
-      T3R2F2.Width:= 40;
+      AR1T1F1.Width:= 40;
+      AR1T1F2.Width:= 40;
+      AR2T1F1.Width:= 40;
+      AR2T1F2.Width:= 40;
+      AR1T2F1.Width:= 40;
+      AR1T2F2.Width:= 40;
+      AR2T2F1.Width:= 40;
+      AR2T2F2.Width:= 40;
+      AR1T3F1.Width:= 40;
+      AR1T3F2.Width:= 40;
+      AR2T3F1.Width:= 40;
+      AR2T3F2.Width:= 40;
     end
     else begin
-      T1R1F1.Width:= 77;
-      T1R2F1.Width:= 77;
-      T2R1F1.Width:= 77;
-      T2R2F1.Width:= 77;
-      T3R1F1.Width:= 77;
-      T3R2F1.Width:= 77;
-      T1R1F2.Width:= 77;
-      T1R2F2.Width:= 77;
-      T2R1F2.Width:= 77;
-      T2R2F2.Width:= 77;
-      T3R1F2.Width:= 77;
-      T3R2F2.Width:= 77;
+      AR1T1F1.Width:= 77;
+      AR1T1F2.Width:= 77;
+      AR2T1F1.Width:= 77;
+      AR2T1F2.Width:= 77;
+      AR1T2F1.Width:= 77;
+      AR1T2F2.Width:= 77;
+      AR2T2F1.Width:= 77;
+      AR2T2F2.Width:= 77;
+      AR1T3F1.Width:= 77;
+      AR1T3F2.Width:= 77;
+      AR2T3F1.Width:= 77;
+      AR2T3F2.Width:= 77;
     end;
 end;
 
@@ -1128,6 +1225,8 @@ begin
 
         for i:= 0 to 15 do ComputedChannels.Items.Add(AmplitudeName(i));
         for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
+        for i:= 0 to 11 do ComputedChannels.Items.Add(CondChannels[i]);
+
 
         ParamPos:= GetParamPosition('RTCs');
         hrsPlus:= LocalTime.Value;
@@ -1190,6 +1289,25 @@ begin
   if SW <> exptd then PassFail:= 'Failed'
   else PassFail:= 'Passed';
   SWString:= SWLine(SWName, SW, exptd, PassFail);
+end;
+
+procedure PrintAmplitudes(AR1Tx, AR2Tx: TStaticText);
+var TxR1, TxR2: Real;
+    FontColor: TColor;
+begin
+   TxR1:= GetReportAmpl(AR1Tx.Name);
+   TxR2:= GetReportAmpl(AR2Tx.Name);
+   AR1Tx.Caption:= ' ' + FloatToStrF(TxR1, ffFixed, 10, 3);
+   AR2Tx.Caption:= ' ' + FloatToStrF(TxR2, ffFixed, 10, 3);
+   if (AR1Tx.Name = 'AR1T2F1') or (AR1Tx.Name = 'AR1T2F2') then
+      if TxR2 > TxR1 then FontColor:= clRed
+      else FontColor:= clBlack
+   else
+      if TxR1 > TxR2 then FontColor:= clRed
+      else FontColor:= clBlack;
+   AR1Tx.Font.Color:= FontColor;
+   AR2Tx.Font.Color:= FontColor;
+   if FontColor = clRed then Tool.Warning.Caption:= 'Warning! Check receivers and trunsmitters positions';
 end;
 
 procedure TCSV.ReportClick(Sender: TObject);
@@ -1330,18 +1448,15 @@ begin
       for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
       ReportText.Text:= wStr;
 
-      Tool.T1R1F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T1F1'), ffFixed, 10, 3);
-      Tool.T1R2F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T1F1'), ffFixed, 10, 3);
-      Tool.T2R1F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T2F1'), ffFixed, 10, 3);
-      Tool.T2R2F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T2F1'), ffFixed, 10, 3);
-      Tool.T3R1F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T3F1'), ffFixed, 10, 3);
-      Tool.T3R2F1.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T3F1'), ffFixed, 10, 3);
-      Tool.T1R1F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T1F2'), ffFixed, 10, 3);
-      Tool.T1R2F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T1F2'), ffFixed, 10, 3);
-      Tool.T2R1F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T2F2'), ffFixed, 10, 3);
-      Tool.T2R2F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T2F2'), ffFixed, 10, 3);
-      Tool.T3R1F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR1T3F2'), ffFixed, 10, 3);
-      Tool.T3R2F2.Caption:= ' ' + FloatToStrF(GetReportAmpl('AR2T3F2'), ffFixed, 10, 3);
+      Tool.Warning.Caption:= '';
+
+      PrintAmplitudes(Tool.AR1T1F1, Tool.AR2T1F1);
+      PrintAmplitudes(Tool.AR1T2F1, Tool.AR2T2F1);
+      PrintAmplitudes(Tool.AR1T3F1, Tool.AR2T3F1);
+      PrintAmplitudes(Tool.AR1T1F2, Tool.AR2T1F2);
+      PrintAmplitudes(Tool.AR1T2F2, Tool.AR2T2F2);
+      PrintAmplitudes(Tool.AR1T3F2, Tool.AR2T3F2);
+
       ShowTool.Enabled:= true;
    end
    else ShowMessage('Please enter a Seral Number');

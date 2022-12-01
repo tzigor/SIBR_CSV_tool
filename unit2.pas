@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
   TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Types, TAChartUtils, uComplex, Math;
+  DateTimePicker, Types, TAChartUtils, uComplex, Math, Unit3;
 
 type String70 = String[70];
 type ShortString = String[24];
@@ -34,6 +34,7 @@ Const Line = #13#10;
       NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
+      CondChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
 
 Const SWLo: array of String70 = (
       '+24V_CTRL out of range ±30%',
@@ -126,8 +127,9 @@ function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
 function expon2(n: Integer): Integer;
 function DateTimePlusLocal(DateTime: String): String;
-function GetReportAmpl(Param: String): Double;
+function GetReportAmpl(Param: String): Real;
 function ComplexAmplitude(nParam, n: Integer): complex;
+function GetConductivity(Param: String; n: Integer; c: Byte): Real;
 
 implementation
 
@@ -258,6 +260,50 @@ begin
   ComplexAmplitude:= cinit(RawR, RawX);
 end;
 
+function GetConductivity(Param: String; n: Integer; c: Byte): Real;
+// c = 1 - Compensated
+var x, x1: real;
+begin
+   if RightStr(Param, 1) = 'L' then begin // F1 - 400 KHz
+     VT1R1:= ComplexAmplitude(0, n);
+     VT1R2:= ComplexAmplitude(1, n);
+     VT2R1:= ComplexAmplitude(4, n);
+     VT2R2:= ComplexAmplitude(5, n);
+     VT3R1:= ComplexAmplitude(8, n);
+     VT3R2:= ComplexAmplitude(9, n);
+   end
+   else begin // F2 - 2 MHz
+     VT1R1:= ComplexAmplitude(2, n);
+     VT1R2:= ComplexAmplitude(3, n);
+     VT2R1:= ComplexAmplitude(6, n);
+     VT2R2:= ComplexAmplitude(7, n);
+     VT3R1:= ComplexAmplitude(10, n);
+     VT3R2:= ComplexAmplitude(11, n)
+   end;
+
+   //x:=  conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', 0);
+   //x1:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', 1);
+   //if (x < -1.4) and (Param = 'A16L') then begin
+   //   ShowMessage(FloatToStr(x) + '  Comp - ' + FloatToStr(x1));
+   //end;
+
+   case Param of
+     'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
+     'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
+     'A34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
+     'A16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
+     'A22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
+     'A34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
+     'P16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
+     'P22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
+     'P34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
+     'P16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
+     'P22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
+     'P34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
+   end;
+
+end;
+
 function Amplitude(nParam, n: Integer): Double;
 var StartParamPos, Step: Integer;
     RawR, RawX: Double;
@@ -284,7 +330,7 @@ begin
   else PhaseShift:= 0;
 end;
 
-function GetReportAmpl(Param: String): Double;
+function GetReportAmpl(Param: String): Real;
 var i, NumReportParams: integer;
 begin
   NumReportParams:= Length(ReportParams);

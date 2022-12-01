@@ -1,7 +1,7 @@
 object Tool: TTool
-  Left = -1185
+  Left = -1393
   Height = 420
-  Top = -401
+  Top = -436
   Width = 860
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Amplitudes'
@@ -324,7 +324,7 @@ object Tool: TTool
       6082
     }
   end
-  object T1R2F1: TStaticText
+  object AR2T1F1: TStaticText
     Left = 456
     Height = 17
     Top = 160
@@ -338,7 +338,7 @@ object Tool: TTool
     TabOrder = 0
     Transparent = False
   end
-  object T2R1F1: TStaticText
+  object AR1T2F1: TStaticText
     Left = 240
     Height = 17
     Top = 16
@@ -354,7 +354,7 @@ object Tool: TTool
     TabOrder = 2
     Transparent = False
   end
-  object T1R1F1: TStaticText
+  object AR1T1F1: TStaticText
     Left = 424
     Height = 17
     Top = 16
@@ -368,7 +368,7 @@ object Tool: TTool
     TabOrder = 3
     Transparent = False
   end
-  object T3R1F1: TStaticText
+  object AR1T3F1: TStaticText
     Left = 584
     Height = 17
     Top = 44
@@ -382,7 +382,7 @@ object Tool: TTool
     TabOrder = 4
     Transparent = False
   end
-  object T3R2F1: TStaticText
+  object AR2T3F1: TStaticText
     Left = 584
     Height = 17
     Top = 136
@@ -410,7 +410,7 @@ object Tool: TTool
     ParentFont = False
     TabOrder = 6
   end
-  object T2R2F1: TStaticText
+  object AR2T2F1: TStaticText
     Left = 264
     Height = 17
     Top = 160
@@ -424,7 +424,7 @@ object Tool: TTool
     TabOrder = 1
     Transparent = False
   end
-  object T2R1F2: TStaticText
+  object AR1T2F2: TStaticText
     Left = 240
     Height = 17
     Top = 208
@@ -438,7 +438,7 @@ object Tool: TTool
     TabOrder = 7
     Transparent = False
   end
-  object T1R1F2: TStaticText
+  object AR1T1F2: TStaticText
     Left = 424
     Height = 17
     Top = 208
@@ -452,7 +452,7 @@ object Tool: TTool
     TabOrder = 8
     Transparent = False
   end
-  object T3R1F2: TStaticText
+  object AR1T3F2: TStaticText
     Left = 584
     Height = 17
     Top = 237
@@ -480,7 +480,7 @@ object Tool: TTool
     ParentFont = False
     TabOrder = 10
   end
-  object T3R2F2: TStaticText
+  object AR2T3F2: TStaticText
     Left = 584
     Height = 17
     Top = 328
@@ -494,7 +494,7 @@ object Tool: TTool
     TabOrder = 11
     Transparent = False
   end
-  object T1R2F2: TStaticText
+  object AR2T1F2: TStaticText
     Left = 456
     Height = 17
     Top = 352
@@ -508,7 +508,7 @@ object Tool: TTool
     TabOrder = 12
     Transparent = False
   end
-  object T2R2F2: TStaticText
+  object AR2T2F2: TStaticText
     Left = 264
     Height = 17
     Top = 352
@@ -530,5 +530,20 @@ object Tool: TTool
     Caption = 'Close'
     OnClick = Button1Click
     TabOrder = 14
+  end
+  object Warning: TLabel
+    Left = 16
+    Height = 1
+    Top = 392
+    Width = 1
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clRed
+    Font.Height = -13
+    Font.Name = 'Segoe UI Semibold'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
 end

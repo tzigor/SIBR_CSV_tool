@@ -5,51 +5,58 @@ unit Unit3;
 interface
 
 uses
-  Classes, SysUtils, uComplex, Math;
+  Classes, SysUtils, uComplex, Math, StrUtils, LazSysUtils, Dialogs;
 
 var
   VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex;
   CP: array[0..10] of real;
 
-function angle(q_cos, q_sin: double): real;
-function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): real;
+function angle(z : complex): real;
+function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): double;
 procedure coeffpoly(f, n: byte; reg: string);
-function probe2sig(probe: real; f, n: byte; reg: string): real;
+function probe2sig(probe: double; f, n: byte; reg: string): double;
+function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): real;
 
 implementation
-function angle(q_cos, q_sin: double): real;
+function angle(z : complex): real;
 begin
-  if q_cos = 0 then
-    if q_sin > 0 then angle:= Pi/2
+  if z.re = 0 then
+    if z.im > 0 then angle:= Pi/2
     else angle:= -Pi/2
   else
-    if q_cos > 0 then angle:= Arctan(q_sin/q_cos)
-    else angle:= Pi-Arctan(-q_sin/q_cos)
+    if z.re > 0 then angle:= Arctan(z.im/z.re)
+    else angle:= Pi-Arctan(-z.im/z.re)
 end;
 
-function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): real;
+function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): double;
 // f = 1 - '404000' or 2 - '1818000' - frequency (Hz)
 // n = 1 or 2 or 3 - number of the synthesized probe
-const  a: array[0..2, 0..2] of real = ((-2/3, 1/2, 1/6), (-1/3, 1/2, -1/6), (1/3, 1/2, -5/6));
+// reg = "abs" or "ang" - probe type (amplitude/phase, respectively)
+const  a: array[1..3, 1..3] of real = ((-2/3, 1/2, 1/6), (-1/3, 1/2, -1/6), (1/3, 1/2, -5/6));
 var d1, d2, d3, s: complex;
-    K: array[0..2] of complex;
+    K: array[1..3] of complex;
 begin
-  d1:= VT1R2/VT1R1;
-  d2:= VT2R2/VT2R1;
-  d3:= VT3R2/VT3R1;
-  if f = 1 then begin // 400 KHz
-    K[0]:= 0.388742894 + 4.627e-6*i;
-    K[1]:= 0.458389342 + 1.365e-6*i;
-    K[2]:= 0.637350908 - 9.479e-6*i;
-  end
-  else begin // 2 MHz
-    K[0]:= 0.388779642 + 1.964e-6*i;
-    K[1]:= 0.458441645 + 1.51e-7*i;
-    K[2]:= 0.637448576 - 5.81e-6*i;
+  if ((VT1R2.re = 0) and (VT1R2.im = 0)) or ((VT2R2.re = 0) and (VT2R2.im = 0)) or ((VT3R2.re = 0) and (VT3R2.im = 0)) or
+     ((VT1R1.re = 0) and (VT1R1.im = 0)) or ((VT2R1.re = 0) and (VT2R1.im = 0)) or ((VT3R1.re = 0) and (VT3R1.im = 0)) then
+    costruct_probe:= 0
+  else begin
+    d1:= VT1R2/VT1R1;
+    d2:= VT2R2/VT2R1;
+    d3:= VT3R2/VT3R1;
+    if f = 1 then begin // 400 KHz
+      K[1]:= 0.388742894 + 4.627e-6*i;
+      K[2]:= 0.458389342 + 1.365e-6*i;
+      K[3]:= 0.637350908 - 9.479e-6*i;
+    end
+    else begin // 2 MHz
+      K[1]:= 0.388779642 + 1.964e-6*i;
+      K[2]:= 0.458441645 + 1.51e-7*i;
+      K[3]:= 0.637448576 - 5.81e-6*i;
+    end;
+    s:= d1**a[n,1]*d2**a[n,2]*d3**a[n,3] / K[n];
+    if reg = 'abs' then costruct_probe:= 20*Log10(cMod(s))
+    else costruct_probe:= angle(s);
   end;
-  s:= d1**a[n,1]*d2**a[n,2]*d3**a[n,3] / K[n];
-  if reg = 'abs' then costruct_probe:= -20*Log10(cMod(s))
-  else costruct_probe:= angle(s.re, s.im);
 end;
 
 procedure coeffpoly(f, n: byte; reg: string);
@@ -221,17 +228,34 @@ begin
        end
 end;
 
-function probe2sig(probe: real; f, n: byte; reg: string): real;
-var c_probe, sig: real;
+function probe2sig(probe: double; f, n: byte; reg: string): double;
+var c_probe, sig: double;
     i: integer;
 begin
+  sig:= 0;
   if probe = 0 then probe2sig:= 0
   else begin
      c_probe:= Log10(Abs(probe));
      coeffpoly(f, n, reg);
      for i:= 10 downto 0 do sig:= sig + CP[i] * power(c_probe, i);
+     c_probe:= power(10, sig);
+     if c_probe > 10000 then probe2sig:= 10000
+     else probe2sig:= c_probe
   end;
-  probe2sig:= power(10, sig);
+end;
+
+function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): real;
+// c = 1 - Compensated
+var x, xc: double;
+begin
+  x:= costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, f, n, reg);
+  xc:= probe2sig(x, f, n, reg);
+  //if (x < -1.4) and (reg = 'abs') and (f = 1) and (n = 1) then begin
+  //   ShowMessage(FloatToStr(x) + '  Comp - ' + FloatToStr(xc));
+  //   ShowMessage(FloatToStr(x) + '  Comp - ' + FloatToStr(probe2sig(x, f, n, reg)));
+  //end;
+  if c = 1 then conductivity:= xc
+  else conductivity:= x;
 end;
 
 end.
