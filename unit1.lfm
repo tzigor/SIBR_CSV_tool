@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = -1502
+  Left = -1451
   Height = 663
-  Top = -596
+  Top = -586
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.2.2 Portable'
+  Caption = 'SIBR Dump Tool v1.3.0 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -2356,8 +2356,8 @@ object CSV: TCSV
         end
         object ProgressBar: TProgressBar
           Left = 0
-          Height = 8
-          Top = 339
+          Height = 15
+          Top = 329
           Width = 228
           Step = 1
           TabOrder = 7
@@ -2664,7 +2664,7 @@ object CSV: TCSV
         end
         object RawChannels: TListBox
           Left = 16
-          Height = 528
+          Height = 536
           Top = 24
           Width = 140
           Columns = 1
@@ -2709,7 +2709,7 @@ object CSV: TCSV
         end
         object ComputedChannels: TListBox
           Left = 168
-          Height = 527
+          Height = 535
           Top = 25
           Width = 140
           ExtendedSelect = False
@@ -2763,7 +2763,7 @@ object CSV: TCSV
         object Button6: TButton
           Left = 320
           Height = 25
-          Top = 527
+          Top = 512
           Width = 87
           Caption = 'Uncheck All'
           OnClick = Button6Click
@@ -2815,13 +2815,29 @@ object CSV: TCSV
           TabOrder = 7
         end
         object ShowSondes: TButton
-          Left = 320
+          Left = 464
           Height = 32
-          Top = 400
-          Width = 140
-          Caption = 'Show Sondes'
+          Top = 465
+          Width = 176
+          Caption = 'Show Synthesized Sondes'
           OnClick = ShowSondesClick
           TabOrder = 8
+        end
+        object ShowCSondes: TButton
+          Left = 464
+          Height = 32
+          Top = 505
+          Width = 176
+          Caption = 'Show Compensated Sondes'
+          OnClick = ShowCSondesClick
+          TabOrder = 9
+        end
+        object CommonBar: TProgressBar
+          Left = 320
+          Height = 15
+          Top = 545
+          Width = 320
+          TabOrder = 10
         end
       end
       object OpenedFile: TEdit

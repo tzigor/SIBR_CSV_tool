@@ -281,12 +281,6 @@ begin
      VT3R2:= ComplexAmplitude(11, n)
    end;
 
-   //x:=  conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', 0);
-   //x1:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', 1);
-   //if (x < -1.4) and (Param = 'A16L') then begin
-   //   ShowMessage(FloatToStr(x) + '  Comp - ' + FloatToStr(x1));
-   //end;
-
    case Param of
      'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
      'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);

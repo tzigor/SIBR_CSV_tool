@@ -29,8 +29,10 @@ type
     Button8: TButton;
     Chart9: TChart;
     Chart9LineSeries1: TLineSeries;
+    CommonBar: TProgressBar;
     ShowSondes: TButton;
     ChartExtentLink2: TChartExtentLink;
+    ShowCSondes: TButton;
     Sondes1: TChart;
     Sondes2: TChart;
     Sondes3: TChart;
@@ -206,6 +208,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure ShowCSondesClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
@@ -472,11 +475,11 @@ var x, y: real;
     i: Integer;
 begin
   Chart9LineSeries1.Clear;
-  x:= -1.5;
-  for i:=1 to 1000 do begin
+  x:= -10;
+  for i:=1 to 10000 do begin
      y:= probe2sig(x, 1, 1, 'abs');
      Chart9LineSeries1.AddXY(x, y);
-     x:= x + 0.001;
+     x:= x + 0.01;
   end;
 end;
 
@@ -485,6 +488,8 @@ begin
   if AutoFit.Checked then FitToWinClick(Sender);
   Sondes.Height:= (CSV.Height - 50) div 2;
   Sondes1.Height:= (CSV.Height - 50) div 2;
+  Sondes2.Height:= (CSV.Height - 50) div 2;
+  Sondes3.Height:= (CSV.Height - 50) div 2;
 end;
 
 procedure TCSV.ShowToolClick(Sender: TObject);
@@ -588,10 +593,22 @@ begin
   CSV.Sondes1.Visible:= visible;
 end;
 
+procedure CSondesVisible(visible: Boolean);
+begin
+  CSV.Sondes2.Visible:= visible;
+  CSV.Sondes3.Visible:= visible;
+end;
+
 procedure ResetZoomSondes;
 begin
   CSV.Sondes.ZoomFull;
   CSV.Sondes1.ZoomFull;
+end;
+
+procedure ResetZoomCSondes;
+begin
+  CSV.Sondes2.ZoomFull;
+  CSV.Sondes3.ZoomFull;
 end;
 
 procedure ResetSondesSeries;
@@ -608,7 +625,10 @@ begin
   CSV.SondesLineSeries10.Clear;
   CSV.SondesLineSeries11.Clear;
   CSV.SondesLineSeries12.Clear;
+end;
 
+procedure ResetCSondesSeries;
+begin
   CSV.SondesLineSeries13.Clear;
   CSV.SondesLineSeries14.Clear;
   CSV.SondesLineSeries15.Clear;
@@ -629,17 +649,24 @@ begin
   ResetZoomSondes;
   SondesVisible(false);
 end;
+
+procedure ResetCSondes;
+begin
+  ResetCSondesSeries;
+  ResetZoomCSondes;
+  CSondesVisible(false);
+end;
+
 procedure TCSV.ShowSondesClick(Sender: TObject);
-var y: Double;
-    x: TDateTime;
+var x: TDateTime;
     i, TimePos: Integer;
 begin
   ResetSondes;
   TimePos:= GetParamPosition('RTCs');
-  Sondes.Title.Text[0]:='Amplitudes';
-  Sondes1.Title.Text[0]:='Phases';
-  Sondes2.Title.Text[0]:='Amplitudes';
-  Sondes3.Title.Text[0]:='Phases';
+  Sondes.Title.Text[0]:='Synthesized Sondes - Amplitudes';
+  Sondes1.Title.Text[0]:='Synthesized Sondes - Phases';
+  CommonBar.Max:= CSVContent.Count-1;
+  CommonBar.Position:= 0;
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
        x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
@@ -655,7 +682,30 @@ begin
        SondesLineSeries10.AddXY(x, GetConductivity('P16H', i, 0));
        SondesLineSeries11.AddXY(x, GetConductivity('P22H', i, 0));
        SondesLineSeries12.AddXY(x, GetConductivity('P34H', i, 0));
+    end;
+    CommonBar.Position:= CommonBar.Position + 1;
+  end;
+  CommonBar.Position:= 0;
+  Sondes.Height:= (CSV.Height - 50) div 2;
+  Sondes1.Height:= (CSV.Height - 50) div 2;
+  Sondes.Visible:= True;
+  Sondes1.Visible:= True;
+  App.ActivePage:= SondesChart;
+end;
 
+procedure TCSV.ShowCSondesClick(Sender: TObject);
+var x: TDateTime;
+    i, TimePos: Integer;
+begin
+  ResetCSondes;
+  TimePos:= GetParamPosition('RTCs');
+  Sondes2.Title.Text[0]:='Compensated Sondes - Amplitudes';
+  Sondes3.Title.Text[0]:='Compensated Sondes - Phases';
+  CommonBar.Max:= CSVContent.Count-1;
+  CommonBar.Position:= 0;
+  for i:=1 to CSVContent.Count-1 do begin
+    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
+       x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
        SondesLineSeries13.AddXY(x, GetConductivity('A16L', i, 1));
        SondesLineSeries14.AddXY(x, GetConductivity('A22L', i, 1));
        SondesLineSeries15.AddXY(x, GetConductivity('A34L', i, 1));
@@ -669,14 +719,14 @@ begin
        SondesLineSeries23.AddXY(x, GetConductivity('P22H', i, 1));
        SondesLineSeries24.AddXY(x, GetConductivity('P34H', i, 1));
     end;
+    CommonBar.Position:= CommonBar.Position + 1;
   end;
-  Sondes.Height:= (CSV.Height - 50) div 2;
-  Sondes1.Height:= (CSV.Height - 50) div 2;
-  Sondes.Visible:= True;
-  Sondes1.Visible:= True;
+  CommonBar.Position:= 0;
+  Sondes2.Height:= (CSV.Height - 50) div 2;
+  Sondes3.Height:= (CSV.Height - 50) div 2;
   Sondes2.Visible:= True;
   Sondes3.Visible:= True;
-  App.ActivePage:= SondesChart;
+  App.ActivePage:= CSondes;
 end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
@@ -908,7 +958,8 @@ procedure TCSV.ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 begin
    with ComputedChannels do begin
-     if FindPart('AR?T?F', Items[Index]) > 0 then Canvas.Font.Color:= clBlue;
+     if FindPart('AR?T?F', Items[Index]) > 0 then Canvas.Font.Color:= clBlue
+     else if Items[Index] in CondChannels then Canvas.Font.Color:= clGreen;
 
      if (odSelected in State) then begin
        Canvas.Brush.Color:=clBlue;
