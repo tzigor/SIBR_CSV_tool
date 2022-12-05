@@ -18,6 +18,7 @@ type
 
   TCSV = class(TForm)
     App: TPageControl;
+    AutoFit: TCheckBox;
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
@@ -25,14 +26,32 @@ type
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
-    AutoFit: TCheckBox;
     Button8: TButton;
+    Button9: TButton;
     Chart9: TChart;
     Chart9LineSeries1: TLineSeries;
-    CommonBar: TProgressBar;
-    ShowSondes: TButton;
+    Chart9LineSeries2: TLineSeries;
+    Chart9LineSeries3: TLineSeries;
+    Chart9LineSeries4: TLineSeries;
+    Chart9LineSeries5: TLineSeries;
+    Chart9LineSeries6: TLineSeries;
     ChartExtentLink2: TChartExtentLink;
+    CommonBar: TProgressBar;
+    ComputedChannels: TListBox;
+    GroupBox7: TGroupBox;
+    Image1: TImage;
+    Image2: TImage;
+    Label22: TLabel;
+    Label23: TLabel;
+    Label24: TLabel;
+    Label27: TLabel;
+    LocalTime: TSpinEdit;
+    mVolts: TCheckBox;
+    PowerResets: TCheckBox;
+    RawChannels: TListBox;
+    SelectedChannels: TListBox;
     ShowCSondes: TButton;
+    ShowSondes: TButton;
     Sondes1: TChart;
     Sondes2: TChart;
     Sondes3: TChart;
@@ -100,20 +119,14 @@ type
     TestType: TComboBox;
     RPTOnly: TCheckBox;
     Label33: TLabel;
-    mVolts: TCheckBox;
-    ComputedChannels: TListBox;
     CSVFileSize: TLabel;
     Duration: TLabel;
     DurationT: TLabel;
-    Label27: TLabel;
     TabSheet3: TTabSheet;
     ToolTime: TLabel;
-    LocalTime: TSpinEdit;
     OpenedFile: TEdit;
     ExtentDuration: TStaticText;
     GroupBox9: TGroupBox;
-    Image1: TImage;
-    Image2: TImage;
     Image3: TImage;
     FitToWin: TImage;
     Image5: TImage;
@@ -139,7 +152,6 @@ type
     GroupBox4: TGroupBox;
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
-    GroupBox7: TGroupBox;
     GroupBox8: TGroupBox;
     Label1: TLabel;
     Label10: TLabel;
@@ -155,9 +167,6 @@ type
     Label2: TLabel;
     Label20: TLabel;
     Label21: TLabel;
-    Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
     Label25: TLabel;
     Label26: TLabel;
     Label3: TLabel;
@@ -169,10 +178,8 @@ type
     Label9: TLabel;
     MainTab: TTabSheet;
     OpenCSVFast: TButton;
-    PowerResets: TCheckBox;
     ProgressBar: TProgressBar;
     ReportProgress: TProgressBar;
-    RawChannels: TListBox;
     RecordRate: TEdit;
     Records: TLabel;
     RecordsT: TLabel;
@@ -190,7 +197,6 @@ type
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     OpenDialog1: TOpenDialog;
     SaveReport: TButton;
-    SelectedChannels: TListBox;
     SerialNumber: TEdit;
     StartTime: TEdit;
     StatusHi: TRadioButton;
@@ -208,6 +214,7 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
     procedure ShowCSondesClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -475,12 +482,43 @@ var x, y: real;
     i: Integer;
 begin
   Chart9LineSeries1.Clear;
-  x:= -10;
-  for i:=1 to 10000 do begin
-     y:= probe2sig(x, 1, 1, 'abs');
-     Chart9LineSeries1.AddXY(x, y);
-     x:= x + 0.01;
-  end;
+  Chart9LineSeries2.Clear;
+  Chart9LineSeries3.Clear;
+  Chart9LineSeries4.Clear;
+  Chart9LineSeries5.Clear;
+  Chart9LineSeries6.Clear;
+  x:= 0;
+  for i:=1 to 500 do begin
+    y:= sin(x);
+    Chart9LineSeries1.AddXY(x, y);
+    //y:= 2*x;
+    //Chart9LineSeries2.AddXY(x, y);
+    x:= x + 0.1;
+  end
+  //x:= -2.5;
+  //for i:=1 to 400 do begin
+  //   y:= probe2sig(x, 1, 1, 'abs');
+  //   Chart9LineSeries1.AddXY(x, y);
+  //   y:= probe2sig(x, 1, 2, 'abs');
+  //   Chart9LineSeries2.AddXY(x, y);
+  //   y:= probe2sig(x, 1, 3, 'abs');
+  //   Chart9LineSeries3.AddXY(x, y);
+  //   y:= probe2sig(x, 2, 1, 'abs');
+  //   Chart9LineSeries4.AddXY(x, y);
+  //   y:= probe2sig(x, 2, 2, 'abs');
+  //   Chart9LineSeries5.AddXY(x, y);
+  //   y:= probe2sig(x, 2, 3, 'abs');
+  //   Chart9LineSeries6.AddXY(x, y);
+  //   x:= x + 0.01;
+  //end;
+end;
+
+procedure TCSV.Button9Click(Sender: TObject);
+var a, b, c1, c2: complex;
+begin
+  a:= 5 + 3*i;
+  c1:= a**(1/2);
+  ShowMessage(cStr(c1, 0, 3) + '      ' + cStr(c2, 0, 3));
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -749,22 +787,23 @@ begin
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
 
-       if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 1)
-       else
-          if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
-          else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
-               else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+       if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 0)
+       else if SelectedParamName in CondCompChannels then y:= GetConductivity(SelectedParamName, i, 1)
+            else
+                if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
+                else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
+                     else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
 
-            x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+                  x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
 
-            if PowerReset then begin
-              if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
-              else Chart1LineSeries.AddXY(x, y);
-              PowerReset:= false;
-            end
-            else begin
-              Chart1LineSeries.AddXY(x, y);
-            end;
+                  if PowerReset then begin
+                    if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+                    else Chart1LineSeries.AddXY(x, y);
+                    PowerReset:= false;
+                  end
+                  else begin
+                    Chart1LineSeries.AddXY(x, y);
+                  end;
 
     end
     else begin
@@ -959,7 +998,8 @@ procedure TCSV.ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;
 begin
    with ComputedChannels do begin
      if FindPart('AR?T?F', Items[Index]) > 0 then Canvas.Font.Color:= clBlue
-     else if Items[Index] in CondChannels then Canvas.Font.Color:= clGreen;
+     else if Items[Index] in CondChannels then Canvas.Font.Color:= RGBToColor(0, 100, 0)
+          else if Items[Index] in CondCompChannels then Canvas.Font.Color:= RGBToColor(255, 0, 0);
 
      if (odSelected in State) then begin
        Canvas.Brush.Color:=clBlue;
@@ -1277,7 +1317,7 @@ begin
         for i:= 0 to 15 do ComputedChannels.Items.Add(AmplitudeName(i));
         for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
         for i:= 0 to 11 do ComputedChannels.Items.Add(CondChannels[i]);
-
+        for i:= 0 to 11 do ComputedChannels.Items.Add(CondCompChannels[i]);
 
         ParamPos:= GetParamPosition('RTCs');
         hrsPlus:= LocalTime.Value;

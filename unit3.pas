@@ -16,6 +16,7 @@ function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n:
 procedure coeffpoly(f, n: byte; reg: string);
 function probe2sig(probe: real; f, n: byte; reg: string): real;
 function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): real;
+//function Poly(x: real; f, n: byte; reg: string): Real;
 
 implementation
 function angle(z : complex): real;
@@ -228,6 +229,19 @@ begin
        end
 end;
 
+function Poly(probe: real; f, n: byte; reg: string): Real;
+var c_probe, sig: double;
+    i: integer;
+begin
+  sig:= 0;
+  //c_probe:= Log10(Abs(probe));
+  //c_probe:= probe;
+  coeffpoly(f, n, reg);
+  for i:= 10 downto 0 do sig:= sig + CP[i] * power(c_probe, i);
+  //probe2sig:= power(10, sig)
+  Poly:= sig
+end;
+
 function probe2sig(probe: real; f, n: byte; reg: string): real;
 var c_probe, sig: double;
     i: integer;
@@ -244,7 +258,9 @@ begin
      on E : Exception do
        probe2sig:= 0;
      end;
-     probe2sig:= c_probe;
+     //if probe > 0 then probe2sig:= c_probe
+     //else probe2sig:= -c_probe
+     probe2sig:= c_probe
   end;
 end;
 

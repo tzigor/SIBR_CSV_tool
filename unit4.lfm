@@ -1,7 +1,7 @@
 object Tool: TTool
-  Left = -1393
+  Left = -1151
   Height = 420
-  Top = -436
+  Top = -457
   Width = 860
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Amplitudes'

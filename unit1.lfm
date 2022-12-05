@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = -1451
+  Left = -1372
   Height = 663
-  Top = -586
+  Top = -560
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.3.0 Portable'
@@ -1904,14 +1904,14 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = MainTab
+    ActivePage = TabSheet4
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 8
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2372,6 +2372,28 @@ object CSV: TCSV
           TabOrder = 8
         end
       end
+      object OpenedFile: TEdit
+        Left = 72
+        Height = 23
+        Top = 601
+        Width = 696
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        TabOrder = 4
+        Text = 'File:'
+      end
+      object Button7: TButton
+        Left = 0
+        Height = 25
+        Top = 600
+        Width = 64
+        Caption = 'Copy'
+        OnClick = Button7Click
+        TabOrder = 5
+      end
       object GroupBox7: TGroupBox
         Left = 240
         Height = 584
@@ -2383,7 +2405,7 @@ object CSV: TCSV
         Color = clWhite
         ParentBackground = False
         ParentColor = False
-        TabOrder = 4
+        TabOrder = 6
         object Image1: TImage
           Left = 320
           Height = 38
@@ -2837,30 +2859,19 @@ object CSV: TCSV
           Height = 15
           Top = 545
           Width = 320
+          Color = clYellow
+          ParentColor = False
           TabOrder = 10
         end
-      end
-      object OpenedFile: TEdit
-        Left = 72
-        Height = 23
-        Top = 601
-        Width = 696
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Pitch = fpVariable
-        Font.Quality = fqDraft
-        ParentFont = False
-        TabOrder = 5
-        Text = 'File:'
-      end
-      object Button7: TButton
-        Left = 0
-        Height = 25
-        Top = 600
-        Width = 64
-        Caption = 'Copy'
-        OnClick = Button7Click
-        TabOrder = 6
+        object Button9: TButton
+          Left = 504
+          Height = 25
+          Top = 384
+          Width = 75
+          Caption = 'Button9'
+          OnClick = Button9Click
+          TabOrder = 11
+        end
       end
     end
     object Graphs: TTabSheet
@@ -4715,10 +4726,10 @@ object CSV: TCSV
       ClientWidth = 891
       object Label33: TLabel
         Left = 8
-        Height = 90
+        Height = 135
         Top = 8
         Width = 448
-        Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'#13#10#13#10'Version 1.2.2'#13#10'- Amplitudes on antennas visualisation added (buttton [Show tool] in Report section)'
+        Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'#13#10#13#10'Version 1.2.2'#13#10'- Amplitudes on antennas visualisation added (buttton [Show tool] in Report section)'#13#10#13#10'Version 1.3.0'#13#10'- Synthesized Sondes and Compensated Sondes added'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -4758,6 +4769,24 @@ object CSV: TCSV
         Color = clWhite
         object Chart9LineSeries1: TLineSeries
           LinePen.Color = clBlue
+        end
+        object Chart9LineSeries2: TLineSeries
+          LinePen.Color = clRed
+        end
+        object Chart9LineSeries3: TLineSeries
+          LinePen.Color = 2596096
+        end
+        object Chart9LineSeries4: TLineSeries
+          LinePen.Color = clBlue
+          LinePen.Style = psDash
+        end
+        object Chart9LineSeries5: TLineSeries
+          LinePen.Color = clRed
+          LinePen.Style = psDash
+        end
+        object Chart9LineSeries6: TLineSeries
+          LinePen.Color = 163849
+          LinePen.Style = psDash
         end
       end
       object Button8: TButton

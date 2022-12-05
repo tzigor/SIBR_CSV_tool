@@ -34,7 +34,8 @@ Const Line = #13#10;
       NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
-      CondChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
+      CondChannels: array of String = ('A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
+      CondCompChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
 
 Const SWLo: array of String70 = (
       '+24V_CTRL out of range ±30%',
@@ -282,6 +283,19 @@ begin
    end;
 
    case Param of
+     'A16L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
+     'A22L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
+     'A34L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
+     'A16H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
+     'A22H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
+     'A34H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
+     'P16L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
+     'P22L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
+     'P34L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
+     'P16H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
+     'P22H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
+     'P34H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
+
      'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
      'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
      'A34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
