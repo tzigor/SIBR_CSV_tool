@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = -1372
+  Left = -1500
   Height = 663
-  Top = -560
+  Top = -589
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.3.0 Portable'
+  Caption = 'SIBR Dump Tool v1.3.0 Portable Beta'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1904,14 +1904,14 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = TabSheet4
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 8
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2862,15 +2862,6 @@ object CSV: TCSV
           Color = clYellow
           ParentColor = False
           TabOrder = 10
-        end
-        object Button9: TButton
-          Left = 504
-          Height = 25
-          Top = 384
-          Width = 75
-          Caption = 'Button9'
-          OnClick = Button9Click
-          TabOrder = 11
         end
       end
     end
@@ -3906,7 +3897,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Chart1ExtentChanged
+        OnExtentChanging = SondesExtentChanging
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4013,7 +4004,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Chart1ExtentChanged
+        OnExtentChanged = Sondes1ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4125,7 +4116,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Chart1ExtentChanged
+        OnExtentChanged = Sondes2ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4232,7 +4223,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Chart1ExtentChanged
+        OnExtentChanged = Sondes3ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4742,6 +4733,7 @@ object CSV: TCSV
       Caption = 'TabSheet4'
       ClientHeight = 635
       ClientWidth = 891
+      TabVisible = False
       object Chart9: TChart
         Left = 8
         Height = 472
@@ -4844,10 +4836,11 @@ object CSV: TCSV
     end
   end
   object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
+    Params.Count = 1
     Params.MaxLength = 100
-    Params.MinLength = 50
+    Params.MinLength = 100
     Params.NiceSteps = '1'
-    Params.Options = [aipUseMaxLength]
+    Params.Options = [aipUseCount, aipUseMaxLength, aipUseMinLength, aipUseNiceSteps]
     Params.Tolerance = 1
     DateTimeStepFormat.HourFormat = 'dd hh"h":nn"m"'
     DateTimeStepFormat.MinuteFormat = 'hh:nn"m"'

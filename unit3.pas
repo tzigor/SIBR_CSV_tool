@@ -9,17 +9,17 @@ uses
 
 var
   VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex;
-  CP: array[0..10] of real;
+  CP: array[0..10] of Double;
 
-function angle(z : complex): real;
-function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): real;
+function angle(z : complex): Double;
+function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): Double;
 procedure coeffpoly(f, n: byte; reg: string);
-function probe2sig(probe: real; f, n: byte; reg: string): real;
-function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): real;
+function probe2sig(probe: Double; f, n: byte; reg: string): Double;
+function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): Double;
 //function Poly(x: real; f, n: byte; reg: string): Real;
 
 implementation
-function angle(z : complex): real;
+function angle(z : complex): Double;
 begin
   if z.re = 0 then
     if z.im > 0 then angle:= Pi/2
@@ -29,7 +29,7 @@ begin
     else angle:= Pi-Arctan(-z.im/z.re)
 end;
 
-function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): real;
+function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): Double;
 // f = 1 - '404000' or 2 - '1818000' - frequency (Hz)
 // n = 1 or 2 or 3 - number of the synthesized probe
 // reg = "abs" or "ang" - probe type (amplitude/phase, respectively)
@@ -55,7 +55,7 @@ begin
       K[3]:= 0.637448576 - 5.81e-6*i;
     end;
     s:= d1**a[n,1]*d2**a[n,2]*d3**a[n,3] / K[n];
-    if reg = 'abs' then costruct_probe:= 20*Log10(cMod(s))
+    if reg = 'abs' then costruct_probe:= -20*Log10(cMod(s))
     else costruct_probe:= angle(s);
   end;
 end;
@@ -229,7 +229,7 @@ begin
        end
 end;
 
-function Poly(probe: real; f, n: byte; reg: string): Real;
+function Poly(probe: Double; f, n: byte; reg: string): Double;
 var c_probe, sig: double;
     i: integer;
 begin
@@ -242,29 +242,30 @@ begin
   Poly:= sig
 end;
 
-function probe2sig(probe: real; f, n: byte; reg: string): real;
-var c_probe, sig: double;
+function probe2sig(probe: Double; f, n: byte; reg: string): Double;
+var c_probe, sig, calculation: double;
     i: integer;
 begin
   sig:= 0;
-  if Abs(probe) < 0.001 then probe2sig:= 0
+  if Abs(probe) < 0.001 then calculation:= 0
   else begin
+     try
      c_probe:= Log10(Abs(probe));
      coeffpoly(f, n, reg);
      for i:= 10 downto 0 do sig:= sig + CP[i] * power(c_probe, i);
-     try
-       c_probe:= power(10, sig);
+     c_probe:= power(10, sig);
      except
      on E : Exception do
        probe2sig:= 0;
      end;
-     //if probe > 0 then probe2sig:= c_probe
-     //else probe2sig:= -c_probe
-     probe2sig:= c_probe
+     calculation:= -c_probe;
   end;
+  //probe2sig:= (calculation+3)*200;
+    //probe2sig:= (calculation+2.4);
+    probe2sig:= c_probe;
 end;
 
-function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): real;
+function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): Double;
 // c = 1 - Compensated
 var x: real;
 begin

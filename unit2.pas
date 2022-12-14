@@ -15,9 +15,9 @@ type ShortString = String[24];
 
 type TSibrParam = record
     name: ShortString;
-    min: Single;
-    max: Single;
-    stdDev: Single;
+    min: Double;
+    max: Double;
+    stdDev: Double;
     k, m: Byte;
 end;
 
@@ -121,16 +121,16 @@ function GetLineColor(): TColor;
 function GetParamPosition(Param: String): Integer;
 function GetParamValue(ParamNum: Integer; TextLine: String): String;
 function FileSize(FileName:string):Integer;
-function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
+function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Double; k, m: Integer; PF: String): String;
 function SWLine(name:String; SW, Expected: Longint; PF: String): String;
 procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
 function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
 function expon2(n: Integer): Integer;
 function DateTimePlusLocal(DateTime: String): String;
-function GetReportAmpl(Param: String): Real;
+function GetReportAmpl(Param: String): Double;
 function ComplexAmplitude(nParam, n: Integer): complex;
-function GetConductivity(Param: String; n: Integer; c: Byte): Real;
+function GetConductivity(Param: String; n: Integer; c: Byte): Double;
 
 implementation
 
@@ -206,7 +206,7 @@ begin
    GetLineColor:= RGBToColor(R, G, B);
 end;
 
-function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Single; k, m: Integer; PF: String): String;
+function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Double; k, m: Integer; PF: String): String;
 var wStr: String;
 begin
    wStr:= AddCharR(' ',name, 15);
@@ -261,7 +261,7 @@ begin
   ComplexAmplitude:= cinit(RawR, RawX);
 end;
 
-function GetConductivity(Param: String; n: Integer; c: Byte): Real;
+function GetConductivity(Param: String; n: Integer; c: Byte): Double;
 // c = 1 - Compensated
 var x, x1: real;
 begin
@@ -338,7 +338,7 @@ begin
   else PhaseShift:= 0;
 end;
 
-function GetReportAmpl(Param: String): Real;
+function GetReportAmpl(Param: String): Double;
 var i, NumReportParams: integer;
 begin
   NumReportParams:= Length(ReportParams);
@@ -572,112 +572,112 @@ begin
   SibrParams[31].max:= 0;
   SibrParams[31].stdDev:= 0;
   SibrParams[31].k:= 10;
-  SibrParams[31].m:= 2;
+  SibrParams[31].m:= 3;
 
   SibrParams[32].name:= 'AR2T0F1';
   SibrParams[32].min:= 0;
   SibrParams[32].max:= 0;
   SibrParams[32].stdDev:= 0;
   SibrParams[32].k:= 10;
-  SibrParams[32].m:= 2;
+  SibrParams[32].m:= 3;
 
   SibrParams[33].name:= 'AR1T0F2';
   SibrParams[33].min:= 0;
   SibrParams[33].max:= 0;
   SibrParams[33].stdDev:= 0;
   SibrParams[33].k:= 10;
-  SibrParams[33].m:= 2;
+  SibrParams[33].m:= 3;
 
   SibrParams[34].name:= 'AR2T0F2';
   SibrParams[34].min:= 0;
   SibrParams[34].max:= 0;
   SibrParams[34].stdDev:= 0;
   SibrParams[34].k:= 10;
-  SibrParams[34].m:= 2;
+  SibrParams[34].m:= 3;
 
   SibrParams[35].name:= 'AR1T1F1';
   SibrParams[35].min:= 0;
   SibrParams[35].max:= 0;
   SibrParams[35].stdDev:= 0;
   SibrParams[35].k:= 10;
-  SibrParams[35].m:= 2;
+  SibrParams[35].m:= 3;
 
   SibrParams[36].name:= 'AR2T1F1';
   SibrParams[36].min:= 0;
   SibrParams[36].max:= 0;
   SibrParams[36].stdDev:= 0;
   SibrParams[36].k:= 10;
-  SibrParams[36].m:= 2;
+  SibrParams[36].m:= 3;
 
   SibrParams[37].name:= 'AR1T1F2';
   SibrParams[37].min:= 0;
   SibrParams[37].max:= 0;
   SibrParams[37].stdDev:= 0;
   SibrParams[37].k:= 10;
-  SibrParams[37].m:= 2;
+  SibrParams[37].m:= 3;
 
   SibrParams[38].name:= 'AR2T1F2';
   SibrParams[38].min:= 0;
   SibrParams[38].max:= 0;
   SibrParams[38].stdDev:= 0;
   SibrParams[38].k:= 10;
-  SibrParams[38].m:= 2;
+  SibrParams[38].m:= 3;
 
   SibrParams[39].name:= 'AR1T2F1';
   SibrParams[39].min:= 0;
   SibrParams[39].max:= 0;
   SibrParams[39].stdDev:= 0;
   SibrParams[39].k:= 10;
-  SibrParams[39].m:= 2;
+  SibrParams[39].m:= 3;
 
   SibrParams[40].name:= 'AR2T2F1';
   SibrParams[40].min:= 0;
   SibrParams[40].max:= 0;
   SibrParams[40].stdDev:= 0;
   SibrParams[40].k:= 10;
-  SibrParams[40].m:= 2;
+  SibrParams[40].m:= 3;
 
   SibrParams[41].name:= 'AR1T2F2';
   SibrParams[41].min:= 0;
   SibrParams[41].max:= 0;
   SibrParams[41].stdDev:= 0;
   SibrParams[41].k:= 10;
-  SibrParams[41].m:= 2;
+  SibrParams[41].m:= 3;
 
   SibrParams[42].name:= 'AR2T2F2';
   SibrParams[42].min:= 0;
   SibrParams[42].max:= 0;
   SibrParams[42].stdDev:= 0;
   SibrParams[42].k:= 10;
-  SibrParams[42].m:= 2;
+  SibrParams[42].m:= 3;
 
   SibrParams[43].name:= 'AR1T3F1';
   SibrParams[43].min:= 0;
   SibrParams[43].max:= 0;
   SibrParams[43].stdDev:= 0;
   SibrParams[43].k:= 10;
-  SibrParams[43].m:= 2;
+  SibrParams[43].m:= 3;
 
   SibrParams[44].name:= 'AR2T3F1';
   SibrParams[44].min:= 0;
   SibrParams[44].max:= 0;
   SibrParams[44].stdDev:= 0;
   SibrParams[44].k:= 10;
-  SibrParams[44].m:= 2;
+  SibrParams[44].m:= 3;
 
   SibrParams[45].name:= 'AR1T3F2';
   SibrParams[45].min:= 0;
   SibrParams[45].max:= 0;
   SibrParams[45].stdDev:= 0;
   SibrParams[45].k:= 10;
-  SibrParams[45].m:= 2;
+  SibrParams[45].m:= 3;
 
   SibrParams[46].name:= 'AR2T3F2';
   SibrParams[46].min:= 0;
   SibrParams[46].max:= 0;
   SibrParams[46].stdDev:= 0;
   SibrParams[46].k:= 10;
-  SibrParams[46].m:= 2;
+  SibrParams[46].m:= 3;
 
   SibrParams[47].name:= 'PR1T0F1';
   SibrParams[47].min:= 0;

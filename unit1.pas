@@ -27,7 +27,6 @@ type
     Button6: TButton;
     Button7: TButton;
     Button8: TButton;
-    Button9: TButton;
     Chart9: TChart;
     Chart9LineSeries1: TLineSeries;
     Chart9LineSeries2: TLineSeries;
@@ -258,6 +257,10 @@ type
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
+    procedure Sondes1ExtentChanged(ASender: TChart);
+    procedure Sondes2ExtentChanged(ASender: TChart);
+    procedure Sondes3ExtentChanged(ASender: TChart);
+    procedure SondesExtentChanging(ASender: TChart);
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -272,7 +275,6 @@ type
   private
   public
   end;
-
 
 var
   CSV: TCSV;
@@ -383,7 +385,6 @@ begin
     end else ShowMessage('Plese put correct value of Record Rate in sec. (1...)');
   end else ShowMessage('Open CSV file first.');
 end;
-
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
 begin
@@ -802,7 +803,7 @@ begin
                     PowerReset:= false;
                   end
                   else begin
-                    Chart1LineSeries.AddXY(x, y);
+                    Chart1LineSeries.AddXY(x, y)
                   end;
 
     end
@@ -1046,6 +1047,34 @@ begin
   else FillSelectedChannels;
 end;
 
+procedure TCSV.Sondes1ExtentChanged(ASender: TChart);
+var dr: TDoubleRect;
+begin
+  dr:= Sondes1.CurrentExtent;
+  Sondes1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Sondes2ExtentChanged(ASender: TChart);
+var dr: TDoubleRect;
+begin
+  dr:= Sondes2.CurrentExtent;
+  Sondes2.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.Sondes3ExtentChanged(ASender: TChart);
+  var dr: TDoubleRect;
+begin
+  dr:= Sondes3.CurrentExtent;
+  Sondes3.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
+procedure TCSV.SondesExtentChanging(ASender: TChart);
+var dr: TDoubleRect;
+begin
+  dr:= Sondes.CurrentExtent;
+  Sondes.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+end;
+
 procedure TCSV.EStatusLoChange(Sender: TObject);
   var i: Byte;
 begin
@@ -1059,7 +1088,7 @@ end;
 
 procedure TCSV.FormCreate(Sender: TObject);
 begin
-  AmplsInmVolts:= true;
+  AmplsInmVolts:= mVolts.Checked;
   CurrentSW:= 'STATUS.SIBR.LO';
   LocalTime.Value:= HoursBetween(nowUTC(), now());
   hrsPlus:= LocalTime.Value;
@@ -1144,35 +1173,6 @@ end;
 procedure TCSV.mVoltsChange(Sender: TObject);
 begin
   AmplsInmVolts:= mVolts.Checked;
-  with Tool do
-    if mVolts.Checked then begin
-      AR1T1F1.Width:= 40;
-      AR1T1F2.Width:= 40;
-      AR2T1F1.Width:= 40;
-      AR2T1F2.Width:= 40;
-      AR1T2F1.Width:= 40;
-      AR1T2F2.Width:= 40;
-      AR2T2F1.Width:= 40;
-      AR2T2F2.Width:= 40;
-      AR1T3F1.Width:= 40;
-      AR1T3F2.Width:= 40;
-      AR2T3F1.Width:= 40;
-      AR2T3F2.Width:= 40;
-    end
-    else begin
-      AR1T1F1.Width:= 77;
-      AR1T1F2.Width:= 77;
-      AR2T1F1.Width:= 77;
-      AR2T1F2.Width:= 77;
-      AR1T2F1.Width:= 77;
-      AR1T2F2.Width:= 77;
-      AR2T2F1.Width:= 77;
-      AR2T2F2.Width:= 77;
-      AR1T3F1.Width:= 77;
-      AR1T3F2.Width:= 77;
-      AR2T3F1.Width:= 77;
-      AR2T3F2.Width:= 77;
-    end;
 end;
 
 procedure TCSV.RawChannelsDrawItem(Control: TWinControl; Index: Integer;
@@ -1383,7 +1383,7 @@ begin
 end;
 
 procedure PrintAmplitudes(AR1Tx, AR2Tx: TStaticText);
-var TxR1, TxR2: Real;
+var TxR1, TxR2: Double;
     FontColor: TColor;
 begin
    TxR1:= GetReportAmpl(AR1Tx.Name);
@@ -1402,7 +1402,7 @@ begin
 end;
 
 procedure TCSV.ReportClick(Sender: TObject);
-var i, j, meanCount: Longint;
+var i, j, meanCount, start: Longint;
     ParamPos, TimePos, ParamCount: Integer;
     MinValue, MaxValue, Avarage, StdDiviation, Value: Double;
     AmplAvarage, PSAvarage, AmplValue, PSValue, MinAmplValue, MinPSValue, MaxAmplValue, MaxPSValue, AmplStdDiviation, PSStdDiviation: Double;
@@ -1442,12 +1442,19 @@ begin
       wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + Line;
       wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
       Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
+      i:= 1;
+      repeat
+        CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+        i:= i + 1;
+      until (CompareDateTime(CurrentTime, StartTimeDT) = 1) or (i = CSVContent.Count-1);
+      start:= i;
+
       for j:=0 to 30 do begin
         ParamPos:= GetParamPosition(SibrParams[j].name);
-        Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[1]));
+        Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[start]));
         MinValue:= Value; MaxValue:= Value;
         meanCount:= 0;
-        for i:=1 to CSVContent.Count-1 do begin
+        for i:=start to CSVContent.Count-1 do begin
            CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
            if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
              Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
@@ -1486,10 +1493,10 @@ begin
       PSAvarage:= 0; PSStdDiviation:= 0;
 
       for j:=1 to 16 do begin
-        GetResParameters(AmplValue, PSValue, j-1, i);
+        GetResParameters(AmplValue, PSValue, j-1, start);
         MinAmplValue:= AmplValue; MaxAmplValue:= AmplValue;
         MinPSValue:= PSValue; MaxPSValue:= PSValue;
-        for i:=1 to CSVContent.Count-1 do begin
+        for i:=start to CSVContent.Count-1 do begin
            CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
            if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
              GetResParameters(AmplValue, PSValue, j-1, i);
