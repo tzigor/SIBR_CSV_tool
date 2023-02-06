@@ -90,8 +90,8 @@ Const SWLo: array of String70 = (
       'Active logging identifier bit 3');
 
 var
-  CSVFileName, DrawParameter: String;
-  CSVContent: TStringList;
+  CSVFileName, CSVCompareFileName, DrawParameter: String;
+  CSVContent, CSVCompare: TStringList;
   DataSource: array of Single;
   TimeSource: array of TDateTime;
   ParamList: array of String;
@@ -99,6 +99,7 @@ var
   ParameterCount: Integer;
   ChartHeight: Integer;
   ShowPR: Boolean;
+  Warning: Boolean;
   SibrParams: array of TSibrParam;
   AdditionalParams: array[0..31] of ShortString;
   SelectedCount: Byte;

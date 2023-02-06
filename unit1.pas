@@ -27,6 +27,14 @@ type
     Button6: TButton;
     Button7: TButton;
     Button8: TButton;
+    Chart1LineSeries2: TLineSeries;
+    Chart2LineSeries2: TLineSeries;
+    Chart3LineSeries2: TLineSeries;
+    Chart4LineSeries2: TLineSeries;
+    Chart5LineSeries2: TLineSeries;
+    Chart6LineSeries2: TLineSeries;
+    Chart7LineSeries2: TLineSeries;
+    Chart8LineSeries2: TLineSeries;
     Chart9: TChart;
     Chart9LineSeries1: TLineSeries;
     Chart9LineSeries2: TLineSeries;
@@ -35,6 +43,7 @@ type
     Chart9LineSeries5: TLineSeries;
     Chart9LineSeries6: TLineSeries;
     ChartExtentLink2: TChartExtentLink;
+    ZoneFromChart: TCheckBox;
     CommonBar: TProgressBar;
     ComputedChannels: TListBox;
     GroupBox7: TGroupBox;
@@ -58,13 +67,13 @@ type
     Sondes: TChart;
     IniPropStorage1: TIniPropStorage;
     ShowTool: TButton;
-    Chart1LineSeries2: TLineSeries;
-    Chart1LineSeries3: TLineSeries;
-    Chart1LineSeries4: TLineSeries;
-    Chart1LineSeries5: TLineSeries;
-    Chart1LineSeries6: TLineSeries;
-    Chart1LineSeries7: TLineSeries;
-    Chart1LineSeries8: TLineSeries;
+    Chart2LineSeries1: TLineSeries;
+    Chart3LineSeries1: TLineSeries;
+    Chart4LineSeries1: TLineSeries;
+    Chart5LineSeries1: TLineSeries;
+    Chart6LineSeries1: TLineSeries;
+    Chart7LineSeries1: TLineSeries;
+    Chart8LineSeries1: TLineSeries;
     Chart1LineSeries1: TLineSeries;
     Chart2: TChart;
     Chart3: TChart;
@@ -244,7 +253,6 @@ type
     procedure EStatusLoChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Image1Click(Sender: TObject);
-    procedure Image2Click(Sender: TObject);
     procedure Image2MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image2MouseUp(Sender: TObject; Button: TMouseButton;
@@ -389,13 +397,13 @@ end;
 procedure TCSV.ChartPointsChange(Sender: TObject);
 begin
   Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries2.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries3.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries4.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries5.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries6.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries7.Pointer.Visible:= ChartPoints.Checked;
-  Chart1LineSeries8.Pointer.Visible:= ChartPoints.Checked;
+  Chart2LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart3LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart4LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart5LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart6LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart7LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart8LineSeries1.Pointer.Visible:= ChartPoints.Checked;
 end;
 
 procedure DeleteLabels(Chart1LineSeries: TLineSeries);
@@ -515,11 +523,8 @@ begin
 end;
 
 procedure TCSV.Button9Click(Sender: TObject);
-var a, b, c1, c2: complex;
 begin
-  a:= 5 + 3*i;
-  c1:= a**(1/2);
-  ShowMessage(cStr(c1, 0, 3) + '      ' + cStr(c2, 0, 3));
+  Tool.Show;
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -565,13 +570,13 @@ procedure TCSV.ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
 begin
  if LabelSticked then begin
     StickLabel(Chart1LineSeries1);
-    StickLabel(Chart1LineSeries2);
-    StickLabel(Chart1LineSeries3);
-    StickLabel(Chart1LineSeries4);
-    StickLabel(Chart1LineSeries5);
-    StickLabel(Chart1LineSeries6);
-    StickLabel(Chart1LineSeries7);
-    StickLabel(Chart1LineSeries8);
+    StickLabel(Chart2LineSeries1);
+    StickLabel(Chart3LineSeries1);
+    StickLabel(Chart4LineSeries1);
+    StickLabel(Chart5LineSeries1);
+    StickLabel(Chart6LineSeries1);
+    StickLabel(Chart7LineSeries1);
+    StickLabel(Chart8LineSeries1);
     LabelSticked:= false;
   end;
 end;
@@ -696,76 +701,85 @@ begin
   CSondesVisible(false);
 end;
 
-procedure TCSV.ShowSondesClick(Sender: TObject);
+procedure FillZondes(x: TDateTime; i: Integer; zType: Byte);
+begin
+  if zType = 0 then begin
+    CSV.SondesLineSeries1.AddXY(x, GetConductivity('A16L', i, zType));
+    CSV.SondesLineSeries2.AddXY(x, GetConductivity('A22L', i, zType));
+    CSV.SondesLineSeries3.AddXY(x, GetConductivity('A34L', i, zType));
+    CSV.SondesLineSeries4.AddXY(x, GetConductivity('A16H', i, zType));
+    CSV.SondesLineSeries5.AddXY(x, GetConductivity('A22H', i, zType));
+    CSV.SondesLineSeries6.AddXY(x, GetConductivity('A34H', i, zType));
+    CSV.SondesLineSeries7.AddXY(x, GetConductivity('P16L', i, zType));
+    CSV.SondesLineSeries8.AddXY(x, GetConductivity('P22L', i, zType));
+    CSV.SondesLineSeries9.AddXY(x, GetConductivity('P34L', i, zType));
+    CSV.SondesLineSeries10.AddXY(x, GetConductivity('P16H', i, zType));
+    CSV.SondesLineSeries11.AddXY(x, GetConductivity('P22H', i, zType));
+    CSV.SondesLineSeries12.AddXY(x, GetConductivity('P34H', i, zType));
+  end
+  else begin
+    CSV.SondesLineSeries13.AddXY(x, GetConductivity('A16L', i, zType));
+    CSV.SondesLineSeries14.AddXY(x, GetConductivity('A22L', i, zType));
+    CSV.SondesLineSeries15.AddXY(x, GetConductivity('A34L', i, zType));
+    CSV.SondesLineSeries16.AddXY(x, GetConductivity('A16H', i, zType));
+    CSV.SondesLineSeries17.AddXY(x, GetConductivity('A22H', i, zType));
+    CSV.SondesLineSeries18.AddXY(x, GetConductivity('A34H', i, zType));
+    CSV.SondesLineSeries19.AddXY(x, GetConductivity('P16L', i, zType));
+    CSV.SondesLineSeries20.AddXY(x, GetConductivity('P22L', i, zType));
+    CSV.SondesLineSeries21.AddXY(x, GetConductivity('P34L', i, zType));
+    CSV.SondesLineSeries22.AddXY(x, GetConductivity('P16H', i, zType));
+    CSV.SondesLineSeries23.AddXY(x, GetConductivity('P22H', i, zType));
+    CSV.SondesLineSeries24.AddXY(x, GetConductivity('P34H', i, zType));
+  end;
+end;
+
+procedure ShowSonde(Sonde1, Sonde2: TChart; zType: Byte);
 var x: TDateTime;
     i, TimePos: Integer;
 begin
-  ResetSondes;
-  TimePos:= GetParamPosition('RTCs');
-  Sondes.Title.Text[0]:='Synthesized Sondes - Amplitudes';
-  Sondes1.Title.Text[0]:='Synthesized Sondes - Phases';
-  CommonBar.Max:= CSVContent.Count-1;
-  CommonBar.Position:= 0;
-  for i:=1 to CSVContent.Count-1 do begin
-    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-       x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-       SondesLineSeries1.AddXY(x, GetConductivity('A16L', i, 0));
-       SondesLineSeries2.AddXY(x, GetConductivity('A22L', i, 0));
-       SondesLineSeries3.AddXY(x, GetConductivity('A34L', i, 0));
-       SondesLineSeries4.AddXY(x, GetConductivity('A16H', i, 0));
-       SondesLineSeries5.AddXY(x, GetConductivity('A22H', i, 0));
-       SondesLineSeries6.AddXY(x, GetConductivity('A34H', i, 0));
-       SondesLineSeries7.AddXY(x, GetConductivity('P16L', i, 0));
-       SondesLineSeries8.AddXY(x, GetConductivity('P22L', i, 0));
-       SondesLineSeries9.AddXY(x, GetConductivity('P34L', i, 0));
-       SondesLineSeries10.AddXY(x, GetConductivity('P16H', i, 0));
-       SondesLineSeries11.AddXY(x, GetConductivity('P22H', i, 0));
-       SondesLineSeries12.AddXY(x, GetConductivity('P34H', i, 0));
-    end;
-    CommonBar.Position:= CommonBar.Position + 1;
+  if CSV.ZoneFromChart.Checked and (StartZone = EndZone) then ShowMessage('Time zone is not defined')
+  else begin
+      TimePos:= GetParamPosition('RTCs');
+      if zType = 0 then begin
+        ResetSondes;
+        Sonde1.Title.Text[0]:='Synthesized Sondes - Amplitudes';
+        Sonde2.Title.Text[0]:='Synthesized Sondes - Phases';
+      end
+      else begin
+        ResetCSondes;
+        Sonde1.Title.Text[0]:='Compensated Sondes - Amplitudes';
+        Sonde2.Title.Text[0]:='Compensated Sondes - Phases';
+      end;
+      CSV.CommonBar.Max:= CSVContent.Count-1;
+      CSV.CommonBar.Position:= 0;
+      for i:=1 to CSVContent.Count-1 do begin
+        if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
+           x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+           if CSV.ZoneFromChart.Checked then begin
+             if (CompareDateTime(x, StartZone) = 1) and (CompareDateTime(x, EndZone) = -1) then FillZondes(x, i, zType);
+           end
+           else FillZondes(x, i, zType);
+        end;
+        CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
+      end;
+      CSV.CommonBar.Position:= 0;
+      Sonde1.Height:= (CSV.Height - 50) div 2;
+      Sonde2.Height:= (CSV.Height - 50) div 2;
+      Sonde1.Visible:= True;
+      Sonde2.Visible:= True;
+      if zType = 0 then CSV.App.ActivePage:= CSV.SondesChart
+      else CSV.App.ActivePage:= CSV.CSondes;
   end;
-  CommonBar.Position:= 0;
-  Sondes.Height:= (CSV.Height - 50) div 2;
-  Sondes1.Height:= (CSV.Height - 50) div 2;
-  Sondes.Visible:= True;
-  Sondes1.Visible:= True;
-  App.ActivePage:= SondesChart;
+end;
+
+procedure TCSV.ShowSondesClick(Sender: TObject);
+begin
+  ShowSonde(Sondes, Sondes1, 0);
 end;
 
 procedure TCSV.ShowCSondesClick(Sender: TObject);
-var x: TDateTime;
-    i, TimePos: Integer;
 begin
-  ResetCSondes;
-  TimePos:= GetParamPosition('RTCs');
-  Sondes2.Title.Text[0]:='Compensated Sondes - Amplitudes';
-  Sondes3.Title.Text[0]:='Compensated Sondes - Phases';
-  CommonBar.Max:= CSVContent.Count-1;
-  CommonBar.Position:= 0;
-  for i:=1 to CSVContent.Count-1 do begin
-    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-       x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-       SondesLineSeries13.AddXY(x, GetConductivity('A16L', i, 1));
-       SondesLineSeries14.AddXY(x, GetConductivity('A22L', i, 1));
-       SondesLineSeries15.AddXY(x, GetConductivity('A34L', i, 1));
-       SondesLineSeries16.AddXY(x, GetConductivity('A16H', i, 1));
-       SondesLineSeries17.AddXY(x, GetConductivity('A22H', i, 1));
-       SondesLineSeries18.AddXY(x, GetConductivity('A34H', i, 1));
-       SondesLineSeries19.AddXY(x, GetConductivity('P16L', i, 1));
-       SondesLineSeries20.AddXY(x, GetConductivity('P22L', i, 1));
-       SondesLineSeries21.AddXY(x, GetConductivity('P34L', i, 1));
-       SondesLineSeries22.AddXY(x, GetConductivity('P16H', i, 1));
-       SondesLineSeries23.AddXY(x, GetConductivity('P22H', i, 1));
-       SondesLineSeries24.AddXY(x, GetConductivity('P34H', i, 1));
-    end;
-    CommonBar.Position:= CommonBar.Position + 1;
-  end;
-  CommonBar.Position:= 0;
-  Sondes2.Height:= (CSV.Height - 50) div 2;
-  Sondes3.Height:= (CSV.Height - 50) div 2;
-  Sondes2.Visible:= True;
-  Sondes3.Visible:= True;
-  App.ActivePage:= CSondes;
+  ShowSonde(Sondes2, Sondes3, 1);
 end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
@@ -842,13 +856,25 @@ end;
 procedure ResetSeries;
 begin
   CSV.Chart1LineSeries1.Clear;
+  CSV.Chart2LineSeries1.Clear;
+  CSV.Chart3LineSeries1.Clear;
+  CSV.Chart4LineSeries1.Clear;
+  CSV.Chart5LineSeries1.Clear;
+  CSV.Chart6LineSeries1.Clear;
+  CSV.Chart7LineSeries1.Clear;
+  CSV.Chart8LineSeries1.Clear;
+end;
+
+procedure ResetCompareSeries;
+begin
   CSV.Chart1LineSeries2.Clear;
-  CSV.Chart1LineSeries3.Clear;
-  CSV.Chart1LineSeries4.Clear;
-  CSV.Chart1LineSeries5.Clear;
-  CSV.Chart1LineSeries6.Clear;
-  CSV.Chart1LineSeries7.Clear;
-  CSV.Chart1LineSeries8.Clear;
+  CSV.Chart2LineSeries2.Clear;
+  CSV.Chart3LineSeries2.Clear;
+  CSV.Chart4LineSeries2.Clear;
+  CSV.Chart5LineSeries2.Clear;
+  CSV.Chart6LineSeries2.Clear;
+  CSV.Chart7LineSeries2.Clear;
+  CSV.Chart8LineSeries2.Clear;
 end;
 
 procedure ResetCharts;
@@ -885,13 +911,13 @@ begin
         counter:= counter + 1;
      end;
      if SelectedParams[0] <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0]);
-     if SelectedParams[1] <> '' then DrawChart(Chart1LineSeries2, SelectedParams[1]);
-     if SelectedParams[2] <> '' then DrawChart(Chart1LineSeries3, SelectedParams[2]);
-     if SelectedParams[3] <> '' then DrawChart(Chart1LineSeries4, SelectedParams[3]);
-     if SelectedParams[4] <> '' then DrawChart(Chart1LineSeries5, SelectedParams[4]);
-     if SelectedParams[5] <> '' then DrawChart(Chart1LineSeries6, SelectedParams[5]);
-     if SelectedParams[6] <> '' then DrawChart(Chart1LineSeries7, SelectedParams[6]);
-     if SelectedParams[7] <> '' then DrawChart(Chart1LineSeries8, SelectedParams[7]);
+     if SelectedParams[1] <> '' then DrawChart(Chart2LineSeries1, SelectedParams[1]);
+     if SelectedParams[2] <> '' then DrawChart(Chart3LineSeries1, SelectedParams[2]);
+     if SelectedParams[3] <> '' then DrawChart(Chart4LineSeries1, SelectedParams[3]);
+     if SelectedParams[4] <> '' then DrawChart(Chart5LineSeries1, SelectedParams[4]);
+     if SelectedParams[5] <> '' then DrawChart(Chart6LineSeries1, SelectedParams[5]);
+     if SelectedParams[6] <> '' then DrawChart(Chart7LineSeries1, SelectedParams[6]);
+     if SelectedParams[7] <> '' then DrawChart(Chart8LineSeries1, SelectedParams[7]);
      App.ActivePage:= Graphs;
      if NewChart then ChartsCurrentExtent:= Chart1.GetFullExtent;
      if ChartsLink.Checked and Not NewChart and DrawClicked then begin
@@ -1108,11 +1134,6 @@ begin
   DrawClick(Sender);
 end;
 
-procedure TCSV.Image2Click(Sender: TObject);
-begin
-
-end;
-
 procedure TCSV.Image2MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -1147,13 +1168,13 @@ end;
 procedure TCSV.Image5Click(Sender: TObject);
 begin
    DeleteLabels(Chart1LineSeries1);
-   DeleteLabels(Chart1LineSeries2);
-   DeleteLabels(Chart1LineSeries3);
-   DeleteLabels(Chart1LineSeries4);
-   DeleteLabels(Chart1LineSeries5);
-   DeleteLabels(Chart1LineSeries6);
-   DeleteLabels(Chart1LineSeries7);
-   DeleteLabels(Chart1LineSeries8);
+   DeleteLabels(Chart2LineSeries1);
+   DeleteLabels(Chart3LineSeries1);
+   DeleteLabels(Chart4LineSeries1);
+   DeleteLabels(Chart5LineSeries1);
+   DeleteLabels(Chart6LineSeries1);
+   DeleteLabels(Chart7LineSeries1);
+   DeleteLabels(Chart8LineSeries1);
 end;
 
 procedure TCSV.LocalTimeChange(Sender: TObject);
@@ -1276,6 +1297,8 @@ begin
       SelectedChannels.Clear;
       ReportText.Text:= '';
       ShowTool.Enabled:= false;
+      ShowSondes.Enabled:= false;
+      ShowCSondes.Enabled:= false;
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Text:= CSVFileName;
       try
@@ -1350,6 +1373,8 @@ begin
         Duration.Caption:= IntToStr(DurationInMinutes div 60) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
         EstimateFast.Enabled:= True;
         ReportTab.Enabled:= True;
+        ShowSondes.Enabled:= True;
+        ShowCSondes.Enabled:= True;
 
         ReportStartTime.Text:= StartTime.Text;
         ReportEndTime.Text:= EndTime.Text;
@@ -1392,13 +1417,16 @@ begin
    AR2Tx.Caption:= ' ' + FloatToStrF(TxR2, ffFixed, 10, 3);
    if (AR1Tx.Name = 'AR1T2F1') or (AR1Tx.Name = 'AR1T2F2') then
       if TxR2 > TxR1 then FontColor:= clRed
-      else FontColor:= clBlack
+      else FontColor:= clGreen
    else
       if TxR1 > TxR2 then FontColor:= clRed
-      else FontColor:= clBlack;
+      else FontColor:= clGreen;
    AR1Tx.Font.Color:= FontColor;
    AR2Tx.Font.Color:= FontColor;
-   if FontColor = clRed then Tool.Warning.Caption:= 'Warning! Check receivers and trunsmitters positions';
+   if FontColor = clRed then begin
+     Tool.Warning.Caption:= 'Warning! Check receivers and trunsmitters positions';
+     Warning:= True;
+   end;
 end;
 
 procedure TCSV.ReportClick(Sender: TObject);
@@ -1548,13 +1576,17 @@ begin
 
       Tool.Warning.Caption:= '';
 
+      Warning:= False;
       PrintAmplitudes(Tool.AR1T1F1, Tool.AR2T1F1);
       PrintAmplitudes(Tool.AR1T2F1, Tool.AR2T2F1);
       PrintAmplitudes(Tool.AR1T3F1, Tool.AR2T3F1);
       PrintAmplitudes(Tool.AR1T1F2, Tool.AR2T1F2);
       PrintAmplitudes(Tool.AR1T2F2, Tool.AR2T2F2);
       PrintAmplitudes(Tool.AR1T3F2, Tool.AR2T3F2);
-
+      if Warning then begin
+         Application.MessageBox('Warning! Check receivers and trunsmitters positions', 'Warning', MB_ICONWARNING + MB_OK);
+         Warning:= False;
+      end;
       ShowTool.Enabled:= true;
    end
    else ShowMessage('Please enter a Seral Number');

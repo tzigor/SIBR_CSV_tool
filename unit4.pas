@@ -12,27 +12,43 @@ type
   { TTool }
 
   TTool = class(TForm)
+    AR1T1F1: TStaticText;
+    AR1T1F2: TStaticText;
+    AR1T2F1: TStaticText;
+    AR1T2F2: TStaticText;
+    AR1T3F1: TStaticText;
+    AR1T3F2: TStaticText;
+    AR2T1F1: TStaticText;
+    AR2T1F2: TStaticText;
+    AR2T2F1: TStaticText;
+    AR2T2F2: TStaticText;
+    AR2T3F1: TStaticText;
+    AR2T3F2: TStaticText;
     Button1: TButton;
-    Image6: TImage;
-    Image8: TImage;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
+    GroupBox3: TGroupBox;
+    GroupBox4: TGroupBox;
+    GroupBox5: TGroupBox;
+    GroupBox6: TGroupBox;
+    Image1: TImage;
+    StaticText12: TStaticText;
+    StaticText13: TStaticText;
+    StaticText14: TStaticText;
+    StaticText15: TStaticText;
+    StaticText16: TStaticText;
+    StaticText17: TStaticText;
+    StaticText18: TStaticText;
+    StaticText19: TStaticText;
+    StaticText6: TStaticText;
+    StaticText7: TStaticText;
+    StaticText8: TStaticText;
+    StaticText9: TStaticText;
     Warning: TLabel;
     StaticText1: TStaticText;
     StaticText2: TStaticText;
-    AR1T1F1: TStaticText;
-    AR1T1F2: TStaticText;
-    AR2T1F1: TStaticText;
-    AR2T1F2: TStaticText;
-    AR1T2F1: TStaticText;
-    AR1T2F2: TStaticText;
-    AR2T2F1: TStaticText;
-    AR2T2F2: TStaticText;
-    AR1T3F1: TStaticText;
-    AR1T3F2: TStaticText;
-    AR2T3F1: TStaticText;
-    AR2T3F2: TStaticText;
     procedure Button1Click(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
+    procedure Image1Click(Sender: TObject);
   private
 
   public
@@ -48,37 +64,16 @@ implementation
 
 { TTool }
 
-procedure ToolAmplsWidth(wdth: Byte);
-begin
-  Tool.AR1T1F1.Width:= wdth;
-  Tool.AR1T1F2.Width:= wdth;
-  Tool.AR2T1F1.Width:= wdth;
-  Tool.AR2T1F2.Width:= wdth;
-  Tool.AR1T2F1.Width:= wdth;
-  Tool.AR1T2F2.Width:= wdth;
-  Tool.AR2T2F1.Width:= wdth;
-  Tool.AR2T2F2.Width:= wdth;
-  Tool.AR1T3F1.Width:= wdth;
-  Tool.AR1T3F2.Width:= wdth;
-  Tool.AR2T3F1.Width:= wdth;
-  Tool.AR2T3F2.Width:= wdth;
-end;
-
 procedure TTool.Button1Click(Sender: TObject);
 begin
   Tool.Close;
 end;
 
-procedure TTool.FormActivate(Sender: TObject);
-begin
-  if AmplsInmVolts then ToolAmplsWidth(48)
-  else ToolAmplsWidth(77);
-end;
-
-procedure TTool.FormCreate(Sender: TObject);
+procedure TTool.Image1Click(Sender: TObject);
 begin
 
 end;
+
 
 end.
 

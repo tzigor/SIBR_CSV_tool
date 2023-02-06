@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = -1500
+  Left = -1212
   Height = 663
-  Top = -589
+  Top = -413
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.3.0 Portable Beta'
@@ -2345,7 +2345,7 @@ object CSV: TCSV
           TabOrder = 5
         end
         object Generate: TButton
-          Left = 128
+          Left = 130
           Height = 32
           Top = 288
           Width = 91
@@ -2375,7 +2375,7 @@ object CSV: TCSV
       object OpenedFile: TEdit
         Left = 72
         Height = 23
-        Top = 601
+        Top = 602
         Width = 696
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
@@ -2548,7 +2548,6 @@ object CSV: TCSV
           Top = 352
           Width = 140
           AntialiasingMode = amOff
-          OnClick = Image2Click
           OnMouseDown = Image2MouseDown
           OnMouseUp = Image2MouseUp
           Picture.Data = {
@@ -2842,6 +2841,7 @@ object CSV: TCSV
           Top = 465
           Width = 176
           Caption = 'Show Synthesized Sondes'
+          Enabled = False
           OnClick = ShowSondesClick
           TabOrder = 8
         end
@@ -2851,6 +2851,7 @@ object CSV: TCSV
           Top = 505
           Width = 176
           Caption = 'Show Compensated Sondes'
+          Enabled = False
           OnClick = ShowCSondesClick
           TabOrder = 9
         end
@@ -2862,6 +2863,14 @@ object CSV: TCSV
           Color = clYellow
           ParentColor = False
           TabOrder = 10
+        end
+        object ZoneFromChart: TCheckBox
+          Left = 464
+          Height = 19
+          Top = 440
+          Width = 130
+          Caption = 'Get zone from charts'
+          TabOrder = 11
         end
       end
     end
@@ -3126,7 +3135,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries2: TLineSeries
+          object Chart2LineSeries1: TLineSeries
             LinePen.Color = clRed
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3136,6 +3145,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart2LineSeries2: TLineSeries
           end
         end
         object Chart3: TChart
@@ -3209,7 +3220,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries3: TLineSeries
+          object Chart3LineSeries1: TLineSeries
             LinePen.Color = clGreen
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3219,6 +3230,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart3LineSeries2: TLineSeries
           end
         end
         object Chart4: TChart
@@ -3292,7 +3305,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries4: TLineSeries
+          object Chart4LineSeries1: TLineSeries
             LinePen.Color = clFuchsia
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3302,6 +3315,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart4LineSeries2: TLineSeries
           end
         end
         object Chart5: TChart
@@ -3375,7 +3390,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries5: TLineSeries
+          object Chart5LineSeries1: TLineSeries
             LinePen.Color = 13088280
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3385,6 +3400,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart5LineSeries2: TLineSeries
           end
         end
         object Chart8: TChart
@@ -3458,7 +3475,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries8: TLineSeries
+          object Chart8LineSeries1: TLineSeries
             LinePen.Color = clTeal
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3468,6 +3485,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart8LineSeries2: TLineSeries
           end
         end
         object Chart7: TChart
@@ -3541,7 +3560,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries7: TLineSeries
+          object Chart7LineSeries1: TLineSeries
             LinePen.Color = clNavy
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3551,6 +3570,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart7LineSeries2: TLineSeries
           end
         end
         object Chart6: TChart
@@ -3624,7 +3645,7 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart1LineSeries6: TLineSeries
+          object Chart6LineSeries1: TLineSeries
             LinePen.Color = 33023
             Marks.Format = '%2:s'
             Marks.LinkPen.Color = clRed
@@ -3634,6 +3655,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart6LineSeries2: TLineSeries
           end
         end
         object Chart1: TChart
@@ -3717,6 +3740,8 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
+          end
+          object Chart1LineSeries2: TLineSeries
           end
         end
       end
@@ -4533,7 +4558,7 @@ object CSV: TCSV
         Height = 25
         Top = 40
         Width = 95
-        Caption = 'Show tool'
+        Caption = 'Amplitudes'
         Enabled = False
         OnClick = ShowToolClick
         TabOrder = 10

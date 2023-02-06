@@ -41,6 +41,22 @@ begin
      ((VT1R1.re = 0) and (VT1R1.im = 0)) or ((VT2R1.re = 0) and (VT2R1.im = 0)) or ((VT3R1.re = 0) and (VT3R1.im = 0)) then
     costruct_probe:= 0
   else begin
+
+    //VT1R1.re:= VT1R1.re;
+    //VT1R1.im:= VT1R1.im;
+    //VT1R2.re:= VT1R2.re;
+    //VT1R2.im:= VT1R2.im;
+    //
+    //VT2R1.re:= VT2R1.re;
+    //VT2R1.im:= VT2R1.im;
+    //VT2R2.re:= VT2R2.re;
+    //VT2R2.im:= VT2R2.im;
+    //
+    //VT3R1.re:= VT3R1.re;
+    //VT3R1.im:= VT3R1.im;
+    //VT3R2.re:= VT3R2.re;
+    //VT3R2.im:= VT3R2.im;
+
     d1:= VT1R2/VT1R1;
     d2:= VT2R2/VT2R1;
     d3:= VT3R2/VT3R1;
@@ -243,26 +259,23 @@ begin
 end;
 
 function probe2sig(probe: Double; f, n: byte; reg: string): Double;
-var c_probe, sig, calculation: double;
+var x, sig: double;
     i: integer;
 begin
   sig:= 0;
-  if Abs(probe) < 0.001 then calculation:= 0
+  if Abs(probe) < 0.001 then x:= 0
   else begin
      try
-     c_probe:= Log10(Abs(probe));
+     x:= Log10(Abs(probe));
      coeffpoly(f, n, reg);
-     for i:= 10 downto 0 do sig:= sig + CP[i] * power(c_probe, i);
-     c_probe:= power(10, sig);
+     sig:= CP[0] + x * (CP[1] + x * (CP[2] + x * (CP[3] + x * (CP[4] + x * (CP[5] + x * (CP[6] + x * (CP[7] + x * (CP[8] + x * (CP[9] + x * CP[10])))))))));
+     x:= power(10, sig);
      except
      on E : Exception do
        probe2sig:= 0;
      end;
-     calculation:= -c_probe;
   end;
-  //probe2sig:= (calculation+3)*200;
-    //probe2sig:= (calculation+2.4);
-    probe2sig:= c_probe;
+    probe2sig:= x;
 end;
 
 function conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string; c: Byte): Double;
