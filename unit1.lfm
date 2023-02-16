@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = -1212
+  Left = -1477
   Height = 663
-  Top = -413
+  Top = -574
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.3.0 Portable Beta'
+  Caption = 'SIBR Dump Tool v1.3.0 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1904,15 +1904,16 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = MainTab
+    ActivePage = Graphs
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
+    OnChange = AppChange
     object MainTab: TTabSheet
       Caption = 'Main'
       ClientHeight = 635
@@ -2776,7 +2777,7 @@ object CSV: TCSV
         object PowerResets: TCheckBox
           Left = 480
           Height = 19
-          Top = 64
+          Top = 65
           Width = 121
           Caption = 'Show Power Resets'
           TabOrder = 3
@@ -2793,7 +2794,7 @@ object CSV: TCSV
         object Label27: TLabel
           Left = 480
           Height = 15
-          Top = 27
+          Top = 28
           Width = 32
           Caption = 'UTC +'
           Font.CharSet = ANSI_CHARSET
@@ -2806,7 +2807,7 @@ object CSV: TCSV
         object LocalTime: TSpinEdit
           Left = 515
           Height = 23
-          Top = 24
+          Top = 25
           Width = 50
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -2817,23 +2818,16 @@ object CSV: TCSV
           TabOrder = 5
         end
         object mVolts: TCheckBox
-          Left = 480
+          Left = 479
           Height = 19
-          Top = 88
+          Top = 122
           Width = 122
           Caption = 'Amplitudes in volts'
           Checked = True
           OnChange = mVoltsChange
           State = cbChecked
           TabOrder = 6
-        end
-        object AutoFit: TCheckBox
-          Left = 480
-          Height = 19
-          Top = 112
-          Width = 60
-          Caption = 'Auto fit'
-          TabOrder = 7
+          Visible = False
         end
         object ShowSondes: TButton
           Left = 464
@@ -2843,7 +2837,8 @@ object CSV: TCSV
           Caption = 'Show Synthesized Sondes'
           Enabled = False
           OnClick = ShowSondesClick
-          TabOrder = 8
+          TabOrder = 7
+          Visible = False
         end
         object ShowCSondes: TButton
           Left = 464
@@ -2853,7 +2848,8 @@ object CSV: TCSV
           Caption = 'Show Compensated Sondes'
           Enabled = False
           OnClick = ShowCSondesClick
-          TabOrder = 9
+          TabOrder = 8
+          Visible = False
         end
         object CommonBar: TProgressBar
           Left = 320
@@ -2862,7 +2858,7 @@ object CSV: TCSV
           Width = 320
           Color = clYellow
           ParentColor = False
-          TabOrder = 10
+          TabOrder = 9
         end
         object ZoneFromChart: TCheckBox
           Left = 464
@@ -2870,6 +2866,17 @@ object CSV: TCSV
           Top = 440
           Width = 130
           Caption = 'Get zone from charts'
+          TabOrder = 10
+          Visible = False
+        end
+        object AutoFit: TCheckBox
+          Left = 480
+          Height = 19
+          Top = 94
+          Width = 60
+          Caption = 'Auto fit'
+          Checked = True
+          State = cbChecked
           TabOrder = 11
         end
       end
@@ -2921,7 +2928,9 @@ object CSV: TCSV
         Top = 7
         Width = 85
         Caption = 'Chart Points'
+        Checked = True
         OnChange = ChartPointsChange
+        State = cbChecked
         TabOrder = 2
       end
       object Image3: TImage
@@ -3852,6 +3861,7 @@ object CSV: TCSV
       Caption = 'Sondes'
       ClientHeight = 635
       ClientWidth = 891
+      TabVisible = False
       object Sondes: TChart
         Left = 0
         Height = 312
@@ -4071,6 +4081,7 @@ object CSV: TCSV
       Caption = 'C Sondes'
       ClientHeight = 635
       ClientWidth = 891
+      TabVisible = False
       object Sondes2: TChart
         Left = 0
         Height = 312
@@ -4144,7 +4155,6 @@ object CSV: TCSV
         OnExtentChanged = Sondes2ExtentChanged
         Align = alTop
         Color = clDefault
-        Visible = False
         object SondesLineSeries13: TLineSeries
           Title = ' A16L '
           LinePen.Color = clBlue
@@ -4291,6 +4301,7 @@ object CSV: TCSV
       ClientHeight = 635
       ClientWidth = 891
       Enabled = False
+      OnContextPopup = ReportTabContextPopup
       object GroupBox3: TGroupBox
         Left = 201
         Height = 80
@@ -4572,6 +4583,7 @@ object CSV: TCSV
       Font.Color = clBlack
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
+      OnContextPopup = TabSheet1ContextPopup
       ParentFont = False
       object StatusLo: TRadioButton
         Left = 32
@@ -4713,7 +4725,7 @@ object CSV: TCSV
           Height = 105
           Top = 8
           Width = 188
-          Caption = 'Vertical & horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'#13#10'Stick label on datapoint to all charts'
+          Caption = 'Vertical and horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'#13#10'Stick label on datapoint to all charts'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
           Font.Pitch = fpVariable
@@ -4871,7 +4883,6 @@ object CSV: TCSV
     DateTimeStepFormat.MinuteFormat = 'hh:nn"m"'
     DateTimeStepFormat.SecondFormat = 'nn:ss"s"'
     Steps = [dtsYear, dtsMonth, dtsDay, dtsHour, dtsMinute, dtsSecond]
-    SuppressPrevUnit = False
     Left = 424
     Top = 632
   end

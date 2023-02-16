@@ -50,7 +50,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="SIBR_CSV_tool.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -84,8 +84,13 @@
       <Unit5>
         <Filename Value="compare.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="Compare"/>
+        <UnitName Value="Parameters"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="parameters.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="Parameters"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

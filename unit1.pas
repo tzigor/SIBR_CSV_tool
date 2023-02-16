@@ -8,9 +8,9 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils, TADataTools,
-  TAChartExtentLink, TALegendPanel, SpinEx, SynHighlighterCpp, LCLType, Spin,
-  IniPropStorage, uComplex, Math;
+  DateTimePicker, Unit2, Unit4, Types, TAChartUtils, TADataTools,
+  TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
+  IniPropStorage, Parameters;
 
 type
 
@@ -215,6 +215,7 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
+    procedure AppChange(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -223,6 +224,8 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure ReportTabContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure ShowCSondesClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -280,6 +283,8 @@ type
     procedure Button2Click(Sender: TObject);
     procedure OpenCSVFastClick(Sender: TObject);
     procedure ReportClick(Sender: TObject);
+    procedure TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
   private
   public
   end;
@@ -454,6 +459,11 @@ begin
   ZoneDuration.Caption:= IntToStr(MinutesBetween(StrToDateTime(ReportStartTime.Caption), StrToDateTime(ReportEndTime.Caption))) + ' min';
 end;
 
+procedure TCSV.AppChange(Sender: TObject);
+begin
+
+end;
+
 procedure TCSV.Button3Click(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -525,6 +535,12 @@ end;
 procedure TCSV.Button9Click(Sender: TObject);
 begin
   Tool.Show;
+end;
+
+procedure TCSV.ReportTabContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -1122,11 +1138,19 @@ begin
   ToolTime.Caption:= 'Tool time + ' + IntToStr(hrsPlus) + ' hours';
   TestType.Items.Add('Air Test');
   TestType.Items.Add('Jack stand Test');
-  TestType.Items.Add('Bench Test');
-  TestType.Items.Add('Heat Test');
+  //TestType.Items.Add('Bench Test');
+  //TestType.Items.Add('Heat Test');
   TestType.Items.Add('Foil Test');
   TestType.ItemIndex:= 0;
   TestDate.Date:= Date;
+  Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart2LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart3LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart4LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart5LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart6LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart7LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  Chart8LineSeries1.Pointer.Visible:= ChartPoints.Checked;
 end;
 
 procedure TCSV.Image1Click(Sender: TObject);
@@ -1379,8 +1403,6 @@ begin
         ReportStartTime.Text:= StartTime.Text;
         ReportEndTime.Text:= EndTime.Text;
         ZoneDuration.Caption:= IntToStr(DurationInMinutes) + ' min';
-
-        FillParams;
       except
       on E: EInOutError do
         ShowMessage('Error: ' + E.Message);
@@ -1434,162 +1456,185 @@ var i, j, meanCount, start: Longint;
     ParamPos, TimePos, ParamCount: Integer;
     MinValue, MaxValue, Avarage, StdDiviation, Value: Double;
     AmplAvarage, PSAvarage, AmplValue, PSValue, MinAmplValue, MinPSValue, MaxAmplValue, MaxPSValue, AmplStdDiviation, PSStdDiviation: Double;
-    wStr, PassFail: String;
+    wStr, PassFail, PSPassFail: String;
     PSStrings: array[0..15] of String;
     CurrentTime, StartTimeDT, EndTimeDT: TDateTime;
 begin
   if SerialNumber.Text <> '' then begin
+      if (TestType.Text = 'Air Test') or (TestType.Text = 'Jack stand Test') then FillParamsAir
+      else FillParamsFoil;
       TimePos:= GetParamPosition('RTCs');
       StartTimeDT:= StrToDateTime(ReportStartTime.Text);
       EndTimeDT:= StrToDateTime(ReportEndTime.Text);
-      ReportProgress.Max:= 46;
+      ReportProgress.Max:= 43;
       ReportProgress.Position:= 0;
       wStr:= '';
       ParamCount:= 0;
       ZoneDuration.Caption:= IntToStr(MinutesBetween(StartTimeDT, EndTimeDT)) + ' min';
 
-      wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + Line;
-      wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + Line;
-      wStr:= wStr +  'Test Duration: ' + ZoneDuration.Caption + Line;
-      wStr:= wStr +  'Test Comment: ' + Comment.Text + Line;
+      if MinutesBetween(StartTimeDT, EndTimeDT) >= 5 then begin
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
-      wStr:= wStr + '                                                   ' + TestType.Text + Line;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + Line;
+          wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + Line;
+          wStr:= wStr +  'Test Duration: ' + ZoneDuration.Caption + Line;
+          wStr:= wStr +  'Test Comment: ' + Comment.Text + Line;
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
-      wStr:= wStr + 'Status Word     Dec   Hex    Bin              | Exptd   | Result' + Line;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          wStr:= wStr + '                                                   ' + TestType.Text + Line;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
 
-      wStr:= wStr +  SWString('STATUS.SIBR.LO', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
-      wStr:= wStr +  SWString('STATUS.SIBR.HI', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
-      wStr:= wStr +  SWString('ESTATUS.SIBR.LO', 32, TimePos, StartTimeDT, EndTimeDT) + Line + Line;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          wStr:= wStr + 'Status Word     Dec   Hex    Bin              | Exptd   | Result' + Line;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
 
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
-      wStr:= wStr + '                                                                |              Tolerances              |' + Line;
-      wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + Line;
-      wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
-      Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
-      i:= 1;
-      repeat
-        CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-        i:= i + 1;
-      until (CompareDateTime(CurrentTime, StartTimeDT) = 1) or (i = CSVContent.Count-1);
-      start:= i;
+          wStr:= wStr +  SWString('STATUS.SIBR.LO', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
+          if (TestType.Text = 'Foil Test') then wStr:= wStr +  SWString('STATUS.SIBR.HI', 40960, TimePos, StartTimeDT, EndTimeDT) + Line
+          else wStr:= wStr +  SWString('STATUS.SIBR.HI', 0, TimePos, StartTimeDT, EndTimeDT) + Line;
+          wStr:= wStr +  SWString('ESTATUS.SIBR.LO', 32, TimePos, StartTimeDT, EndTimeDT) + Line + Line;
 
-      for j:=0 to 30 do begin
-        ParamPos:= GetParamPosition(SibrParams[j].name);
-        Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[start]));
-        MinValue:= Value; MaxValue:= Value;
-        meanCount:= 0;
-        for i:=start to CSVContent.Count-1 do begin
-           CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-           if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
-             Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
-             if Value < MinValue then MinValue:=Value;
-             if Value > MaxValue then MaxValue:=Value;
-             Avarage:= Avarage + Value;
-             meanCount:= meanCount + 1;
-           end
-        end;
-        Avarage:= Avarage/meanCount;
-        for i:=1 to CSVContent.Count-1 do begin
-          CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-          if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
-             Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
-             StdDiviation:= StdDiviation + Sqr(Value-Avarage);
-          end
-        end;
-        StdDiviation:= Sqrt(StdDiviation/meanCount);
-        if (Avarage < SibrParams[j].min) or (Avarage > SibrParams[j].max) or (StdDiviation > SibrParams[j].stdDev) then PassFail:= 'Failed'
-        else PassFail:= 'Passed';
-        ReportParams[ParamCount].name:= SibrParams[j].name;
-        ReportParams[ParamCount].min:= MinValue;
-        ReportParams[ParamCount].max:= MaxValue;
-        ReportParams[ParamCount].mean:= Avarage;
-        ReportParams[ParamCount].stdDev:= StdDiviation;
-        ReportParams[ParamCount].k:= SibrParams[j].k;
-        ReportParams[ParamCount].m:= SibrParams[j].m;
-        ParamCount:= ParamCount + 1;
-        wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ Line;
-        ReportProgress.Position:= ReportProgress.Position + 1;
-      end;
-      ReportText.Text:= wStr;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          wStr:= wStr + '                                                                |              Tolerances              |' + Line;
+          wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + Line;
+          wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
+          Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
+          i:= 1;
+          repeat
+            CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+            i:= i + 1;
+          until (CompareDateTime(CurrentTime, StartTimeDT) = 1) or (i = CSVContent.Count-1);
+          start:= i;
 
-      // *************   Amplitudes & Phases   *************************
-      AmplAvarage:= 0; AmplStdDiviation:= 0;
-      PSAvarage:= 0; PSStdDiviation:= 0;
+          for j:=0 to 30 do begin
+            if FindPart('RES?', SibrParams[j].name) = 0 then begin
+              ParamPos:= GetParamPosition(SibrParams[j].name);
+              Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[start]));
+              MinValue:= Value; MaxValue:= Value;
+              meanCount:= 0;
+              for i:=start to CSVContent.Count-1 do begin
+                 CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+                 if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
+                   Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
+                   if Value < MinValue then MinValue:=Value;
+                   if Value > MaxValue then MaxValue:=Value;
+                   Avarage:= Avarage + Value;
+                   meanCount:= meanCount + 1;
+                 end
+              end;
+              Avarage:= Avarage/meanCount;
+              for i:=start to CSVContent.Count-1 do begin
+                CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+                if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
+                   Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[i]));
+                   StdDiviation:= StdDiviation + Sqr(Value-Avarage);
+                end
+              end;
+              StdDiviation:= Sqrt(StdDiviation/meanCount);
+              if (Avarage < SibrParams[j].min) or (Avarage > SibrParams[j].max) or (StdDiviation > SibrParams[j].stdDev) then PassFail:= 'Failed'
+              else PassFail:= 'Passed';
+              ReportParams[ParamCount].name:= SibrParams[j].name;
+              ReportParams[ParamCount].min:= MinValue;
+              ReportParams[ParamCount].max:= MaxValue;
+              ReportParams[ParamCount].mean:= Avarage;
+              ReportParams[ParamCount].stdDev:= StdDiviation;
+              ReportParams[ParamCount].k:= SibrParams[j].k;
+              ReportParams[ParamCount].m:= SibrParams[j].m;
+              ParamCount:= ParamCount + 1;
+              wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ Line;
+              ReportProgress.Position:= ReportProgress.Position + 1;
+            end
+          end;
+          ReportText.Text:= wStr;
 
-      for j:=1 to 16 do begin
-        GetResParameters(AmplValue, PSValue, j-1, start);
-        MinAmplValue:= AmplValue; MaxAmplValue:= AmplValue;
-        MinPSValue:= PSValue; MaxPSValue:= PSValue;
-        for i:=start to CSVContent.Count-1 do begin
-           CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-           if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
-             GetResParameters(AmplValue, PSValue, j-1, i);
-             if AmplValue < MinAmplValue then MinAmplValue:= AmplValue;
-             if AmplValue > MaxAmplValue then MaxAmplValue:= AmplValue;
-             if PSValue < MinPSValue then MinPSValue:= PSValue;
-             if PSValue > MaxPSValue then MaxPSValue:= PSValue;
-             AmplAvarage:= AmplAvarage + AmplValue;
-             PSAvarage:= PSAvarage + PSValue;
-           end;
-        end;
-        AmplAvarage:=AmplAvarage/meanCount;
-        PSAvarage:=PSAvarage/meanCount;
-        for i:=1 to CSVContent.Count-1 do begin
-           CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-           if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
-             GetResParameters(AmplValue, PSValue, j-1, i);
-             AmplStdDiviation:= AmplStdDiviation + Sqr(AmplValue - AmplAvarage);
-             PSStdDiviation:= PSStdDiviation + Sqr(PSValue - PSAvarage);
-           end;
-        end;
-        AmplStdDiviation:= Sqrt(AmplStdDiviation/meanCount);
-        PSStdDiviation:= Sqrt(PSStdDiviation/meanCount);
+          // *************   Amplitudes & Phases   *************************
+          AmplAvarage:= 0; AmplStdDiviation:= 0;
+          PSAvarage:= 0; PSStdDiviation:= 0;
 
-        ReportParams[ParamCount].name:= SibrParams[J+30].name;
-        ReportParams[ParamCount].min:= MinAmplValue;
-        ReportParams[ParamCount].max:= MaxAmplValue;
-        ReportParams[ParamCount].mean:= AmplAvarage;
-        ReportParams[ParamCount].k:= SibrParams[J+30].k;
-        ReportParams[ParamCount].m:= SibrParams[J+30].m;
-        ReportParams[ParamCount].stdDev:= AmplStdDiviation;
-        ParamCount:= ParamCount + 1;
+          for j:=1 to 16 do begin
+            GetResParameters(AmplValue, PSValue, j-1, start);
+            MinAmplValue:= AmplValue; MaxAmplValue:= AmplValue;
+            MinPSValue:= PSValue; MaxPSValue:= PSValue;
+            for i:=start to CSVContent.Count-1 do begin
+               CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+               if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
+                 GetResParameters(AmplValue, PSValue, j-1, i);
+                 if AmplValue < MinAmplValue then MinAmplValue:= AmplValue;
+                 if AmplValue > MaxAmplValue then MaxAmplValue:= AmplValue;
+                 if PSValue < MinPSValue then MinPSValue:= PSValue;
+                 if PSValue > MaxPSValue then MaxPSValue:= PSValue;
+                 AmplAvarage:= AmplAvarage + AmplValue;
+                 PSAvarage:= PSAvarage + PSValue;
+               end;
+            end;
+            AmplAvarage:=AmplAvarage/meanCount;
+            PSAvarage:=PSAvarage/meanCount;
+            for i:=start to CSVContent.Count-1 do begin
+               CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+               if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
+                 GetResParameters(AmplValue, PSValue, j-1, i);
+                 AmplStdDiviation:= AmplStdDiviation + Sqr(AmplValue - AmplAvarage);
+                 PSStdDiviation:= PSStdDiviation + Sqr(PSValue - PSAvarage);
+               end;
+            end;
+            AmplStdDiviation:= Sqrt(AmplStdDiviation/meanCount);
+            PSStdDiviation:= Sqrt(PSStdDiviation/meanCount);
 
-        ReportParams[ParamCount].name:= SibrParams[J+46].name;
-        ReportParams[ParamCount].min:= MinPSValue;
-        ReportParams[ParamCount].max:= MaxPSValue;
-        ReportParams[ParamCount].mean:= PSAvarage;
-        ReportParams[ParamCount].stdDev:= PSStdDiviation;
-        ReportParams[ParamCount].k:= SibrParams[J+46].k;
-        ReportParams[ParamCount].m:= SibrParams[J+46].m;
-        ParamCount:= ParamCount + 1;
+            if (AmplAvarage < SibrParams[j+30].min) or (AmplAvarage > SibrParams[j+30].max) or (AmplStdDiviation > SibrParams[j+30].stdDev) then PassFail:= 'Failed'
+            else PassFail:= 'Passed';
 
-        wStr:= wStr + ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + Line;
-        PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PassFail) + Line;
-        ReportProgress.Position:= ReportProgress.Position + 1;
-      end;
-      for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
-      ReportText.Text:= wStr;
+            if (PSAvarage < SibrParams[j+46].min) or (PSAvarage > SibrParams[j+46].max) or (PSStdDiviation > SibrParams[j+46].stdDev) then PSPassFail:= 'Failed'
+            else PSPassFail:= 'Passed';
 
-      Tool.Warning.Caption:= '';
+            ReportParams[ParamCount].name:= SibrParams[J+30].name;
+            ReportParams[ParamCount].min:= MinAmplValue;
+            ReportParams[ParamCount].max:= MaxAmplValue;
+            ReportParams[ParamCount].mean:= AmplAvarage;
+            ReportParams[ParamCount].k:= SibrParams[J+30].k;
+            ReportParams[ParamCount].m:= SibrParams[J+30].m;
+            ReportParams[ParamCount].stdDev:= AmplStdDiviation;
+            ParamCount:= ParamCount + 1;
 
-      Warning:= False;
-      PrintAmplitudes(Tool.AR1T1F1, Tool.AR2T1F1);
-      PrintAmplitudes(Tool.AR1T2F1, Tool.AR2T2F1);
-      PrintAmplitudes(Tool.AR1T3F1, Tool.AR2T3F1);
-      PrintAmplitudes(Tool.AR1T1F2, Tool.AR2T1F2);
-      PrintAmplitudes(Tool.AR1T2F2, Tool.AR2T2F2);
-      PrintAmplitudes(Tool.AR1T3F2, Tool.AR2T3F2);
-      if Warning then begin
-         Application.MessageBox('Warning! Check receivers and trunsmitters positions', 'Warning', MB_ICONWARNING + MB_OK);
-         Warning:= False;
-      end;
-      ShowTool.Enabled:= true;
+            ReportParams[ParamCount].name:= SibrParams[J+46].name;
+            ReportParams[ParamCount].min:= MinPSValue;
+            ReportParams[ParamCount].max:= MaxPSValue;
+            ReportParams[ParamCount].mean:= PSAvarage;
+            ReportParams[ParamCount].stdDev:= PSStdDiviation;
+            ReportParams[ParamCount].k:= SibrParams[J+46].k;
+            ReportParams[ParamCount].m:= SibrParams[J+46].m;
+            ParamCount:= ParamCount + 1;
+
+            wStr:= wStr + ParamLine(SibrParams[J+30].name, AmplAvarage, MinAmplValue, MaxAmplValue, AmplStdDiviation, SibrParams[J+30].min,  SibrParams[J+30].max, SibrParams[J+30].stdDev, SibrParams[J+30].k, SibrParams[J+30].m, PassFail) + Line;
+            PSStrings[j-1]:= ParamLine(SibrParams[J+46].name, PSAvarage, MinPSValue, MaxPSValue, PSStdDiviation, SibrParams[J+46].min,  SibrParams[J+46].max, SibrParams[J+46].stdDev, SibrParams[J+46].k, SibrParams[J+46].m, PSPassFail) + Line;
+            ReportProgress.Position:= ReportProgress.Position + 1;
+          end;
+          for i:= 0 to 15 do wStr:= wStr + PSStrings[i];
+          ReportText.Text:= wStr;
+
+          Tool.Warning.Caption:= '';
+
+          Warning:= False;
+          PrintAmplitudes(Tool.AR1T1F1, Tool.AR2T1F1);
+          PrintAmplitudes(Tool.AR1T2F1, Tool.AR2T2F1);
+          PrintAmplitudes(Tool.AR1T3F1, Tool.AR2T3F1);
+          PrintAmplitudes(Tool.AR1T1F2, Tool.AR2T1F2);
+          PrintAmplitudes(Tool.AR1T2F2, Tool.AR2T2F2);
+          PrintAmplitudes(Tool.AR1T3F2, Tool.AR2T3F2);
+          if ((TestType.Text = 'Air Test') or (TestType.Text = 'Jack stand Test')) and Warning then begin
+             Application.MessageBox('Warning! Check receivers and trunsmitters positions', 'Warning', MB_ICONWARNING + MB_OK);
+             Warning:= False;
+          end;
+          ShowTool.Enabled:= true;
+      end
+      else ShowMessage('Test duration should be more or equal 5 minutes');
+
    end
    else ShowMessage('Please enter a Seral Number');
 end;
+
+procedure TCSV.TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
+end;
+
 end.
 
