@@ -362,7 +362,7 @@ begin
     on Exception : EConvertError do
        RecordRate.Text:= '0';
     end;
-    if RecordRate.Text <> '0' then begin
+    if RecordRate.Text >= '0' then begin
       try
         DurationInMinutes:= MinutesBetween(StrToDateTime(StartTime.Text), StrToDateTime(EndTime.Text));
       except
@@ -803,7 +803,7 @@ var i: Longint;
     ParamPos, TimePos: Integer;
     PowerReset: boolean;
     y: Double;
-    x: TDateTime;
+    x, PrevTime: TDateTime;
 begin
   PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
@@ -814,7 +814,7 @@ begin
   Chart1LineSeries.ParentChart.Height:= ChartHeight;
   Chart1LineSeries.Pointer.Pen.Color:= Chart1LineSeries.SeriesColor;
   Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
-
+  PrevTime:= UnixToDateTime(0);
   for i:=1 to CSVContent.Count-1 do begin
     if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
 
@@ -823,19 +823,24 @@ begin
             else
                 if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
                 else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
-                     else y:= StrToFloat(GetParamValue(ParamPos, CSVContent[i]));
+                     else begin
+                          if not TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then y:= -35535;
+                          if (SelectedParamName = 'BHP') and ((y > 500) or (y < -50)) then y:= -35535;
+                          if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= -35535;
+                     end;
 
                   x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
 
-                  if PowerReset then begin
-                    if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
-                    else Chart1LineSeries.AddXY(x, y);
-                    PowerReset:= false;
+                  if y <> -35535 then begin
+                    if PowerReset then begin
+                      if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
+                      else Chart1LineSeries.AddXY(x, y);
+                      PowerReset:= false;
+                    end
+                    else begin
+                      Chart1LineSeries.AddXY(x, y)
+                    end;
                   end
-                  else begin
-                    Chart1LineSeries.AddXY(x, y)
-                  end;
-
     end
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
