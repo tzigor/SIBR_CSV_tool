@@ -10,7 +10,7 @@ uses
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
   DateTimePicker, Unit2, Unit4, Types, TAChartUtils, TADataTools,
   TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
-  IniPropStorage, Parameters;
+  IniPropStorage, Parameters, TAChartAxisUtils;
 
 type
 
@@ -43,6 +43,10 @@ type
     Chart9LineSeries5: TLineSeries;
     Chart9LineSeries6: TLineSeries;
     ChartExtentLink2: TChartExtentLink;
+    RTCBugs: TCheckBox;
+    mVolts: TCheckBox;
+    TimeScale: TRadioButton;
+    RadioButton2: TRadioButton;
     ZoneFromChart: TCheckBox;
     CommonBar: TProgressBar;
     ComputedChannels: TListBox;
@@ -54,7 +58,6 @@ type
     Label24: TLabel;
     Label27: TLabel;
     LocalTime: TSpinEdit;
-    mVolts: TCheckBox;
     PowerResets: TCheckBox;
     RawChannels: TListBox;
     SelectedChannels: TListBox;
@@ -215,7 +218,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
-    procedure AppChange(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -224,8 +226,9 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
-    procedure ReportTabContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
+    procedure Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
+      AMark: Double);
+    procedure RTCBugsChange(Sender: TObject);
     procedure ShowCSondesClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -283,8 +286,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure OpenCSVFastClick(Sender: TObject);
     procedure ReportClick(Sender: TObject);
-    procedure TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
+    procedure TimeScaleChange(Sender: TObject);
   private
   public
   end;
@@ -459,11 +461,6 @@ begin
   ZoneDuration.Caption:= IntToStr(MinutesBetween(StrToDateTime(ReportStartTime.Caption), StrToDateTime(ReportEndTime.Caption))) + ' min';
 end;
 
-procedure TCSV.AppChange(Sender: TObject);
-begin
-
-end;
-
 procedure TCSV.Button3Click(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -537,10 +534,25 @@ begin
   Tool.Show;
 end;
 
-procedure TCSV.ReportTabContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: Boolean);
+procedure TCSV.Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
+  AMark: Double);
+var DateTime: TDateTime;
 begin
+   if Not TimeScale.Checked then begin
+     if (AMark > 0) And (AMark < CSVContent.Count) then begin
+       DateTime:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(AMark)])));
+       AText:= TimeToStr(DateTime) + Line + DateToStr(DateTime);
+     end
+     else AText:= '';
+   end
+   else begin
+     AText:= TimeToStr(AMark) + Line + DateToStr(AMark);
+   end;
+end;
 
+procedure TCSV.RTCBugsChange(Sender: TObject);
+begin
+  NewChart:= true;
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -799,13 +811,15 @@ begin
 end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
-var i: Longint;
+var i, xInt: Longint;
     ParamPos, TimePos: Integer;
-    PowerReset: boolean;
+    PowerReset, TimeShift: boolean;
     y: Double;
-    x, PrevTime: TDateTime;
+    x, Time, PrevTime: TDateTime;
+    Sticker, xStr: String;
 begin
   PowerReset:= false;
+  TimeShift:= false;
   TimePos:= GetParamPosition('RTCs');
   ParamPos:= GetParamPosition(SelectedParamName);
   Chart1LineSeries.Clear;
@@ -816,8 +830,8 @@ begin
   Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
   PrevTime:= UnixToDateTime(0);
   for i:=1 to CSVContent.Count-1 do begin
-    if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-
+    Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+    if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (CSV.RTCBugs.Checked) then begin
        if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 0)
        else if SelectedParamName in CondCompChannels then y:= GetConductivity(SelectedParamName, i, 1)
             else
@@ -829,18 +843,18 @@ begin
                           if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= -35535;
                      end;
 
-                  x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+       Sticker:= '';
+       x:= IncHour(Time, hrsPlus);
+       xInt:= i;
+       if Time < PrevTime then Sticker:= 'Back shift in time';
+       if ShowPR and PowerReset then Sticker:= 'P';
+       if y <> -35535 then begin
+          if CSV.TimeScale.Checked then Chart1LineSeries.AddXY(x, y, Sticker)
+          else Chart1LineSeries.AddXY(xInt, y, Sticker)
+       end;
+       PowerReset:= false;
+       PrevTime:= Time;
 
-                  if y <> -35535 then begin
-                    if PowerReset then begin
-                      if ShowPR then Chart1LineSeries.AddXY(x, y, 'P')
-                      else Chart1LineSeries.AddXY(x, y);
-                      PowerReset:= false;
-                    end
-                    else begin
-                      Chart1LineSeries.AddXY(x, y)
-                    end;
-                  end
     end
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
@@ -1372,6 +1386,7 @@ begin
         for i:= 0 to 11 do ComputedChannels.Items.Add(CondCompChannels[i]);
 
         ParamPos:= GetParamPosition('RTCs');
+        TimePosition:= ParamPos;
         hrsPlus:= LocalTime.Value;
 
         for i:=1 to CSVContent.Count-1 do begin
@@ -1510,7 +1525,6 @@ begin
           start:= i;
 
           for j:=0 to 30 do begin
-            if FindPart('RES?', SibrParams[j].name) = 0 then begin
               ParamPos:= GetParamPosition(SibrParams[j].name);
               Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[start]));
               MinValue:= Value; MaxValue:= Value;
@@ -1544,9 +1558,10 @@ begin
               ReportParams[ParamCount].k:= SibrParams[j].k;
               ReportParams[ParamCount].m:= SibrParams[j].m;
               ParamCount:= ParamCount + 1;
-              wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ Line;
+              if FindPart('RES?', SibrParams[j].name) = 0 then begin
+                wStr:= wStr + ParamLine(SibrParams[j].name, Avarage, MinValue, MaxValue, StdDiviation, SibrParams[j].min,  SibrParams[j].max, SibrParams[j].stdDev, SibrParams[j].k, SibrParams[j].m, PassFail)+ Line;
+              end;
               ReportProgress.Position:= ReportProgress.Position + 1;
-            end
           end;
           ReportText.Text:= wStr;
 
@@ -1635,11 +1650,11 @@ begin
    else ShowMessage('Please enter a Seral Number');
 end;
 
-procedure TCSV.TabSheet1ContextPopup(Sender: TObject; MousePos: TPoint;
-  var Handled: Boolean);
+procedure TCSV.TimeScaleChange(Sender: TObject);
 begin
-
+   NewChart:= true;
 end;
+
 
 end.
 

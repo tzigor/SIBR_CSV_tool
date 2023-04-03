@@ -1,12 +1,12 @@
 object Tool: TTool
-  Left = 583
+  Left = 584
   Height = 357
-  Top = 211
+  Top = 212
   Width = 624
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Amplitudes'
-  ClientHeight = 357
-  ClientWidth = 624
+  ClientHeight = 0
+  ClientWidth = 0
   Color = clWhite
   Constraints.MaxHeight = 357
   Constraints.MaxWidth = 624

@@ -113,6 +113,7 @@ var
   Redraw, DrawClicked: Boolean;
   AmplsInmVolts: Boolean;
   ReportParams: array[0..62] of TSibrReportParam;
+  TimePosition: Longint;
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;

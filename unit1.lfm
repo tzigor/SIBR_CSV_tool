@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = 299
+  Left = 229
   Height = 663
-  Top = 18
+  Top = 23
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.3.0 Portable'
@@ -1904,16 +1904,15 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = MainTab
+    ActivePage = Graphs
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
-    OnChange = AppChange
     object MainTab: TTabSheet
       Caption = 'Main'
       ClientHeight = 635
@@ -2817,18 +2816,6 @@ object CSV: TCSV
           ParentFont = False
           TabOrder = 5
         end
-        object mVolts: TCheckBox
-          Left = 479
-          Height = 19
-          Top = 122
-          Width = 122
-          Caption = 'Amplitudes in volts'
-          Checked = True
-          OnChange = mVoltsChange
-          State = cbChecked
-          TabOrder = 6
-          Visible = False
-        end
         object ShowSondes: TButton
           Left = 464
           Height = 32
@@ -2837,7 +2824,7 @@ object CSV: TCSV
           Caption = 'Show Synthesized Sondes'
           Enabled = False
           OnClick = ShowSondesClick
-          TabOrder = 7
+          TabOrder = 6
           Visible = False
         end
         object ShowCSondes: TButton
@@ -2848,7 +2835,7 @@ object CSV: TCSV
           Caption = 'Show Compensated Sondes'
           Enabled = False
           OnClick = ShowCSondesClick
-          TabOrder = 8
+          TabOrder = 7
           Visible = False
         end
         object CommonBar: TProgressBar
@@ -2858,7 +2845,7 @@ object CSV: TCSV
           Width = 320
           Color = clYellow
           ParentColor = False
-          TabOrder = 9
+          TabOrder = 8
         end
         object ZoneFromChart: TCheckBox
           Left = 464
@@ -2866,7 +2853,7 @@ object CSV: TCSV
           Top = 440
           Width = 130
           Caption = 'Get zone from charts'
-          TabOrder = 10
+          TabOrder = 9
           Visible = False
         end
         object AutoFit: TCheckBox
@@ -2877,7 +2864,47 @@ object CSV: TCSV
           Caption = 'Auto fit'
           Checked = True
           State = cbChecked
+          TabOrder = 10
+        end
+        object TimeScale: TRadioButton
+          Left = 480
+          Height = 19
+          Top = 128
+          Width = 92
+          Caption = 'Chart by time'
+          Checked = True
+          OnChange = TimeScaleChange
+          TabOrder = 13
+          TabStop = True
+        end
+        object RadioButton2: TRadioButton
+          Left = 480
+          Height = 19
+          Top = 155
+          Width = 91
+          Caption = 'Chart by dots'
           TabOrder = 11
+        end
+        object mVolts: TCheckBox
+          Left = 479
+          Height = 19
+          Top = 232
+          Width = 122
+          Caption = 'Amplitudes in volts'
+          Checked = True
+          OnChange = mVoltsChange
+          State = cbChecked
+          TabOrder = 12
+          Visible = False
+        end
+        object RTCBugs: TCheckBox
+          Left = 480
+          Height = 19
+          Top = 184
+          Width = 147
+          Caption = 'Keep RTC bugs in charts'
+          OnChange = RTCBugsChange
+          TabOrder = 14
         end
       end
     end
@@ -3106,6 +3133,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3684,8 +3712,9 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
-              Intervals.NiceSteps = '0.1|0.5|1.0'
-              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
+              Intervals.NiceSteps = '1'
               Intervals.Tolerance = 1
               Alignment = calBottom
               Marks.Format = '%2:s'
@@ -3701,6 +3730,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -4301,7 +4331,6 @@ object CSV: TCSV
       ClientHeight = 635
       ClientWidth = 891
       Enabled = False
-      OnContextPopup = ReportTabContextPopup
       object GroupBox3: TGroupBox
         Left = 201
         Height = 80
@@ -4430,7 +4459,7 @@ object CSV: TCSV
         TabOrder = 1
       end
       object SaveReport: TButton
-        Left = 793
+        Left = 794
         Height = 33
         Top = 72
         Width = 95
@@ -4583,7 +4612,6 @@ object CSV: TCSV
       Font.Color = clBlack
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
-      OnContextPopup = TabSheet1ContextPopup
       ParentFont = False
       object StatusLo: TRadioButton
         Left = 32
