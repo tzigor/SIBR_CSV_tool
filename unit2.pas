@@ -34,7 +34,7 @@ Const Line = #13#10;
       NumOsCharts: Byte = 8;
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
-      CondChannels: array of String = ('A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
+      CondChannels: array of String = ('A0L_UNC', 'A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P0L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A0H_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P0H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
       CondCompChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
 
 Const SWLo: array of String70 = (
@@ -125,13 +125,12 @@ function FileSize(FileName:string):Integer;
 function ParamLine(name:String; mean, min, max, stdDev, minTol, maxTol, stdDevTol: Double; k, m: Integer; PF: String): String;
 function SWLine(name:String; SW, Expected: Longint; PF: String): String;
 procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
-function Amplitude(nParam, n: Integer): Double;
-function PhaseShift(nParam, n: Integer): Double;
-function expon2(n: Integer): Integer;
 function DateTimePlusLocal(DateTime: String): String;
 function GetReportAmpl(Param: String): Double;
 function ComplexAmplitude(nParam, n: Integer): complex;
 function GetConductivity(Param: String; n: Integer; c: Byte): Double;
+function Amplitude(nParam, n: Integer): Double;
+function PhaseShift(nParam, n: Integer): Double;
 
 implementation
 
@@ -139,14 +138,6 @@ function DateTimePlusLocal(DateTime: String): String;
 begin
   if DateTime<>'' then DateTimePlusLocal:= DateTimeToStr(IncHour(StrToDateTime(DateTime), hrsPlus - prevHrsPlus))
   else DateTimePlusLocal:= '';
-end;
-
-function expon2(n: Integer): Integer;
-var i, exp: Integer;
-begin
-  exp:= 1;
-  for i:=1 to n do exp:= exp * 2;
-  expon2:= exp;
 end;
 
 function GetParamPosition(Param: String): Integer;
@@ -250,11 +241,36 @@ begin
   else PhaseShift:= 0;
 end;
 
+function GetReportAmpl(Param: String): Double;
+var i, NumReportParams: integer;
+begin
+  NumReportParams:= Length(ReportParams);
+  for i:=0 to NumReportParams - 1 do begin
+     if ReportParams[i].name = Param then GetReportAmpl:= ReportParams[i].mean;
+  end;
+end;
+
+function AmplitudeName(n: Integer):String;
+begin
+   AmplitudeName:= 'AR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
+end;
+
+function PhaseShiftName(n: Integer):String;
+begin
+   PhaseShiftName:= 'PR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
+end;
+
+function NameToInt(name: String): Integer;
+begin
+   NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
+end;
+
+
 function ComplexAmplitude(nParam, n: Integer): complex;
 var StartParamPos, Step: Integer;
     RawR, RawX: Real;
 begin
-  StartParamPos:= GetParamPosition('VR1T1F1r');
+  StartParamPos:= GetParamPosition('VR1T0F1r');
   if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
   else Step:= ((nParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
@@ -262,55 +278,107 @@ begin
   ComplexAmplitude:= cinit(RawR, RawX);
 end;
 
+function ComplexCalibration(nParam, n: Integer): complex;
+var StartParamPos, Step: Integer;
+    RawR, RawX: Real;
+begin
+  StartParamPos:= GetParamPosition('VR1C0F1r');
+  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
+  else Step:= ((nParam div 2) * 8) + 2;
+  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
+  ComplexCalibration:= cinit(RawR, RawX);
+end;
+
 function GetConductivity(Param: String; n: Integer; c: Byte): Double;
 // c = 1 - Compensated
 var x, x1: real;
+    T0F1_UNC, T1F1_UNC, T2F1_UNC, T3F1_UNC, T0F2_UNC, T1F2_UNC, T2F2_UNC, T3F2_UNC: complex;
 begin
-   if RightStr(Param, 1) = 'L' then begin // F1 - 400 KHz
-     VT1R1:= ComplexAmplitude(0, n);
-     VT1R2:= ComplexAmplitude(1, n);
-     VT2R1:= ComplexAmplitude(4, n);
-     VT2R2:= ComplexAmplitude(5, n);
-     VT3R1:= ComplexAmplitude(8, n);
-     VT3R2:= ComplexAmplitude(9, n);
+   if RightStr(Param, 5) = 'L_UNC' then begin // F1 - 400 KHz
+     VT0R1F1:= ComplexAmplitude(0, n);
+     VT0R2F1:= ComplexAmplitude(1, n);
+
+     VT1R1F1:= ComplexAmplitude(4, n);
+     VT1R2F1:= ComplexAmplitude(5, n);
+     VT2R1F1:= ComplexAmplitude(8, n);
+     VT2R2F1:= ComplexAmplitude(9, n);
+     VT3R1F1:= ComplexAmplitude(12, n);
+     VT3R2F1:= ComplexAmplitude(13, n);
+
+     VR1C0F1:= ComplexCalibration(0, n);
+     VR2C0F1:= ComplexCalibration(1, n);
+
+     VR1C1F1:= ComplexCalibration(4, n);
+     VR2C1F1:= ComplexCalibration(5, n);
+     VR1C2F1:= ComplexCalibration(8, n);
+     VR2C2F1:= ComplexCalibration(9, n);
+     VR1C3F1:= ComplexCalibration(12, n);
+     VR2C3F1:= ComplexCalibration(13, n);
+
+     T0F1_UNC:= (VT0R1F1/VR1C0F1) / (VT0R2F1/VR2C0F1);
+     T1F1_UNC:= (VT1R1F1/VR1C1F1) / (VT1R2F1/VR2C1F1);
+     T2F1_UNC:= (VT2R2F1/VR2C2F1) / (VT2R1F1/VR1C2F1);
+     T3F1_UNC:= (VT3R1F1/VR1C3F1) / (VT3R2F1/VR2C3F1);
    end
    else begin // F2 - 2 MHz
-     VT1R1:= ComplexAmplitude(2, n);
-     VT1R2:= ComplexAmplitude(3, n);
-     VT2R1:= ComplexAmplitude(6, n);
-     VT2R2:= ComplexAmplitude(7, n);
-     VT3R1:= ComplexAmplitude(10, n);
-     VT3R2:= ComplexAmplitude(11, n)
+     VT0R1F2:= ComplexAmplitude(2, n);
+     VT0R2F2:= ComplexAmplitude(3, n);
+
+     VT1R1F2:= ComplexAmplitude(6, n);
+     VT1R2F2:= ComplexAmplitude(7, n);
+     VT2R1F2:= ComplexAmplitude(10, n);
+     VT2R2F2:= ComplexAmplitude(11, n);
+     VT3R1F2:= ComplexAmplitude(14, n);
+     VT3R2F2:= ComplexAmplitude(15, n);
+
+     VR1C0F2:= ComplexCalibration(2, n);
+     VR2C0F2:= ComplexCalibration(3, n);
+
+     VR1C1F2:= ComplexCalibration(6, n);
+     VR2C1F2:= ComplexCalibration(7, n);
+     VR1C2F2:= ComplexCalibration(10, n);
+     VR2C2F2:= ComplexCalibration(11, n);
+     VR1C3F2:= ComplexCalibration(14, n);
+     VR2C3F2:= ComplexCalibration(15, n);
+
+     T0F2_UNC:= (VT0R1F2/VR1C0F2) / (VT0R2F2/VR2C0F2);
+     T1F2_UNC:= (VT1R1F2/VR1C1F2) / (VT1R2F2/VR2C1F2);
+     T2F2_UNC:= (VT2R2F2/VR2C2F2) / (VT2R1F2/VR1C2F2);
+     T3F2_UNC:= (VT3R1F2/VR1C3F2) / (VT3R2F2/VR2C3F2);
    end;
 
    case Param of
-     'A16L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
-     'A22L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
-     'A34L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
-     'A16H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
-     'A22H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
-     'A34H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
-     'P16L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
-     'P22L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
-     'P34L_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
-     'P16H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
-     'P22H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
-     'P34H_UNC': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
+     'P0L_UNC': GetConductivity:= angle(T0F1_UNC);
+     'P0H_UNC': GetConductivity:= angle(T0F2_UNC);
+     'P16L_UNC': GetConductivity:= angle(T1F1_UNC);
+     'P22L_UNC': GetConductivity:= angle(T2F1_UNC);
+     'P34L_UNC': GetConductivity:= angle(T3F1_UNC);
+     'P16H_UNC': GetConductivity:= angle(T1F2_UNC);
+     'P22H_UNC': GetConductivity:= angle(T2F2_UNC);
+     'P34H_UNC': GetConductivity:= angle(T3F2_UNC);
+     'A0L_UNC': GetConductivity:= -20*Log10(cMod(T0F1_UNC));
+     'A0H_UNC': GetConductivity:= -20*Log10(cMod(T0F2_UNC));
+     'A16L_UNC': GetConductivity:= -20*Log10(cMod(T1F1_UNC));
+     'A22L_UNC': GetConductivity:= -20*Log10(cMod(T2F1_UNC));
+     'A34L_UNC': GetConductivity:= -20*Log10(cMod(T3F1_UNC));
+     'A16H_UNC': GetConductivity:= -20*Log10(cMod(T1F2_UNC));
+     'A22H_UNC': GetConductivity:= -20*Log10(cMod(T2F2_UNC));
+     'A34H_UNC': GetConductivity:= -20*Log10(cMod(T3F2_UNC));
 
-     'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
-     'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
-     'A34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
-     'A16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
-     'A22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
-     'A34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
-     'P16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
-     'P22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
-     'P34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
-     'P16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
-     'P22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
-     'P34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
+     //'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
+     //'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
+     //'A34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
+     //'A16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
+     //'A22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
+     //'A34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
+     //'P16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
+     //'P22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
+     //'P34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
+     //'P16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
+     //'P22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
+     //'P34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
    end;
-
 end;
 
 function Amplitude(nParam, n: Integer): Double;
@@ -329,39 +397,17 @@ end;
 function PhaseShift(nParam, n: Integer): Double;
 var StartParamPos, Step: Integer;
     RawR, RawX: Double;
+    Phase: complex;
 begin
   StartParamPos:= GetParamPosition('VR1T0F1r');
   if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
   else Step:= ((nParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  Phase:= cInit(RawR, RawX);
+  //if RawR <> 0 then PhaseShift:= Arctan(-RawX/RawR)
+  if RawR <> 0 then PhaseShift:= Angle(Phase) * 180/Pi
   else PhaseShift:= 0;
-end;
-
-function GetReportAmpl(Param: String): Double;
-var i, NumReportParams: integer;
-begin
-  NumReportParams:= Length(ReportParams);
-  for i:=0 to NumReportParams - 1 do begin
-     if ReportParams[i].name = Param then GetReportAmpl:= ReportParams[i].mean;
-  end;
-end;
-
-
-function AmplitudeName(n: Integer):String;
-begin
-   AmplitudeName:= 'AR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
-end;
-
-function PhaseShiftName(n: Integer):String;
-begin
-   PhaseShiftName:= 'PR' + IntToStr((n mod 2) + 1) + 'T' + IntToStr((n mod 16) div 4) + 'F' + IntToStr(((n div 2) mod 2) + 1);
-end;
-
-function NameToInt(name: String): Integer;
-begin
-   NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
 end;
 
 

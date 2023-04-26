@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 229
+  Left = 345
   Height = 663
-  Top = 23
+  Top = 7
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.3.0 Portable'
+  Caption = 'SIBR Dump Tool v1.3.2 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1904,14 +1904,14 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = Graphs
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2128,7 +2128,7 @@ object CSV: TCSV
           Font.Quality = fqDraft
           ParentFont = False
           TabOrder = 0
-          Text = '1'
+          Text = '0'
         end
         object Label12: TLabel
           Left = 120
@@ -2345,7 +2345,7 @@ object CSV: TCSV
           TabOrder = 5
         end
         object Generate: TButton
-          Left = 130
+          Left = 128
           Height = 32
           Top = 288
           Width = 91
@@ -2362,13 +2362,13 @@ object CSV: TCSV
           Step = 1
           TabOrder = 7
         end
-        object Button4: TButton
+        object GetRangeBtn: TButton
           Left = 96
           Height = 25
           Top = 104
           Width = 125
           Caption = 'Get range from chart'
-          OnClick = Button4Click
+          OnClick = GetRangeBtnClick
           TabOrder = 8
         end
       end
@@ -2867,7 +2867,7 @@ object CSV: TCSV
           TabOrder = 10
         end
         object TimeScale: TRadioButton
-          Left = 480
+          Left = 479
           Height = 19
           Top = 128
           Width = 92
@@ -2877,7 +2877,7 @@ object CSV: TCSV
           TabOrder = 13
           TabStop = True
         end
-        object RadioButton2: TRadioButton
+        object ByDots: TRadioButton
           Left = 480
           Height = 19
           Top = 155
@@ -2888,7 +2888,7 @@ object CSV: TCSV
         object mVolts: TCheckBox
           Left = 479
           Height = 19
-          Top = 232
+          Top = 256
           Width = 122
           Caption = 'Amplitudes in volts'
           Checked = True
@@ -2898,13 +2898,23 @@ object CSV: TCSV
           Visible = False
         end
         object RTCBugs: TCheckBox
+          Left = 479
+          Height = 19
+          Top = 220
+          Width = 145
+          Caption = 'Only synchronized time'
+          Checked = True
+          OnChange = RTCBugsChange
+          State = cbChecked
+          TabOrder = 14
+        end
+        object ByTemperature: TRadioButton
           Left = 480
           Height = 19
           Top = 184
-          Width = 147
-          Caption = 'Keep RTC bugs in charts'
-          OnChange = RTCBugsChange
-          TabOrder = 14
+          Width = 133
+          Caption = 'Chart by temperature'
+          TabOrder = 15
         end
       end
     end
@@ -3219,6 +3229,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3304,6 +3315,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3389,6 +3401,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3474,6 +3487,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3559,6 +3573,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -3644,6 +3659,7 @@ object CSV: TCSV
               Title.Caption = 'Date'
               Title.LabelBrush.Style = bsClear
               Title.PositionOnMarks = True
+              OnGetMarkText = Chart1AxisList1GetMarkText
             end>
           BackColor = clWhite
           Foot.Alignment = taLeftJustify
@@ -4452,7 +4468,7 @@ object CSV: TCSV
       object Report: TButton
         Left = 688
         Height = 32
-        Top = 73
+        Top = 72
         Width = 96
         Caption = 'Report'
         OnClick = ReportClick

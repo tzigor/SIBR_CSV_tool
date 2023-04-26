@@ -8,9 +8,9 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Unit4, Types, TAChartUtils, TADataTools,
+  DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils, TADataTools,
   TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
-  IniPropStorage, Parameters, TAChartAxisUtils;
+  IniPropStorage, Parameters;
 
 type
 
@@ -22,7 +22,7 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    Button4: TButton;
+    GetRangeBtn: TButton;
     Button5: TButton;
     Button6: TButton;
     Button7: TButton;
@@ -43,10 +43,11 @@ type
     Chart9LineSeries5: TLineSeries;
     Chart9LineSeries6: TLineSeries;
     ChartExtentLink2: TChartExtentLink;
+    ByTemperature: TRadioButton;
     RTCBugs: TCheckBox;
     mVolts: TCheckBox;
     TimeScale: TRadioButton;
-    RadioButton2: TRadioButton;
+    ByDots: TRadioButton;
     ZoneFromChart: TCheckBox;
     CommonBar: TProgressBar;
     ComputedChannels: TListBox;
@@ -220,7 +221,7 @@ type
     TestDate: TDateTimePicker;
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
+    procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
@@ -233,7 +234,7 @@ type
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
-    procedure Chart6ExtentChanged(ASender: TChart);
+    procedure Chart6ExtentChanged();
     procedure Chart7ExtentChanged(ASender: TChart);
     procedure Chart8ExtentChanged(ASender: TChart);
     procedure ChartHeightControlChange(Sender: TObject);
@@ -271,14 +272,14 @@ type
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
-    procedure Sondes1ExtentChanged(ASender: TChart);
-    procedure Sondes2ExtentChanged(ASender: TChart);
-    procedure Sondes3ExtentChanged(ASender: TChart);
-    procedure SondesExtentChanging(ASender: TChart);
+    procedure Sondes1ExtentChanged();
+    procedure Sondes2ExtentChanged();
+    procedure Sondes3ExtentChanged();
+    procedure SondesExtentChanging();
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
-      aRect: TRect; aState: TGridDrawState);
+      aRect: TRect);
     procedure SaveReportClick(Sender: TObject);
     procedure EstimateFastClick(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
@@ -323,7 +324,7 @@ procedure TCSV.GenerateClick(Sender: TObject);
           while not eof(WorkingFile) do begin
             Readln(WorkingFile, TextLine);
             CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine))), hrsPlus);
-            if (YearOf(CurrentTime) <> 1970) and (SecondsBetween(PrevTime,CurrentTime) >= Rate ) and
+            if (SecondsBetween(PrevTime,CurrentTime) >= Rate ) and
                  (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin;
                PrevTime:= UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine)));
                WriteLn(NewCSVFile,TextLine);
@@ -386,7 +387,7 @@ begin
           NumOfLines:= 0;
           for i:=1 to CSVContent.Count-1 do begin
               CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i]))), hrsPlus);
-              if (YearOf(CurrentTime) <> 1970) and (SecondsBetween(PrevTime,CurrentTime) >= Rate )
+              if (SecondsBetween(PrevTime,CurrentTime) >= Rate )
                   and (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
                  NumOfLines:=  NumOfLines + 1;
                  FSize:= FSize + Length(CSVContent[i]);
@@ -471,7 +472,7 @@ begin
   end;
 end;
 
-procedure TCSV.Button4Click(Sender: TObject);
+procedure TCSV.GetRangeBtnClick(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
   else begin
@@ -538,16 +539,17 @@ procedure TCSV.Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
   AMark: Double);
 var DateTime: TDateTime;
 begin
-   if Not TimeScale.Checked then begin
-     if (AMark > 0) And (AMark < CSVContent.Count) then begin
+   if ByDots.Checked then begin
+     if (AMark >= 1) And (AMark < CSVContent.Count) then begin
        DateTime:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(AMark)])));
        AText:= TimeToStr(DateTime) + Line + DateToStr(DateTime);
      end
      else AText:= '';
    end
-   else begin
-     AText:= TimeToStr(AMark) + Line + DateToStr(AMark);
-   end;
+   else if TimeScale.Checked then begin
+           AText:= TimeToStr(AMark) + Line + DateToStr(AMark);
+        end
+        else AText:= FloatToStrF(AMark, ffFixed, 3, 1);
 end;
 
 procedure TCSV.RTCBugsChange(Sender: TObject);
@@ -613,14 +615,17 @@ procedure TCSV.ChartToolset1DataPointClickTool2PointClick(ATool: TChartTool;
   APoint: TPoint);
 var y: Double;
     x: TDateTime;
+    DateStr: String;
 begin
   with ATool as TDatapointClickTool do begin
     if (Series is TLineSeries) then
       with TLineSeries(Series) do begin
+        if TimeScale.Checked then DateStr:= Line + DateTimeToStr(x)
+        else DateStr:= '';
         ChartPointIndex:= PointIndex;
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
+        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + DateStr
         else ListSource.Item[PointIndex]^.Text := '';
         ParentChart.Repaint;
         LabelSticked:= true;
@@ -811,16 +816,17 @@ begin
 end;
 
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
-var i, xInt: Longint;
+var i, CtrlTempPos: Longint;
     ParamPos, TimePos: Integer;
     PowerReset, TimeShift: boolean;
-    y: Double;
+    y, xCtrlTemp: Double;
     x, Time, PrevTime: TDateTime;
     Sticker, xStr: String;
 begin
   PowerReset:= false;
   TimeShift:= false;
   TimePos:= GetParamPosition('RTCs');
+  CtrlTempPos:= GetParamPosition('TEMP_CTRL');
   ParamPos:= GetParamPosition(SelectedParamName);
   Chart1LineSeries.Clear;
   Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParamName;
@@ -831,7 +837,7 @@ begin
   PrevTime:= UnixToDateTime(0);
   for i:=1 to CSVContent.Count-1 do begin
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
-    if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (CSV.RTCBugs.Checked) then begin
+    if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
        if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 0)
        else if SelectedParamName in CondCompChannels then y:= GetConductivity(SelectedParamName, i, 1)
             else
@@ -844,13 +850,14 @@ begin
                      end;
 
        Sticker:= '';
-       x:= IncHour(Time, hrsPlus);
-       xInt:= i;
+       if CSV.TimeScale.Checked then x:= IncHour(Time, hrsPlus);
+       if CSV.ByTemperature.Checked then xCtrlTemp:= StrToFloat(GetParamValue(CtrlTempPos, CSVContent[i]));
        if Time < PrevTime then Sticker:= 'Back shift in time';
        if ShowPR and PowerReset then Sticker:= 'P';
        if y <> -35535 then begin
           if CSV.TimeScale.Checked then Chart1LineSeries.AddXY(x, y, Sticker)
-          else Chart1LineSeries.AddXY(xInt, y, Sticker)
+          else if CSV.ByDots.Checked then Chart1LineSeries.AddXY(i, y, Sticker)
+               else Chart1LineSeries.AddXY(xCtrlTemp, y, Sticker)
        end;
        PowerReset:= false;
        PrevTime:= Time;
@@ -980,9 +987,16 @@ begin
   Chart1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
   StartZone:= dr.a.X;
   EndZone:= dr.b.X;
-  LeftExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', StartZone);
-  RightExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', EndZone);
-  ExtentDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
+  if TimeScale.Checked then begin
+    LeftExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', StartZone);
+    RightExtent.Caption:= FormatDateTime('dd-mm-yy hh:mm:ss', EndZone);
+    ExtentDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
+  end
+  else begin
+    LeftExtent.Caption:= '';
+    RightExtent.Caption:= '';
+    ExtentDuration.Caption:= '';
+  end;
 end;
 
 procedure TCSV.Chart2ExtentChanged(ASender: TChart);
@@ -1013,7 +1027,7 @@ begin
   Chart5.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
-procedure TCSV.Chart6ExtentChanged(ASender: TChart);
+procedure TCSV.Chart6ExtentChanged();
   var dr: TDoubleRect;
 begin
   dr:= Chart6.CurrentExtent;
@@ -1042,13 +1056,16 @@ end;
 procedure TCSV.ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool; APoint: TPoint);
 var y: Double;
     x: TDateTime;
+    DateStr: String;
 begin
   with ATool as TDatapointClickTool do begin
     if (Series is TLineSeries) then
       with TLineSeries(Series) do begin
+        if TimeScale.Checked then DateStr:= Line + DateTimeToStr(x)
+        else DateStr:= '';
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
+        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + DateStr
         else ListSource.Item[PointIndex]^.Text := '';
         ParentChart.Repaint;
       end;
@@ -1108,28 +1125,28 @@ begin
   else FillSelectedChannels;
 end;
 
-procedure TCSV.Sondes1ExtentChanged(ASender: TChart);
+procedure TCSV.Sondes1ExtentChanged();
 var dr: TDoubleRect;
 begin
   dr:= Sondes1.CurrentExtent;
   Sondes1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
-procedure TCSV.Sondes2ExtentChanged(ASender: TChart);
+procedure TCSV.Sondes2ExtentChanged();
 var dr: TDoubleRect;
 begin
   dr:= Sondes2.CurrentExtent;
   Sondes2.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
-procedure TCSV.Sondes3ExtentChanged(ASender: TChart);
+procedure TCSV.Sondes3ExtentChanged();
   var dr: TDoubleRect;
 begin
   dr:= Sondes3.CurrentExtent;
   Sondes3.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
-procedure TCSV.SondesExtentChanging(ASender: TChart);
+procedure TCSV.SondesExtentChanging();
 var dr: TDoubleRect;
 begin
   dr:= Sondes.CurrentExtent;
@@ -1162,6 +1179,7 @@ begin
   TestType.Items.Add('Foil Test');
   TestType.ItemIndex:= 0;
   TestDate.Date:= Date;
+  ChartHeightControl.Max:= CSV.Height - 30;
   Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
   Chart2LineSeries1.Pointer.Visible:= ChartPoints.Checked;
   Chart3LineSeries1.Pointer.Visible:= ChartPoints.Checked;
@@ -1197,7 +1215,8 @@ end;
 
 procedure TCSV.FitToWinClick(Sender: TObject);
 begin
-  if SelectedChannels.Items.Count > 0 then ChartHeightControl.Position:= (CSV.Height - 90) div SelectedChannels.Items.Count;
+  if SelectedChannels.Items.Count > 1 then ChartHeightControl.Position:= (CSV.Height - 90) div SelectedChannels.Items.Count;
+  if SelectedChannels.Items.Count = 1 then ChartHeightControl.Position:= CSV.Height - 30;
   Chart1.Height:= ChartHeightControl.Position;
   Chart2.Height:= ChartHeightControl.Position;
   Chart3.Height:= ChartHeightControl.Position;
@@ -1281,7 +1300,7 @@ begin
 end;
 
 procedure TCSV.SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
-  aRect: TRect; aState: TGridDrawState);
+  aRect: TRect);
 begin
   if SWList.Cells[0, Arow]='1' then begin
      //SWList.Canvas.Brush.Color:=clRed;
@@ -1339,9 +1358,11 @@ begin
       ComputedChannels.Clear;
       SelectedChannels.Clear;
       ReportText.Text:= '';
+      ReportTab.Enabled:= false;
       ShowTool.Enabled:= false;
       ShowSondes.Enabled:= false;
       ShowCSondes.Enabled:= false;
+      GetRangeBtn .Enabled:= false;
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Text:= CSVFileName;
       try
@@ -1382,7 +1403,7 @@ begin
 
         for i:= 0 to 15 do ComputedChannels.Items.Add(AmplitudeName(i));
         for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
-        for i:= 0 to 11 do ComputedChannels.Items.Add(CondChannels[i]);
+        for i:= 0 to 15 do ComputedChannels.Items.Add(CondChannels[i]);
         for i:= 0 to 11 do ComputedChannels.Items.Add(CondCompChannels[i]);
 
         ParamPos:= GetParamPosition('RTCs');
@@ -1392,17 +1413,17 @@ begin
         for i:=1 to CSVContent.Count-1 do begin
             FSize:= FSize + Length(CSVContent[i]);
             if not StartRun then begin
-               if YearOf(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i])))) <> 1970 then begin
+               //if YearOf(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i])))) <> 1970 then begin
                   StartRunDT:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i]))), hrsPlus);
                   RunStart.Caption:= DateTimeToStr(StartRunDT);
                   StartTime.Text:= RunStart.Caption;
                   StartRun:= true;
-               end
+               //end
             end
             else begin
-               if (YearOf(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i])))) <> 1970) then begin
+               //if (YearOf(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i])))) <> 1970) then begin
                   EndRun:= GetParamValue(ParamPos, CSVContent[i]);
-               end
+               //end
             end;
         end;
 
@@ -1415,8 +1436,11 @@ begin
         CSVFileSize.Caption:= IntToStr(Round(FSize/1000))+' KB';
         DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
         Duration.Caption:= IntToStr(DurationInMinutes div 60) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
+        if TimeScale.Checked And RTCBugs.Checked then begin
+           ReportTab.Enabled:= True;
+           GetRangeBtn .Enabled:= True;
+        end;
         EstimateFast.Enabled:= True;
-        ReportTab.Enabled:= True;
         ShowSondes.Enabled:= True;
         ShowCSondes.Enabled:= True;
 
@@ -1474,7 +1498,7 @@ end;
 procedure TCSV.ReportClick(Sender: TObject);
 var i, j, meanCount, start: Longint;
     ParamPos, TimePos, ParamCount: Integer;
-    MinValue, MaxValue, Avarage, StdDiviation, Value: Double;
+    MinValue, MaxValue, Avarage, StdDiviation, Value, MeanAv: Double;
     AmplAvarage, PSAvarage, AmplValue, PSValue, MinAmplValue, MinPSValue, MaxAmplValue, MaxPSValue, AmplStdDiviation, PSStdDiviation: Double;
     wStr, PassFail, PSPassFail: String;
     PSStrings: array[0..15] of String;
@@ -1492,7 +1516,8 @@ begin
       ParamCount:= 0;
       ZoneDuration.Caption:= IntToStr(MinutesBetween(StartTimeDT, EndTimeDT)) + ' min';
 
-      if MinutesBetween(StartTimeDT, EndTimeDT) >= 5 then begin
+      //if MinutesBetween(StartTimeDT, EndTimeDT) >= 5 then begin
+      if true then begin
 
           wStr:= wStr + 'SIB-R S/N: ' + SerialNumber.Text + Line;
           wStr:= wStr + 'Test Date: ' + FormatDateTime('DD-MMM-YYYY', TestDate.Date) + Line;
@@ -1516,7 +1541,6 @@ begin
           wStr:= wStr + '                                                                |              Tolerances              |' + Line;
           wStr:= wStr + 'Param          Mean        Min         Max         S.D.         | Minimum     Maximum     MaxS.D.      | Result' + Line;
           wStr:= wStr + '---------------------------------------------------------------------------------------------------------------' + Line;
-          Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
           i:= 1;
           repeat
             CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
@@ -1525,10 +1549,10 @@ begin
           start:= i;
 
           for j:=0 to 30 do begin
+              Avarage:= 0; StdDiviation:= 0; meanCount:= 0;
               ParamPos:= GetParamPosition(SibrParams[j].name);
               Value:= StrToFloat(GetParamValue(ParamPos,CSVContent[start]));
               MinValue:= Value; MaxValue:= Value;
-              meanCount:= 0;
               for i:=start to CSVContent.Count-1 do begin
                  CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
                  if (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin
@@ -1566,10 +1590,9 @@ begin
           ReportText.Text:= wStr;
 
           // *************   Amplitudes & Phases   *************************
-          AmplAvarage:= 0; AmplStdDiviation:= 0;
-          PSAvarage:= 0; PSStdDiviation:= 0;
-
           for j:=1 to 16 do begin
+            AmplAvarage:= 0; AmplStdDiviation:= 0;
+            PSAvarage:= 0; PSStdDiviation:= 0;
             GetResParameters(AmplValue, PSValue, j-1, start);
             MinAmplValue:= AmplValue; MaxAmplValue:= AmplValue;
             MinPSValue:= PSValue; MaxPSValue:= PSValue;
@@ -1653,6 +1676,14 @@ end;
 procedure TCSV.TimeScaleChange(Sender: TObject);
 begin
    NewChart:= true;
+   if TimeScale.Checked then begin
+      ReportTab.Enabled:= True;
+      GetRangeBtn .Enabled:= True;
+   end
+   else begin
+      ReportTab.Enabled:= false;
+      GetRangeBtn .Enabled:= false;
+   end;
 end;
 
 
