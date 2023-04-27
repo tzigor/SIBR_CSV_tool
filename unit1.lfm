@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = 383
+  Left = 425
   Height = 663
-  Top = 28
+  Top = 31
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.4.0 Portable'
@@ -3261,7 +3261,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart3ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3347,7 +3347,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart4ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3433,7 +3433,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart5ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3519,7 +3519,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart8ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3605,7 +3605,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart7ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3691,7 +3691,7 @@ object CSV: TCSV
           )
           Title.Visible = True
           Toolset = ChartToolset1
-          OnExtentChanged = Chart6ExtentChanged
+          OnExtentChanged = Chart2ExtentChanged
           Align = alTop
           Color = clDefault
           Visible = False
@@ -3975,7 +3975,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanging = SondesExtentChanging
+        OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4083,7 +4083,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Sondes1ExtentChanged
+        OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4196,9 +4196,10 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Sondes2ExtentChanged
+        OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
+        Visible = False
         object SondesLineSeries13: TLineSeries
           Title = ' A16L '
           LinePen.Color = clBlue
@@ -4303,7 +4304,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
-        OnExtentChanged = Sondes3ExtentChanged
+        OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
         Visible = False
@@ -4978,6 +4979,12 @@ object CSV: TCSV
       end    
       item
         Chart = Sondes1
+      end    
+      item
+        Chart = Sondes2
+      end    
+      item
+        Chart = Sondes3
       end>
     Mode = elmOnlyX
     Left = 664

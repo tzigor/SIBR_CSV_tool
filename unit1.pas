@@ -233,9 +233,6 @@ type
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
-    procedure Chart6ExtentChanged();
-    procedure Chart7ExtentChanged(ASender: TChart);
-    procedure Chart8ExtentChanged(ASender: TChart);
     procedure ChartHeightControlChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
       APoint: TPoint);
@@ -246,9 +243,6 @@ type
     procedure DrawClick(Sender: TObject);
     procedure Chart1ExtentChanged(ASender: TChart);
     procedure Chart2ExtentChanged(ASender: TChart);
-    procedure Chart3ExtentChanged(ASender: TChart);
-    procedure Chart4ExtentChanged(ASender: TChart);
-    procedure Chart5ExtentChanged(ASender: TChart);
     procedure ChartPointsChange(Sender: TObject);
     procedure ChartsLinkChange(Sender: TObject);
     procedure ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool;
@@ -271,10 +265,6 @@ type
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
-    procedure Sondes1ExtentChanged();
-    procedure Sondes2ExtentChanged();
-    procedure Sondes3ExtentChanged();
-    procedure SondesExtentChanging();
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -697,7 +687,7 @@ begin
   CSondesVisible(false);
 end;
 
-procedure FillZondes(x: TDateTime; i: Integer; zType: Byte);
+procedure FillZondes(x: TDateTime; i: Integer; zType: Byte; time: boolean);
 var A16L_UNC, A22L_UNC, A34L_UNC, P16L_UNC, P22L_UNC, P34L_UNC, A16H_UNC, A22H_UNC, A34H_UNC, P16H_UNC, P22H_UNC, P34H_UNC: Double;
 begin
   FillCoplexParams(i, 0);
@@ -717,37 +707,69 @@ begin
   P34H_UNC:= angle(T3F2_UNC) * 180/Pi;
 
   if zType = 0 then begin
-    CSV.SondesLineSeries1.AddXY(x, A16L_UNC);
-    CSV.SondesLineSeries2.AddXY(x, A22L_UNC);
-    CSV.SondesLineSeries3.AddXY(x, A34L_UNC);
-    CSV.SondesLineSeries4.AddXY(x, A16H_UNC);
-    CSV.SondesLineSeries5.AddXY(x, A22H_UNC);
-    CSV.SondesLineSeries6.AddXY(x, A34H_UNC);
-    CSV.SondesLineSeries7.AddXY(x, P16L_UNC);
-    CSV.SondesLineSeries8.AddXY(x, P22L_UNC);
-    CSV.SondesLineSeries9.AddXY(x, P34L_UNC);
-    CSV.SondesLineSeries10.AddXY(x, P16H_UNC);
-    CSV.SondesLineSeries11.AddXY(x, P22H_UNC);
-    CSV.SondesLineSeries12.AddXY(x, P34H_UNC);
+    if time then begin
+      CSV.SondesLineSeries1.AddXY(x, A16L_UNC);
+      CSV.SondesLineSeries2.AddXY(x, A22L_UNC);
+      CSV.SondesLineSeries3.AddXY(x, A34L_UNC);
+      CSV.SondesLineSeries4.AddXY(x, A16H_UNC);
+      CSV.SondesLineSeries5.AddXY(x, A22H_UNC);
+      CSV.SondesLineSeries6.AddXY(x, A34H_UNC);
+      CSV.SondesLineSeries7.AddXY(x, P16L_UNC);
+      CSV.SondesLineSeries8.AddXY(x, P22L_UNC);
+      CSV.SondesLineSeries9.AddXY(x, P34L_UNC);
+      CSV.SondesLineSeries10.AddXY(x, P16H_UNC);
+      CSV.SondesLineSeries11.AddXY(x, P22H_UNC);
+      CSV.SondesLineSeries12.AddXY(x, P34H_UNC);
+    end
+    else begin
+      CSV.SondesLineSeries1.AddXY(i, A16L_UNC);
+      CSV.SondesLineSeries2.AddXY(i, A22L_UNC);
+      CSV.SondesLineSeries3.AddXY(i, A34L_UNC);
+      CSV.SondesLineSeries4.AddXY(i, A16H_UNC);
+      CSV.SondesLineSeries5.AddXY(i, A22H_UNC);
+      CSV.SondesLineSeries6.AddXY(i, A34H_UNC);
+      CSV.SondesLineSeries7.AddXY(i, P16L_UNC);
+      CSV.SondesLineSeries8.AddXY(i, P22L_UNC);
+      CSV.SondesLineSeries9.AddXY(i, P34L_UNC);
+      CSV.SondesLineSeries10.AddXY(i, P16H_UNC);
+      CSV.SondesLineSeries11.AddXY(i, P22H_UNC);
+      CSV.SondesLineSeries12.AddXY(i, P34H_UNC);
+    end;
   end
   else begin
-    CSV.SondesLineSeries13.AddXY(x, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
-    CSV.SondesLineSeries14.AddXY(x, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
-    CSV.SondesLineSeries15.AddXY(x, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
-    CSV.SondesLineSeries16.AddXY(x, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
-    CSV.SondesLineSeries17.AddXY(x, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
-    CSV.SondesLineSeries18.AddXY(x, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
-    CSV.SondesLineSeries19.AddXY(x, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
-    CSV.SondesLineSeries20.AddXY(x, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
-    CSV.SondesLineSeries21.AddXY(x, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
-    CSV.SondesLineSeries22.AddXY(x, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
-    CSV.SondesLineSeries23.AddXY(x, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
-    CSV.SondesLineSeries24.AddXY(x, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
+    if time then begin
+      CSV.SondesLineSeries13.AddXY(x, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
+      CSV.SondesLineSeries14.AddXY(x, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
+      CSV.SondesLineSeries15.AddXY(x, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
+      CSV.SondesLineSeries16.AddXY(x, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
+      CSV.SondesLineSeries17.AddXY(x, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
+      CSV.SondesLineSeries18.AddXY(x, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
+      CSV.SondesLineSeries19.AddXY(x, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
+      CSV.SondesLineSeries20.AddXY(x, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
+      CSV.SondesLineSeries21.AddXY(x, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
+      CSV.SondesLineSeries22.AddXY(x, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
+      CSV.SondesLineSeries23.AddXY(x, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
+      CSV.SondesLineSeries24.AddXY(x, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
+    end
+    else begin
+      CSV.SondesLineSeries13.AddXY(i, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
+      CSV.SondesLineSeries14.AddXY(i, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
+      CSV.SondesLineSeries15.AddXY(i, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
+      CSV.SondesLineSeries16.AddXY(i, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
+      CSV.SondesLineSeries17.AddXY(i, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
+      CSV.SondesLineSeries18.AddXY(i, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
+      CSV.SondesLineSeries19.AddXY(i, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
+      CSV.SondesLineSeries20.AddXY(i, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
+      CSV.SondesLineSeries21.AddXY(i, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
+      CSV.SondesLineSeries22.AddXY(i, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
+      CSV.SondesLineSeries23.AddXY(i, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
+      CSV.SondesLineSeries24.AddXY(i, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
+    end;
   end;
 end;
 
 procedure ShowSonde(Sonde1, Sonde2: TChart; zType: Byte);
-var x: TDateTime;
+var x, Time: TDateTime;
     i, TimePos: Integer;
 begin
   if CSV.ZoneFromChart.Checked and (StartZone = EndZone) then ShowMessage('Time zone is not defined')
@@ -766,12 +788,15 @@ begin
       CSV.CommonBar.Max:= CSVContent.Count-1;
       CSV.CommonBar.Position:= 0;
       for i:=1 to CSVContent.Count-1 do begin
-        if YearOf(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])))) > 2020 then begin
-           x:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
+        Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+        if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
+           if CSV.TimeScale.Checked then x:= IncHour(Time, hrsPlus);
            if CSV.ZoneFromChart.Checked then begin
-             if (CompareDateTime(x, StartZone) = 1) and (CompareDateTime(x, EndZone) = -1) then FillZondes(x, i, zType);
+             if (CompareDateTime(x, StartZone) = 1) and (CompareDateTime(x, EndZone) = -1) then begin
+               FillZondes(x, i, zType, CSV.TimeScale.Checked)
+             end;
            end
-           else FillZondes(x, i, zType);
+           else FillZondes(x, i, zType, CSV.TimeScale.Checked);
         end;
         CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
       end;
@@ -798,13 +823,12 @@ end;
 procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
 var i, CtrlTempPos: Longint;
     ParamPos, TimePos: Integer;
-    PowerReset, TimeShift: boolean;
+    PowerReset: boolean;
     y, xCtrlTemp: Double;
     x, Time, PrevTime: TDateTime;
-    Sticker, xStr: String;
+    Sticker: String;
 begin
   PowerReset:= false;
-  TimeShift:= false;
   TimePos:= GetParamPosition('RTCs');
   CtrlTempPos:= GetParamPosition('TEMP_CTRL');
   ParamPos:= GetParamPosition(SelectedParamName);
@@ -830,7 +854,6 @@ begin
                           if (SelectedParamName = 'BHP') and ((y > 500) or (y < -50)) then y:= -35535;
                           if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= -35535;
                      end;
-
        Sticker:= '';
        if CSV.TimeScale.Checked then x:= IncHour(Time, hrsPlus);
        if CSV.ByTemperature.Checked then xCtrlTemp:= StrToFloat(GetParamValue(CtrlTempPos, CSVContent[i]));
@@ -984,50 +1007,8 @@ end;
 procedure TCSV.Chart2ExtentChanged(ASender: TChart);
   var dr: TDoubleRect;
 begin
-  dr:= Chart2.CurrentExtent;
-  Chart2.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart3ExtentChanged(ASender: TChart);
-  var dr: TDoubleRect;
-begin
-  dr:= Chart3.CurrentExtent;
-  Chart3.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart4ExtentChanged(ASender: TChart);
-  var dr: TDoubleRect;
-begin
-  dr:= Chart4.CurrentExtent;
-  Chart4.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart5ExtentChanged(ASender: TChart);
-  var dr: TDoubleRect;
-begin
-  dr:= Chart5.CurrentExtent;
-  Chart5.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart6ExtentChanged();
-  var dr: TDoubleRect;
-begin
-  dr:= Chart6.CurrentExtent;
-  Chart6.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart7ExtentChanged(ASender: TChart);
-  var dr: TDoubleRect;
-begin
-  dr:= Chart7.CurrentExtent;
-  Chart7.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Chart8ExtentChanged(ASender: TChart);
-  var dr: TDoubleRect;
-begin
-  dr:= Chart8.CurrentExtent;
-  Chart8.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
+  dr:= ASender.CurrentExtent;
+  ASender.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
 procedure TCSV.ChartsLinkChange(Sender: TObject);
@@ -1105,34 +1086,6 @@ begin
   i:= RawChannels.GetIndexAtXY(Pos.X, Pos.Y);
   if RawChannels.Selected[i] and (ComputedChannels.SelCount + RawChannels.SelCount > NumOsCharts) then RawChannels.Selected[i]:= false
   else FillSelectedChannels;
-end;
-
-procedure TCSV.Sondes1ExtentChanged();
-var dr: TDoubleRect;
-begin
-  dr:= Sondes1.CurrentExtent;
-  Sondes1.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Sondes2ExtentChanged();
-var dr: TDoubleRect;
-begin
-  dr:= Sondes2.CurrentExtent;
-  Sondes2.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.Sondes3ExtentChanged();
-  var dr: TDoubleRect;
-begin
-  dr:= Sondes3.CurrentExtent;
-  Sondes3.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
-end;
-
-procedure TCSV.SondesExtentChanging();
-var dr: TDoubleRect;
-begin
-  dr:= Sondes.CurrentExtent;
-  Sondes.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X);
 end;
 
 procedure TCSV.EStatusLoChange(Sender: TObject);
