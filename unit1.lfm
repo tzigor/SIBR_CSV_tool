@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 345
+  Left = 383
   Height = 663
-  Top = 7
+  Top = 28
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.3.2 Portable'
+  Caption = 'SIBR Dump Tool v1.4.0 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -2825,7 +2825,6 @@ object CSV: TCSV
           Enabled = False
           OnClick = ShowSondesClick
           TabOrder = 6
-          Visible = False
         end
         object ShowCSondes: TButton
           Left = 464
@@ -2836,7 +2835,6 @@ object CSV: TCSV
           Enabled = False
           OnClick = ShowCSondesClick
           TabOrder = 7
-          Visible = False
         end
         object CommonBar: TProgressBar
           Left = 320
@@ -2854,7 +2852,6 @@ object CSV: TCSV
           Width = 130
           Caption = 'Get zone from charts'
           TabOrder = 9
-          Visible = False
         end
         object AutoFit: TCheckBox
           Left = 480
@@ -3907,7 +3904,6 @@ object CSV: TCSV
       Caption = 'Sondes'
       ClientHeight = 635
       ClientWidth = 891
-      TabVisible = False
       object Sondes: TChart
         Left = 0
         Height = 312
@@ -3941,6 +3937,7 @@ object CSV: TCSV
             Title.Caption = 'Date'
             Title.LabelBrush.Style = bsClear
             Title.PositionOnMarks = True
+            OnGetMarkText = Chart1AxisList1GetMarkText
           end>
         BackColor = clWhite
         Foot.Alignment = taLeftJustify
@@ -4048,6 +4045,7 @@ object CSV: TCSV
             Title.Caption = 'Date'
             Title.LabelBrush.Style = bsClear
             Title.PositionOnMarks = True
+            OnGetMarkText = Chart1AxisList1GetMarkText
           end>
         BackColor = clWhite
         Foot.Alignment = taLeftJustify
@@ -4127,7 +4125,6 @@ object CSV: TCSV
       Caption = 'C Sondes'
       ClientHeight = 635
       ClientWidth = 891
-      TabVisible = False
       object Sondes2: TChart
         Left = 0
         Height = 312
@@ -4161,6 +4158,7 @@ object CSV: TCSV
             Title.Caption = 'Date'
             Title.LabelBrush.Style = bsClear
             Title.PositionOnMarks = True
+            OnGetMarkText = Chart1AxisList1GetMarkText
           end>
         BackColor = clWhite
         Foot.Alignment = taLeftJustify
@@ -4267,6 +4265,7 @@ object CSV: TCSV
             Title.Caption = 'Date'
             Title.LabelBrush.Style = bsClear
             Title.PositionOnMarks = True
+            OnGetMarkText = Chart1AxisList1GetMarkText
           end>
         BackColor = clWhite
         Foot.Alignment = taLeftJustify
@@ -4868,7 +4867,6 @@ object CSV: TCSV
         Top = 504
         Width = 128
         Caption = 'Button8'
-        OnClick = Button8Click
         TabOrder = 1
       end
     end

@@ -5,7 +5,7 @@ unit Unit5;
 interface
 
 uses
-  Classes, SysUtils, uComplex, Math, Unit3;
+  Classes, SysUtils, uComplex, Math, Unit3, Unit2;
 
 function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n: byte; reg: string): Double;
 procedure coeffpoly(f, n: byte; reg: string);
@@ -19,7 +19,6 @@ function costruct_probe(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2: complex; f, n:
 // f = 1 - '404000' or 2 - '1818000' - frequency (Hz)
 // n = 1 or 2 or 3 - number of the synthesized probe
 // reg = "abs" or "ang" - probe type (amplitude/phase, respectively)
-const  a: array[1..3, 1..3] of real = ((-2/3, 1/2, 1/6), (-1/3, 1/2, -1/6), (1/3, 1/2, -5/6));
 var d1, d2, d3, s: complex;
     K: array[1..3] of complex;
 begin

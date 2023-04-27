@@ -5,10 +5,8 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, DateUtils, StrUtils, csvdataset, LConvEncoding, TAGraph,
-  TASources, TACustomSource, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Types, TAChartUtils, uComplex, Math, Unit3;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
+  ComCtrls, DateUtils, StrUtils, LConvEncoding, TAGraph, TASeries, TATools, Types, TAChartUtils, uComplex, Math, Unit3;
 
 type String70 = String[70];
 type ShortString = String[24];
@@ -36,6 +34,7 @@ Const Line = #13#10;
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
       CondChannels: array of String = ('A0L_UNC', 'A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P0L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A0H_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P0H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
       CondCompChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
+      const  a: array[1..3, 1..3] of real = ((2/3, 1/2, -1/6), (1/3, 1/2, 1/6), (-1/3, 1/2, 5/6));
 
 Const SWLo: array of String70 = (
       '+24V_CTRL out of range ±30%',
@@ -127,12 +126,15 @@ function SWLine(name:String; SW, Expected: Longint; PF: String): String;
 procedure GetResParameters(var Amplitude, PhaseShift: Double; nParam, n: Integer);
 function DateTimePlusLocal(DateTime: String): String;
 function GetReportAmpl(Param: String): Double;
-function ComplexAmplitude(nParam, n: Integer): complex;
-function GetConductivity(Param: String; n: Integer; c: Byte): Double;
+function ComplexAmplitude(nParam, n, shift: Integer): complex;
+function GetSonde(Param: String; n: Integer): Double;
+function GetCompSonde(Param: String; n: Integer): Double;
 function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
+procedure FillCoplexParams(n: Integer; Freq: Byte);
 
 implementation
+uses Unit1;
 
 function DateTimePlusLocal(DateTime: String): String;
 begin
@@ -265,119 +267,114 @@ begin
    NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
 end;
 
-
-function ComplexAmplitude(nParam, n: Integer): complex;
+function ComplexAmplitude(nParam, n, shift: Integer): complex;
 var StartParamPos, Step: Integer;
-    RawR, RawX: Real;
 begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
+  StartParamPos:= GetParamPosition('VR1C0F1r') + shift;
   if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
   else Step:= ((nParam div 2) * 8) + 2;
-  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
-  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  ComplexAmplitude:= cinit(RawR, RawX);
+  ComplexAmplitude.re:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
+  ComplexAmplitude.im:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
 end;
 
-function ComplexCalibration(nParam, n: Integer): complex;
-var StartParamPos, Step: Integer;
-    RawR, RawX: Real;
+procedure FillCoplexParams(n: Integer; Freq: Byte);
+// Freq = 0 - 400 KHz, Freq = 1 - 2 MHz
 begin
-  StartParamPos:= GetParamPosition('VR1C0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
-  RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
-  RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
-  ComplexCalibration:= cinit(RawR, RawX);
-end;
+  if Freq = 0 then begin // F1 - 400 KHz
+     VT0R1F1:= ComplexAmplitude(0, n, 4);
+     VT0R2F1:= ComplexAmplitude(1, n, 4);
 
-function GetConductivity(Param: String; n: Integer; c: Byte): Double;
-// c = 1 - Compensated
-var x, x1: real;
-    T0F1_UNC, T1F1_UNC, T2F1_UNC, T3F1_UNC, T0F2_UNC, T1F2_UNC, T2F2_UNC, T3F2_UNC: complex;
-begin
-   if RightStr(Param, 5) = 'L_UNC' then begin // F1 - 400 KHz
-     VT0R1F1:= ComplexAmplitude(0, n);
-     VT0R2F1:= ComplexAmplitude(1, n);
+     VT1R1F1:= ComplexAmplitude(4, n, 4);
+     VT1R2F1:= ComplexAmplitude(5, n, 4);
+     VT2R1F1:= ComplexAmplitude(8, n, 4);
+     VT2R2F1:= ComplexAmplitude(9, n, 4);
+     VT3R1F1:= ComplexAmplitude(12, n, 4);
+     VT3R2F1:= ComplexAmplitude(13, n, 4);
 
-     VT1R1F1:= ComplexAmplitude(4, n);
-     VT1R2F1:= ComplexAmplitude(5, n);
-     VT2R1F1:= ComplexAmplitude(8, n);
-     VT2R2F1:= ComplexAmplitude(9, n);
-     VT3R1F1:= ComplexAmplitude(12, n);
-     VT3R2F1:= ComplexAmplitude(13, n);
+     VR1C0F1:= ComplexAmplitude(0, n, 0);
+     VR2C0F1:= ComplexAmplitude(1, n, 0);
 
-     VR1C0F1:= ComplexCalibration(0, n);
-     VR2C0F1:= ComplexCalibration(1, n);
+     VR1C1F1:= ComplexAmplitude(4, n, 0);
+     VR2C1F1:= ComplexAmplitude(5, n, 0);
+     VR1C2F1:= ComplexAmplitude(8, n, 0);
+     VR2C2F1:= ComplexAmplitude(9, n, 0);
+     VR1C3F1:= ComplexAmplitude(12, n, 0);
+     VR2C3F1:= ComplexAmplitude(13, n, 0);
 
-     VR1C1F1:= ComplexCalibration(4, n);
-     VR2C1F1:= ComplexCalibration(5, n);
-     VR1C2F1:= ComplexCalibration(8, n);
-     VR2C2F1:= ComplexCalibration(9, n);
-     VR1C3F1:= ComplexCalibration(12, n);
-     VR2C3F1:= ComplexCalibration(13, n);
-
-     T0F1_UNC:= (VT0R1F1/VR1C0F1) / (VT0R2F1/VR2C0F1);
+     T0F1_UNC:= VR1C0F1 / VR2C0F1;
      T1F1_UNC:= (VT1R1F1/VR1C1F1) / (VT1R2F1/VR2C1F1);
      T2F1_UNC:= (VT2R2F1/VR2C2F1) / (VT2R1F1/VR1C2F1);
      T3F1_UNC:= (VT3R1F1/VR1C3F1) / (VT3R2F1/VR2C3F1);
    end
    else begin // F2 - 2 MHz
-     VT0R1F2:= ComplexAmplitude(2, n);
-     VT0R2F2:= ComplexAmplitude(3, n);
+     VT0R1F2:= ComplexAmplitude(2, n, 4);
+     VT0R2F2:= ComplexAmplitude(3, n, 4);
 
-     VT1R1F2:= ComplexAmplitude(6, n);
-     VT1R2F2:= ComplexAmplitude(7, n);
-     VT2R1F2:= ComplexAmplitude(10, n);
-     VT2R2F2:= ComplexAmplitude(11, n);
-     VT3R1F2:= ComplexAmplitude(14, n);
-     VT3R2F2:= ComplexAmplitude(15, n);
+     VT1R1F2:= ComplexAmplitude(6, n, 4);
+     VT1R2F2:= ComplexAmplitude(7, n, 4);
+     VT2R1F2:= ComplexAmplitude(10, n, 4);
+     VT2R2F2:= ComplexAmplitude(11, n, 4);
+     VT3R1F2:= ComplexAmplitude(14, n, 4);
+     VT3R2F2:= ComplexAmplitude(15, n, 4);
 
-     VR1C0F2:= ComplexCalibration(2, n);
-     VR2C0F2:= ComplexCalibration(3, n);
+     VR1C0F2:= ComplexAmplitude(2, n, 0);
+     VR2C0F2:= ComplexAmplitude(3, n, 0);
 
-     VR1C1F2:= ComplexCalibration(6, n);
-     VR2C1F2:= ComplexCalibration(7, n);
-     VR1C2F2:= ComplexCalibration(10, n);
-     VR2C2F2:= ComplexCalibration(11, n);
-     VR1C3F2:= ComplexCalibration(14, n);
-     VR2C3F2:= ComplexCalibration(15, n);
+     VR1C1F2:= ComplexAmplitude(6, n, 0);
+     VR2C1F2:= ComplexAmplitude(7, n, 0);
+     VR1C2F2:= ComplexAmplitude(10, n, 0);
+     VR2C2F2:= ComplexAmplitude(11, n, 0);
+     VR1C3F2:= ComplexAmplitude(14, n, 0);
+     VR2C3F2:= ComplexAmplitude(15, n, 0);
 
-     T0F2_UNC:= (VT0R1F2/VR1C0F2) / (VT0R2F2/VR2C0F2);
+     T0F2_UNC:= VR1C0F2 / VR2C0F2;
      T1F2_UNC:= (VT1R1F2/VR1C1F2) / (VT1R2F2/VR2C1F2);
      T2F2_UNC:= (VT2R2F2/VR2C2F2) / (VT2R1F2/VR1C2F2);
      T3F2_UNC:= (VT3R1F2/VR1C3F2) / (VT3R2F2/VR2C3F2);
    end;
+end;
+
+function GetSonde(Param: String; n: Integer): Double;
+begin
+   if RightStr(Param, 5) = 'L_UNC' then FillCoplexParams(n, 0) // F1 - 400 KHz
+   else FillCoplexParams(n, 1); // F2 - 2 MHz
 
    case Param of
-     'P0L_UNC': GetConductivity:= angle(T0F1_UNC);
-     'P0H_UNC': GetConductivity:= angle(T0F2_UNC);
-     'P16L_UNC': GetConductivity:= angle(T1F1_UNC);
-     'P22L_UNC': GetConductivity:= angle(T2F1_UNC);
-     'P34L_UNC': GetConductivity:= angle(T3F1_UNC);
-     'P16H_UNC': GetConductivity:= angle(T1F2_UNC);
-     'P22H_UNC': GetConductivity:= angle(T2F2_UNC);
-     'P34H_UNC': GetConductivity:= angle(T3F2_UNC);
-     'A0L_UNC': GetConductivity:= -20*Log10(cMod(T0F1_UNC));
-     'A0H_UNC': GetConductivity:= -20*Log10(cMod(T0F2_UNC));
-     'A16L_UNC': GetConductivity:= -20*Log10(cMod(T1F1_UNC));
-     'A22L_UNC': GetConductivity:= -20*Log10(cMod(T2F1_UNC));
-     'A34L_UNC': GetConductivity:= -20*Log10(cMod(T3F1_UNC));
-     'A16H_UNC': GetConductivity:= -20*Log10(cMod(T1F2_UNC));
-     'A22H_UNC': GetConductivity:= -20*Log10(cMod(T2F2_UNC));
-     'A34H_UNC': GetConductivity:= -20*Log10(cMod(T3F2_UNC));
+     'P0L_UNC': GetSonde:= angle(T0F1_UNC) * 180/Pi;
+     'P0H_UNC': GetSonde:= angle(T0F2_UNC) * 180/Pi;
+     'P16L_UNC': GetSonde:= angle(T1F1_UNC) * 180/Pi;
+     'P22L_UNC': GetSonde:= angle(T2F1_UNC) * 180/Pi;
+     'P34L_UNC': GetSonde:= angle(T3F1_UNC) * 180/Pi;
+     'P16H_UNC': GetSonde:= angle(T1F2_UNC) * 180/Pi;
+     'P22H_UNC': GetSonde:= angle(T2F2_UNC) * 180/Pi;
+     'P34H_UNC': GetSonde:= angle(T3F2_UNC) * 180/Pi;
+     'A0L_UNC': GetSonde:= -20*Log10(cMod(T0F1_UNC));
+     'A0H_UNC': GetSonde:= -20*Log10(cMod(T0F2_UNC));
+     'A16L_UNC': GetSonde:= -20*Log10(cMod(T1F1_UNC));
+     'A22L_UNC': GetSonde:= -20*Log10(cMod(T2F1_UNC));
+     'A34L_UNC': GetSonde:= -20*Log10(cMod(T3F1_UNC));
+     'A16H_UNC': GetSonde:= -20*Log10(cMod(T1F2_UNC));
+     'A22H_UNC': GetSonde:= -20*Log10(cMod(T2F2_UNC));
+     'A34H_UNC': GetSonde:= -20*Log10(cMod(T3F2_UNC));
+   end;
+end;
 
-     //'A16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'abs', c);
-     //'A22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'abs', c);
-     //'A34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'abs', c);
-     //'A16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'abs', c);
-     //'A22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'abs', c);
-     //'A34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'abs', c);
-     //'P16L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 1, 'ang', c);
-     //'P22L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 2, 'ang', c);
-     //'P34L': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 1, 3, 'ang', c);
-     //'P16H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 1, 'ang', c);
-     //'P22H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 2, 'ang', c);
-     //'P34H': GetConductivity:= conductivity(VT1R1, VT1R2, VT2R1, VT2R2, VT3R1, VT3R2, 2, 3, 'ang', c);
+function GetCompSonde(Param: String; n: Integer): Double;
+begin
+   case Param of
+     'A16L': GetCompSonde:= Abs(GetSonde('A16L_UNC' ,n)*a[1,1]+GetSonde('A22L_UNC', n)*a[1,2]+GetSonde('A34L_UNC', n)*a[1,3]);
+     'A22L': GetCompSonde:= Abs(GetSonde('A16L_UNC' ,n)*a[2,1]+GetSonde('A22L_UNC', n)*a[2,2]+GetSonde('A34L_UNC', n)*a[2,3]);
+     'A34L': GetCompSonde:= Abs(GetSonde('A16L_UNC' ,n)*a[3,1]+GetSonde('A22L_UNC', n)*a[3,2]+GetSonde('A34L_UNC', n)*a[3,3]);
+     'A16H': GetCompSonde:= Abs(GetSonde('A16H_UNC' ,n)*a[1,1]+GetSonde('A22H_UNC', n)*a[1,2]+GetSonde('A34H_UNC', n)*a[1,3]);
+     'A22H': GetCompSonde:= Abs(GetSonde('A16H_UNC' ,n)*a[2,1]+GetSonde('A22H_UNC', n)*a[2,2]+GetSonde('A34H_UNC', n)*a[2,3]);
+     'A34H': GetCompSonde:= Abs(GetSonde('A16H_UNC' ,n)*a[3,1]+GetSonde('A22H_UNC', n)*a[3,2]+GetSonde('A34H_UNC', n)*a[3,3]);
+
+     'P16L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[1,1]+GetSonde('P22L_UNC', n)*a[1,2]+GetSonde('P34L_UNC', n)*a[1,3])*180/Pi;
+     'P22L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[2,1]+GetSonde('P22L_UNC', n)*a[2,2]+GetSonde('P34L_UNC', n)*a[2,3])*180/Pi;
+     'P34L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[3,1]+GetSonde('P22L_UNC', n)*a[3,2]+GetSonde('P34L_UNC', n)*a[3,3])*180/Pi;
+     'P16H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[1,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[1,3])*180/Pi;
+     'P22H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[2,1]+GetSonde('P22H_UNC', n)*a[2,2]+GetSonde('P34H_UNC', n)*a[2,3])*180/Pi;
+     'P34H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[3,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[3,3])*180/Pi;
    end;
 end;
 

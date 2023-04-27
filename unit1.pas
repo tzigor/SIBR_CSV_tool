@@ -10,7 +10,7 @@ uses
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
   DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils, TADataTools,
   TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
-  IniPropStorage, Parameters;
+  IniPropStorage, Parameters, PQConnection, Math, uComplex;
 
 type
 
@@ -225,7 +225,6 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
-    procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
       AMark: Double);
@@ -494,42 +493,6 @@ begin
   Clipboard.AsText := OpenedFile.Text;
 end;
 
-procedure TCSV.Button8Click(Sender: TObject);
-var x, y: real;
-    i: Integer;
-begin
-  Chart9LineSeries1.Clear;
-  Chart9LineSeries2.Clear;
-  Chart9LineSeries3.Clear;
-  Chart9LineSeries4.Clear;
-  Chart9LineSeries5.Clear;
-  Chart9LineSeries6.Clear;
-  x:= 0;
-  for i:=1 to 500 do begin
-    y:= sin(x);
-    Chart9LineSeries1.AddXY(x, y);
-    //y:= 2*x;
-    //Chart9LineSeries2.AddXY(x, y);
-    x:= x + 0.1;
-  end
-  //x:= -2.5;
-  //for i:=1 to 400 do begin
-  //   y:= probe2sig(x, 1, 1, 'abs');
-  //   Chart9LineSeries1.AddXY(x, y);
-  //   y:= probe2sig(x, 1, 2, 'abs');
-  //   Chart9LineSeries2.AddXY(x, y);
-  //   y:= probe2sig(x, 1, 3, 'abs');
-  //   Chart9LineSeries3.AddXY(x, y);
-  //   y:= probe2sig(x, 2, 1, 'abs');
-  //   Chart9LineSeries4.AddXY(x, y);
-  //   y:= probe2sig(x, 2, 2, 'abs');
-  //   Chart9LineSeries5.AddXY(x, y);
-  //   y:= probe2sig(x, 2, 3, 'abs');
-  //   Chart9LineSeries6.AddXY(x, y);
-  //   x:= x + 0.01;
-  //end;
-end;
-
 procedure TCSV.Button9Click(Sender: TObject);
 begin
   Tool.Show;
@@ -735,34 +698,51 @@ begin
 end;
 
 procedure FillZondes(x: TDateTime; i: Integer; zType: Byte);
+var A16L_UNC, A22L_UNC, A34L_UNC, P16L_UNC, P22L_UNC, P34L_UNC, A16H_UNC, A22H_UNC, A34H_UNC, P16H_UNC, P22H_UNC, P34H_UNC: Double;
 begin
+  FillCoplexParams(i, 0);
+  FillCoplexParams(i, 1);
+  A16L_UNC:= -20*Log10(cMod(T1F1_UNC));
+  A22L_UNC:= -20*Log10(cMod(T2F1_UNC));
+  A34L_UNC:= -20*Log10(cMod(T3F1_UNC));
+  A16H_UNC:= -20*Log10(cMod(T1F2_UNC));
+  A22H_UNC:= -20*Log10(cMod(T2F2_UNC));
+  A34H_UNC:= -20*Log10(cMod(T3F2_UNC));
+
+  P16L_UNC:= angle(T1F1_UNC) * 180/Pi;
+  P22L_UNC:= angle(T2F1_UNC) * 180/Pi;
+  P34L_UNC:= angle(T3F1_UNC) * 180/Pi;
+  P16H_UNC:= angle(T1F2_UNC) * 180/Pi;
+  P22H_UNC:= angle(T2F2_UNC) * 180/Pi;
+  P34H_UNC:= angle(T3F2_UNC) * 180/Pi;
+
   if zType = 0 then begin
-    CSV.SondesLineSeries1.AddXY(x, GetConductivity('A16L', i, zType));
-    CSV.SondesLineSeries2.AddXY(x, GetConductivity('A22L', i, zType));
-    CSV.SondesLineSeries3.AddXY(x, GetConductivity('A34L', i, zType));
-    CSV.SondesLineSeries4.AddXY(x, GetConductivity('A16H', i, zType));
-    CSV.SondesLineSeries5.AddXY(x, GetConductivity('A22H', i, zType));
-    CSV.SondesLineSeries6.AddXY(x, GetConductivity('A34H', i, zType));
-    CSV.SondesLineSeries7.AddXY(x, GetConductivity('P16L', i, zType));
-    CSV.SondesLineSeries8.AddXY(x, GetConductivity('P22L', i, zType));
-    CSV.SondesLineSeries9.AddXY(x, GetConductivity('P34L', i, zType));
-    CSV.SondesLineSeries10.AddXY(x, GetConductivity('P16H', i, zType));
-    CSV.SondesLineSeries11.AddXY(x, GetConductivity('P22H', i, zType));
-    CSV.SondesLineSeries12.AddXY(x, GetConductivity('P34H', i, zType));
+    CSV.SondesLineSeries1.AddXY(x, A16L_UNC);
+    CSV.SondesLineSeries2.AddXY(x, A22L_UNC);
+    CSV.SondesLineSeries3.AddXY(x, A34L_UNC);
+    CSV.SondesLineSeries4.AddXY(x, A16H_UNC);
+    CSV.SondesLineSeries5.AddXY(x, A22H_UNC);
+    CSV.SondesLineSeries6.AddXY(x, A34H_UNC);
+    CSV.SondesLineSeries7.AddXY(x, P16L_UNC);
+    CSV.SondesLineSeries8.AddXY(x, P22L_UNC);
+    CSV.SondesLineSeries9.AddXY(x, P34L_UNC);
+    CSV.SondesLineSeries10.AddXY(x, P16H_UNC);
+    CSV.SondesLineSeries11.AddXY(x, P22H_UNC);
+    CSV.SondesLineSeries12.AddXY(x, P34H_UNC);
   end
   else begin
-    CSV.SondesLineSeries13.AddXY(x, GetConductivity('A16L', i, zType));
-    CSV.SondesLineSeries14.AddXY(x, GetConductivity('A22L', i, zType));
-    CSV.SondesLineSeries15.AddXY(x, GetConductivity('A34L', i, zType));
-    CSV.SondesLineSeries16.AddXY(x, GetConductivity('A16H', i, zType));
-    CSV.SondesLineSeries17.AddXY(x, GetConductivity('A22H', i, zType));
-    CSV.SondesLineSeries18.AddXY(x, GetConductivity('A34H', i, zType));
-    CSV.SondesLineSeries19.AddXY(x, GetConductivity('P16L', i, zType));
-    CSV.SondesLineSeries20.AddXY(x, GetConductivity('P22L', i, zType));
-    CSV.SondesLineSeries21.AddXY(x, GetConductivity('P34L', i, zType));
-    CSV.SondesLineSeries22.AddXY(x, GetConductivity('P16H', i, zType));
-    CSV.SondesLineSeries23.AddXY(x, GetConductivity('P22H', i, zType));
-    CSV.SondesLineSeries24.AddXY(x, GetConductivity('P34H', i, zType));
+    CSV.SondesLineSeries13.AddXY(x, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
+    CSV.SondesLineSeries14.AddXY(x, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
+    CSV.SondesLineSeries15.AddXY(x, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
+    CSV.SondesLineSeries16.AddXY(x, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
+    CSV.SondesLineSeries17.AddXY(x, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
+    CSV.SondesLineSeries18.AddXY(x, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
+    CSV.SondesLineSeries19.AddXY(x, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
+    CSV.SondesLineSeries20.AddXY(x, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
+    CSV.SondesLineSeries21.AddXY(x, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
+    CSV.SondesLineSeries22.AddXY(x, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
+    CSV.SondesLineSeries23.AddXY(x, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
+    CSV.SondesLineSeries24.AddXY(x, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
   end;
 end;
 
@@ -775,8 +755,8 @@ begin
       TimePos:= GetParamPosition('RTCs');
       if zType = 0 then begin
         ResetSondes;
-        Sonde1.Title.Text[0]:='Synthesized Sondes - Amplitudes';
-        Sonde2.Title.Text[0]:='Synthesized Sondes - Phases';
+        Sonde1.Title.Text[0]:='Uncompensated Sondes - Amplitudes';
+        Sonde2.Title.Text[0]:='Uncompensated Sondes - Phases';
       end
       else begin
         ResetCSondes;
@@ -835,11 +815,13 @@ begin
   Chart1LineSeries.Pointer.Pen.Color:= Chart1LineSeries.SeriesColor;
   Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
   PrevTime:= UnixToDateTime(0);
+  CSV.CommonBar.Max:= CSVContent.Count-1;
+  CSV.CommonBar.Position:= 0;
   for i:=1 to CSVContent.Count-1 do begin
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
     if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
-       if  SelectedParamName in CondChannels then y:= GetConductivity(SelectedParamName, i, 0)
-       else if SelectedParamName in CondCompChannels then y:= GetConductivity(SelectedParamName, i, 1)
+       if  SelectedParamName in CondChannels then y:= GetSonde(SelectedParamName, i)
+       else if SelectedParamName in CondCompChannels then y:= GetCompSonde(SelectedParamName, i)
             else
                 if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
                 else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
@@ -861,13 +843,13 @@ begin
        end;
        PowerReset:= false;
        PrevTime:= Time;
-
     end
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
     end;
-
+    CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
   end;
+  CSV.CommonBar.Position:= 0;
   Chart1LineSeries.ParentChart.Visible:= True;
 end;
 
