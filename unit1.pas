@@ -205,7 +205,6 @@ type
     RunStart: TLabel;
     RunStartT: TLabel;
     SaveDialog1: TSaveDialog;
-    DateTimeIntervalChartSource1: TDateTimeIntervalChartSource;
     Chart1UserDrawnSeries1: TUserDrawnSeries;
     OpenDialog1: TOpenDialog;
     SaveReport: TButton;
@@ -488,8 +487,7 @@ begin
   Tool.Show;
 end;
 
-procedure TCSV.Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
-  AMark: Double);
+procedure TCSV.Chart1AxisList1GetMarkText(Sender: TObject; var AText: String; AMark: Double);
 var DateTime: TDateTime;
 begin
    if ByDots.Checked then begin
@@ -534,87 +532,6 @@ begin
   Chart6.Height:= ChartHeightControl.Position;
   Chart7.Height:= ChartHeightControl.Position;
   Chart8.Height:= ChartHeightControl.Position;
-end;
-
-procedure StickLabel(ChartLineSerie: TLineSeries);
-var y: Double;
-    x: TDateTime;
-begin
-  if ChartLineSerie.Count > 0 then begin
-     x:= ChartLineSerie.GetXValue(ChartPointIndex);
-     y:= ChartLineSerie.GetYValue(ChartPointIndex);
-     ChartLineSerie.ListSource.Item[ChartPointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x);
-     ChartLineSerie.ParentChart.Repaint;
-  end;
-end;
-
-procedure TCSV.ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
-  APoint: TPoint);
-begin
- if LabelSticked then begin
-    StickLabel(Chart1LineSeries1);
-    StickLabel(Chart2LineSeries1);
-    StickLabel(Chart3LineSeries1);
-    StickLabel(Chart4LineSeries1);
-    StickLabel(Chart5LineSeries1);
-    StickLabel(Chart6LineSeries1);
-    StickLabel(Chart7LineSeries1);
-    StickLabel(Chart8LineSeries1);
-    LabelSticked:= false;
-  end;
-end;
-
-procedure TCSV.ChartToolset1DataPointClickTool2PointClick(ATool: TChartTool;
-  APoint: TPoint);
-var y: Double;
-    x: TDateTime;
-    DateStr: String;
-begin
-  with ATool as TDatapointClickTool do begin
-    if (Series is TLineSeries) then
-      with TLineSeries(Series) do begin
-        if TimeScale.Checked then DateStr:= Line + DateTimeToStr(x)
-        else DateStr:= '';
-        ChartPointIndex:= PointIndex;
-        x:= GetXValue(PointIndex);
-        y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + DateStr
-        else ListSource.Item[PointIndex]^.Text := '';
-        ParentChart.Repaint;
-        LabelSticked:= true;
-      end;
-  end;
-end;
-
-function SWHint(SW: Integer; SWDecr: array of String70; DT: TDateTime): String;
-var i: Integer;
-    wStr: String;
-    zero: Boolean;
-begin
-   wStr:= DateTimeToStr(DT) + Line;
-   zero:= true;
-   for i:=0 to 15 do begin
-     if (SW and expon2(i)) > 0 then begin
-       wStr:= wStr + '1 - ' + SWDecr[i] + Line;
-       zero:= false;
-     end;
-   end;
-   if zero then SWHint:= wStr + '0'
-   else SWHint:= wStr;
-end;
-
-procedure TCSV.ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
-  const APoint: TPoint; var AHint: String);
-var y: Double;
-    x: TDateTime;
-
-begin
-   x:= TLineSeries(ATool.Series).GetXValue(ATool.PointIndex);
-   y:= TLineSeries(ATool.Series).GetYValue(ATool.PointIndex);
-   if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.HI' then AHint:= SWHint(Round(y), SWHi, x)
-   else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.LO' then AHint:= SWHint(Round(y), SWLo, x)
-        else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'ESTATUS.SIBR.LO' then AHint:= SWHint(Round(y), ESWLo, x)
-             else AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x);
 end;
 
 procedure SondesVisible(visible: Boolean);
@@ -1016,6 +933,14 @@ begin
    ChartExtentLink1.Enabled:= ChartsLink.Checked;
 end;
 
+function GetSticker(x, y: Double): String;
+begin
+  if CSV.TimeScale.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
+        else if CSV.ByDots.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(x)]))))
+             else GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + FloatToStrF(x, ffFixed, 3, 2) + ' C deg';
+end;
+
+// Ctrl
 procedure TCSV.ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool; APoint: TPoint);
 var y: Double;
     x: TDateTime;
@@ -1024,15 +949,96 @@ begin
   with ATool as TDatapointClickTool do begin
     if (Series is TLineSeries) then
       with TLineSeries(Series) do begin
-        if TimeScale.Checked then DateStr:= Line + DateTimeToStr(x)
-        else DateStr:= '';
         x:= GetXValue(PointIndex);
         y:= GetYValue(PointIndex);
-        if ListSource.Item[PointIndex]^.Text = '' then ListSource.Item[PointIndex]^.Text := FloatToStrF(y, ffFixed, 12, 3) + DateStr
-        else ListSource.Item[PointIndex]^.Text := '';
+        ChartPointIndex:= PointIndex;
+        ListSource.Item[PointIndex]^.Text:= GetSticker(x, y);
         ParentChart.Repaint;
       end;
   end;
+end;
+
+// Alt
+procedure TCSV.ChartToolset1DataPointClickTool2PointClick(ATool: TChartTool;
+  APoint: TPoint);
+var y: Double;
+    x: TDateTime;
+    DateStr: String;
+begin
+  with ATool as TDatapointClickTool do begin
+    if (Series is TLineSeries) then
+      with TLineSeries(Series) do begin
+        x:= GetXValue(PointIndex);
+        y:= GetYValue(PointIndex);
+        ChartPointIndex:= PointIndex;
+        ListSource.Item[PointIndex]^.Text:= GetSticker(x, y);
+        ParentChart.Repaint;
+        LabelSticked:= true;
+      end;
+  end;
+end;
+
+procedure StickLabel(ChartLineSerie: TLineSeries);
+var y: Double;
+    x: TDateTime;
+begin
+  if ChartLineSerie.Count > 0 then begin
+     x:= ChartLineSerie.GetXValue(ChartPointIndex);
+     y:= ChartLineSerie.GetYValue(ChartPointIndex);
+     ChartLineSerie.ListSource.Item[ChartPointIndex]^.Text:= GetSticker(x, y);
+     ChartLineSerie.ParentChart.Repaint;
+  end;
+end;
+
+procedure TCSV.ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
+  APoint: TPoint);
+begin
+ if LabelSticked then begin
+    StickLabel(Chart1LineSeries1);
+    StickLabel(Chart2LineSeries1);
+    StickLabel(Chart3LineSeries1);
+    StickLabel(Chart4LineSeries1);
+    StickLabel(Chart5LineSeries1);
+    StickLabel(Chart6LineSeries1);
+    StickLabel(Chart7LineSeries1);
+    StickLabel(Chart8LineSeries1);
+    LabelSticked:= false;
+  end;
+end;
+
+function SWHint(SW: Integer; SWDecr: array of String70; DT: TDateTime): String;
+var i: Integer;
+    wStr: String;
+    zero: Boolean;
+begin
+   wStr:= DateTimeToStr(DT) + Line;
+   zero:= true;
+   for i:=0 to 15 do begin
+     if (SW and expon2(i)) > 0 then begin
+       wStr:= wStr + '1 - ' + SWDecr[i] + Line;
+       zero:= false;
+     end;
+   end;
+   if zero then SWHint:= wStr + '0'
+   else SWHint:= wStr;
+end;
+
+procedure TCSV.ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
+  const APoint: TPoint; var AHint: String);
+var y: Double;
+    x: TDateTime;
+
+begin
+   x:= TLineSeries(ATool.Series).GetXValue(ATool.PointIndex);
+   y:= TLineSeries(ATool.Series).GetYValue(ATool.PointIndex);
+   if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.HI' then AHint:= SWHint(Round(y), SWHi, x)
+   else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'STATUS.SIBR.LO' then AHint:= SWHint(Round(y), SWLo, x)
+        else if TLineSeries(ATool.Series).ParentChart.Title.Text[0] = 'ESTATUS.SIBR.LO' then AHint:= SWHint(Round(y), ESWLo, x)
+             else AHint:= GetSticker(x, y)
+
+             //else if CSV.TimeScale.Checked then AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
+             //     else if CSV.ByDots.Checked then AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(x)]))))
+             //          else AHint:= FloatToStrF(y, ffFixed, 12, 3) + Line + FloatToStrF(x, ffFixed, 3, 2) + ' C deg';
 end;
 
 procedure TCSV.ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;

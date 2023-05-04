@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = 425
+  Left = 2119
   Height = 663
-  Top = 31
+  Top = -617
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.4.0 Portable'
@@ -3123,14 +3123,12 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
-              Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3209,14 +3207,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3295,14 +3292,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3381,14 +3377,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3467,14 +3462,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3553,14 +3547,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3639,14 +3632,13 @@ object CSV: TCSV
             end          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 100
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3730,10 +3722,7 @@ object CSV: TCSV
               Intervals.NiceSteps = '1'
               Intervals.Tolerance = 1
               Alignment = calBottom
-              Marks.Format = '%2:s'
               Marks.LabelBrush.Style = bsClear
-              Marks.Source = DateTimeIntervalChartSource1
-              Marks.Style = smsLabel
               Minors = <>
               Title.Margins.Left = 0
               Title.Margins.Top = 0
@@ -3926,7 +3915,6 @@ object CSV: TCSV
             Alignment = calBottom
             Marks.Format = '%2:s'
             Marks.LabelBrush.Style = bsClear
-            Marks.Source = DateTimeIntervalChartSource1
             Marks.Style = smsLabel
             Minors = <>
             Title.Margins.Left = 0
@@ -4034,7 +4022,6 @@ object CSV: TCSV
             Alignment = calBottom
             Marks.Format = '%2:s'
             Marks.LabelBrush.Style = bsClear
-            Marks.Source = DateTimeIntervalChartSource1
             Marks.Style = smsLabel
             Minors = <>
             Title.Margins.Left = 0
@@ -4147,7 +4134,6 @@ object CSV: TCSV
             Alignment = calBottom
             Marks.Format = '%2:s'
             Marks.LabelBrush.Style = bsClear
-            Marks.Source = DateTimeIntervalChartSource1
             Marks.Style = smsLabel
             Minors = <>
             Title.Margins.Left = 0
@@ -4255,7 +4241,6 @@ object CSV: TCSV
             Alignment = calBottom
             Marks.Format = '%2:s'
             Marks.LabelBrush.Style = bsClear
-            Marks.Source = DateTimeIntervalChartSource1
             Marks.Style = smsLabel
             Minors = <>
             Title.Margins.Left = 0
@@ -4914,20 +4899,6 @@ object CSV: TCSV
       OnAfterMouseUp = ChartToolset1DataPointClickTool2AfterMouseUp
       OnPointClick = ChartToolset1DataPointClickTool2PointClick
     end
-  end
-  object DateTimeIntervalChartSource1: TDateTimeIntervalChartSource
-    Params.Count = 1
-    Params.MaxLength = 100
-    Params.MinLength = 100
-    Params.NiceSteps = '1'
-    Params.Options = [aipUseCount, aipUseMaxLength, aipUseMinLength, aipUseNiceSteps]
-    Params.Tolerance = 1
-    DateTimeStepFormat.HourFormat = 'dd hh"h":nn"m"'
-    DateTimeStepFormat.MinuteFormat = 'hh:nn"m"'
-    DateTimeStepFormat.SecondFormat = 'nn:ss"s"'
-    Steps = [dtsYear, dtsMonth, dtsDay, dtsHour, dtsMinute, dtsSecond]
-    Left = 424
-    Top = 632
   end
   object ChartExtentLink1: TChartExtentLink
     LinkedCharts = <    
