@@ -88,6 +88,7 @@ Const SWLo: array of String70 = (
       'Active logging identifier bit 2',
       'Active logging identifier bit 3');
 
+const ParameterError = -35535;
 var
   CSVFileName, CSVCompareFileName, DrawParameter: String;
   CSVContent, CSVCompare: TStringList;
@@ -113,6 +114,7 @@ var
   AmplsInmVolts: Boolean;
   ReportParams: array[0..62] of TSibrReportParam;
   TimePosition: Longint;
+  SondeError: Boolean;
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;
@@ -280,6 +282,7 @@ end;
 procedure FillCoplexParams(n: Integer; Freq: Byte);
 // Freq = 0 - 400 KHz, Freq = 1 - 2 MHz
 begin
+  SondeError:= False;
   if Freq = 0 then begin // F1 - 400 KHz
      VT0R1F1:= ComplexAmplitude(0, n, 4);
      VT0R2F1:= ComplexAmplitude(1, n, 4);
@@ -301,10 +304,28 @@ begin
      VR1C3F1:= ComplexAmplitude(12, n, 0);
      VR2C3F1:= ComplexAmplitude(13, n, 0);
 
-     T0F1_UNC:= VR1C0F1 / VR2C0F1;
-     T1F1_UNC:= (VT1R1F1/VR1C1F1) / (VT1R2F1/VR2C1F1);
-     T2F1_UNC:= (VT2R2F1/VR2C2F1) / (VT2R1F1/VR1C2F1);
-     T3F1_UNC:= (VT3R1F1/VR1C3F1) / (VT3R2F1/VR2C3F1);
+     if (VT0R1F1<>0) and
+        (VT0R2F1<>0) and
+        (VT1R1F1<>0) and
+        (VT1R2F1<>0) and
+        (VT2R1F1<>0) and
+        (VT2R2F1<>0) and
+        (VT3R1F1<>0) and
+        (VT3R2F1<>0) and
+        (VR1C0F1<>0) and
+        (VR2C0F1<>0) and
+        (VR1C1F1<>0) and
+        (VR2C1F1<>0) and
+        (VR1C2F1<>0) and
+        (VR2C2F1<>0) and
+        (VR1C3F1<>0) and
+        (VR2C3F1<>0) then begin
+           T0F1_UNC:= VR1C0F1 / VR2C0F1;
+           T1F1_UNC:= (VT1R1F1/VR1C1F1) / (VT1R2F1/VR2C1F1);
+           T2F1_UNC:= (VT2R2F1/VR2C2F1) / (VT2R1F1/VR1C2F1);
+           T3F1_UNC:= (VT3R1F1/VR1C3F1) / (VT3R2F1/VR2C3F1);
+        end
+        else SondeError:= True;
    end
    else begin // F2 - 2 MHz
      VT0R1F2:= ComplexAmplitude(2, n, 4);
@@ -327,10 +348,28 @@ begin
      VR1C3F2:= ComplexAmplitude(14, n, 0);
      VR2C3F2:= ComplexAmplitude(15, n, 0);
 
-     T0F2_UNC:= VR1C0F2 / VR2C0F2;
-     T1F2_UNC:= (VT1R1F2/VR1C1F2) / (VT1R2F2/VR2C1F2);
-     T2F2_UNC:= (VT2R2F2/VR2C2F2) / (VT2R1F2/VR1C2F2);
-     T3F2_UNC:= (VT3R1F2/VR1C3F2) / (VT3R2F2/VR2C3F2);
+     if (VT0R1F2<>0) and
+        (VT0R2F2<>0) and
+        (VT1R1F2<>0) and
+        (VT1R2F2<>0) and
+        (VT2R1F2<>0) and
+        (VT2R2F2<>0) and
+        (VT3R1F2<>0) and
+        (VT3R2F2<>0) and
+        (VR1C0F2<>0) and
+        (VR2C0F2<>0) and
+        (VR1C1F2<>0) and
+        (VR2C1F2<>0) and
+        (VR1C2F2<>0) and
+        (VR2C2F2<>0) and
+        (VR1C3F2<>0) and
+        (VR2C3F2<>0) then begin
+           T0F2_UNC:= VR1C0F2 / VR2C0F2;
+           T1F2_UNC:= (VT1R1F2/VR1C1F2) / (VT1R2F2/VR2C1F2);
+           T2F2_UNC:= (VT2R2F2/VR2C2F2) / (VT2R1F2/VR1C2F2);
+           T3F2_UNC:= (VT3R1F2/VR1C3F2) / (VT3R2F2/VR2C3F2);
+        end
+        else SondeError:= True;
    end;
 end;
 
@@ -338,25 +377,26 @@ function GetSonde(Param: String; n: Integer): Double;
 begin
    if RightStr(Param, 5) = 'L_UNC' then FillCoplexParams(n, 0) // F1 - 400 KHz
    else FillCoplexParams(n, 1); // F2 - 2 MHz
-
-   case Param of
-     'P0L_UNC': GetSonde:= angle(T0F1_UNC) * 180/Pi;
-     'P0H_UNC': GetSonde:= angle(T0F2_UNC) * 180/Pi;
-     'P16L_UNC': GetSonde:= angle(T1F1_UNC) * 180/Pi;
-     'P22L_UNC': GetSonde:= angle(T2F1_UNC) * 180/Pi;
-     'P34L_UNC': GetSonde:= angle(T3F1_UNC) * 180/Pi;
-     'P16H_UNC': GetSonde:= angle(T1F2_UNC) * 180/Pi;
-     'P22H_UNC': GetSonde:= angle(T2F2_UNC) * 180/Pi;
-     'P34H_UNC': GetSonde:= angle(T3F2_UNC) * 180/Pi;
-     'A0L_UNC': GetSonde:= -20*Log10(cMod(T0F1_UNC));
-     'A0H_UNC': GetSonde:= -20*Log10(cMod(T0F2_UNC));
-     'A16L_UNC': GetSonde:= -20*Log10(cMod(T1F1_UNC));
-     'A22L_UNC': GetSonde:= -20*Log10(cMod(T2F1_UNC));
-     'A34L_UNC': GetSonde:= -20*Log10(cMod(T3F1_UNC));
-     'A16H_UNC': GetSonde:= -20*Log10(cMod(T1F2_UNC));
-     'A22H_UNC': GetSonde:= -20*Log10(cMod(T2F2_UNC));
-     'A34H_UNC': GetSonde:= -20*Log10(cMod(T3F2_UNC));
-   end;
+   if SondeError then GetSonde:= ParameterError
+   else
+     case Param of
+       'P0L_UNC': GetSonde:= angle(T0F1_UNC) * 180/Pi;
+       'P0H_UNC': GetSonde:= angle(T0F2_UNC) * 180/Pi;
+       'P16L_UNC': GetSonde:= angle(T1F1_UNC) * 180/Pi;
+       'P22L_UNC': GetSonde:= angle(T2F1_UNC) * 180/Pi;
+       'P34L_UNC': GetSonde:= angle(T3F1_UNC) * 180/Pi;
+       'P16H_UNC': GetSonde:= angle(T1F2_UNC) * 180/Pi;
+       'P22H_UNC': GetSonde:= angle(T2F2_UNC) * 180/Pi;
+       'P34H_UNC': GetSonde:= angle(T3F2_UNC) * 180/Pi;
+       'A0L_UNC': GetSonde:= -20*Log10(cMod(T0F1_UNC));
+       'A0H_UNC': GetSonde:= -20*Log10(cMod(T0F2_UNC));
+       'A16L_UNC': GetSonde:= -20*Log10(cMod(T1F1_UNC));
+       'A22L_UNC': GetSonde:= -20*Log10(cMod(T2F1_UNC));
+       'A34L_UNC': GetSonde:= -20*Log10(cMod(T3F1_UNC));
+       'A16H_UNC': GetSonde:= -20*Log10(cMod(T1F2_UNC));
+       'A22H_UNC': GetSonde:= -20*Log10(cMod(T2F2_UNC));
+       'A34H_UNC': GetSonde:= -20*Log10(cMod(T3F2_UNC));
+     end;
 end;
 
 function GetCompSonde(Param: String; n: Integer): Double;
@@ -376,6 +416,7 @@ begin
      'P22H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[2,1]+GetSonde('P22H_UNC', n)*a[2,2]+GetSonde('P34H_UNC', n)*a[2,3])*180/Pi;
      'P34H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[3,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[3,3])*180/Pi;
    end;
+   if SondeError then GetCompSonde:= ParameterError
 end;
 
 function Amplitude(nParam, n: Integer): Double;
