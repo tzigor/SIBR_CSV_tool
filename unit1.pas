@@ -22,7 +22,9 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    Button4: TButton;
+    Image6: TImage;
+    LDivider: TLabel;
+    Label41: TLabel;
     GetRangeBtn: TButton;
     Button5: TButton;
     Button6: TButton;
@@ -48,6 +50,9 @@ type
     Image4: TImage;
     RTCBugs: TCheckBox;
     mVolts: TCheckBox;
+    ParametersList: TTabSheet;
+    ParamsGrid: TStringGrid;
+    Divider: TSpinEdit;
     TimeScale: TRadioButton;
     ByDots: TRadioButton;
     ZoneFromChart: TCheckBox;
@@ -222,7 +227,6 @@ type
     TestDate: TDateTimePicker;
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
     procedure ByDotsChange(Sender: TObject);
     procedure ByTemperatureChange(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
@@ -463,20 +467,6 @@ begin
     ReportEndTime.Caption:= DateTimeToStr(EndZone);
     ZoneDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
   end;
-end;
-
-procedure TCSV.Button4Click(Sender: TObject);
-var d: Double;
-    dr: TDoubleRect;
-begin
-  //ShowMessage(chart1.Series[0].Name);
-  dr:= Chart1.CurrentExtent;
-  ShowMessage(FloatToStr(dr.a.Y) + '  ' + FloatToStr(dr.b.Y));
-  //dr:= Chart1.LogicalExtent;
-  //ShowMessage(FloatToStr(dr.a.X) + '  ' + FloatToStr(dr.b.X));
-  dr.a.Y:= 4;
-  dr.b.Y:= 4.1;
-  Chart1.LogicalExtent:= dr;
 end;
 
 procedure TCSV.ByDotsChange(Sender: TObject);
@@ -802,13 +792,13 @@ begin
   ShowSonde(Sondes2, Sondes3, 1);
 end;
 
-procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String);
+procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
 var i, CtrlTempPos: Longint;
     ParamPos, TimePos: Integer;
     PowerReset: boolean;
     y, xCtrlTemp: Double;
     x, Time, PrevTime: TDateTime;
-    Sticker: String;
+    Sticker, wStr: String;
 begin
   PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
@@ -832,6 +822,8 @@ begin
                 if FindPart('AR?T?F', SelectedParamName) > 0 then y:= Amplitude(NameToInt(SelectedParamName), i)
                 else if FindPart('PR?T?F', SelectedParamName) > 0 then y:= PhaseShift(NameToInt(SelectedParamName), i)
                      else begin
+                          wStr:= GetParamValue(ParamPos, CSVContent[i]);
+                          TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y);
                           if not TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then y:= ParameterError;
                           if (SelectedParamName = 'BHP') and ((y > 500) or (y < -50)) then y:= ParameterError;
                           if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= ParameterError;
@@ -852,6 +844,11 @@ begin
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
     end;
+
+    CSV.ParamsGrid.Cells[0, i]:= DateTimeToStr(x);
+    if frac(y) = 0 then CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 0)
+    else CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 3);
+
     CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
   end;
   CSV.CommonBar.Position:= 0;
@@ -934,19 +931,25 @@ begin
   ResetCharts;
   for i:=0 to NumOsCharts - 1 do SelectedParams[i]:= '';
   counter:= 0;
+  ParamsGrid.ColCount:= SelectedChannels.Items.Count + 1;
+  ParamsGrid.RowCount:= CSVContent.Count;
+  ParamsGrid.ColWidths[0]:= 110;
+  ParamsGrid.Cells[0, 0]:= 'Date/Time';
+  ParamsGrid.Visible:= true;
   if SelectedChannels.Items.Count > 0 then begin
      for i:=0 to SelectedChannels.Items.Count - 1 do begin
         SelectedParams[counter]:= SelectedChannels.Items[i];
+        ParamsGrid.Cells[i+1, 0]:= SelectedChannels.Items[i];
         counter:= counter + 1;
      end;
-     if SelectedParams[0] <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0]);
-     if SelectedParams[1] <> '' then DrawChart(Chart2LineSeries1, SelectedParams[1]);
-     if SelectedParams[2] <> '' then DrawChart(Chart3LineSeries1, SelectedParams[2]);
-     if SelectedParams[3] <> '' then DrawChart(Chart4LineSeries1, SelectedParams[3]);
-     if SelectedParams[4] <> '' then DrawChart(Chart5LineSeries1, SelectedParams[4]);
-     if SelectedParams[5] <> '' then DrawChart(Chart6LineSeries1, SelectedParams[5]);
-     if SelectedParams[6] <> '' then DrawChart(Chart7LineSeries1, SelectedParams[6]);
-     if SelectedParams[7] <> '' then DrawChart(Chart8LineSeries1, SelectedParams[7]);
+     if SelectedParams[0] <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0], 0);
+     if SelectedParams[1] <> '' then DrawChart(Chart2LineSeries1, SelectedParams[1], 1);
+     if SelectedParams[2] <> '' then DrawChart(Chart3LineSeries1, SelectedParams[2], 2);
+     if SelectedParams[3] <> '' then DrawChart(Chart4LineSeries1, SelectedParams[3], 3);
+     if SelectedParams[4] <> '' then DrawChart(Chart5LineSeries1, SelectedParams[4], 4);
+     if SelectedParams[5] <> '' then DrawChart(Chart6LineSeries1, SelectedParams[5], 5);
+     if SelectedParams[6] <> '' then DrawChart(Chart7LineSeries1, SelectedParams[6], 6);
+     if SelectedParams[7] <> '' then DrawChart(Chart8LineSeries1, SelectedParams[7], 7);
      App.ActivePage:= Graphs;
      if NewChart then ChartsCurrentExtent:= Chart1.GetFullExtent;
      if ChartsLink.Checked and Not NewChart and DrawClicked then begin
@@ -1008,8 +1011,8 @@ end;
 
 function GetSticker(x, y: Double): String;
 begin
-  if CSV.TimeScale.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(x)
-        else if CSV.ByDots.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + DateTimeToStr(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(x)]))))
+  if CSV.TimeScale.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 6) + Line + DateTimeToStr(x)
+        else if CSV.ByDots.Checked then GetSticker:= FloatToStrF(y, ffFixed, 12, 6) + Line + DateTimeToStr(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(x)]))))
              else GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + FloatToStrF(x, ffFixed, 3, 2) + ' C deg';
 end;
 
@@ -1177,6 +1180,14 @@ end;
 procedure TCSV.FormCreate(Sender: TObject);
 begin
   AmplsInmVolts:= mVolts.Checked;
+  if AmplsInmVolts then begin
+    Divider.Visible:= False;
+    LDivider.Visible:= False;
+  end
+  else begin
+    Divider.Visible:= True;
+    LDivider.Visible:= True;
+  end;
   CurrentSW:= 'STATUS.SIBR.LO';
   LocalTime.Value:= HoursBetween(nowUTC(), now());
   hrsPlus:= LocalTime.Value;
@@ -1266,6 +1277,14 @@ end;
 procedure TCSV.mVoltsChange(Sender: TObject);
 begin
   AmplsInmVolts:= mVolts.Checked;
+  if AmplsInmVolts then begin
+    Divider.Visible:= False;
+    LDivider.Visible:= False;
+  end
+  else begin
+    Divider.Visible:= True;
+    LDivider.Visible:= True;
+  end;
 end;
 
 procedure TCSV.RawChannelsDrawItem(Control: TWinControl; Index: Integer;
@@ -1362,6 +1381,7 @@ var ParamPos, LineLength, Counter: Integer;
 begin
   if OpenDialog1.Execute then
    begin
+      DecimalSeparator  := '.';
       ResetCharts;
       NewChart:= true;
       RawChannels.Clear;
@@ -1375,6 +1395,9 @@ begin
       GetRangeBtn .Enabled:= false;
       CSVFileName:= OpenDialog1.FileName;
       OpenedFile.Text:= CSVFileName;
+      ParamsGrid.ColCount:= 2;
+      ParamsGrid.RowCount:= 2;
+      ParamsGrid.Visible:= false;
       try
         Generate.Enabled:= False;
         ProgressBar.Position:= 0;

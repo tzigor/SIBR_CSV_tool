@@ -429,7 +429,7 @@ begin
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
   if AmplsInmVolts then Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX)) * 5000 / 4294967295
-  else Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX));
+  else Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX)) / CSV.Divider.Value;
 end;
 
 function PhaseShift(nParam, n: Integer): Double;

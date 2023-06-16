@@ -1,11 +1,11 @@
 object CSV: TCSV
-  Left = 1810
-  Height = 663
-  Top = -711
+  Left = 1811
+  Height = 664
+  Top = -710
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.4.0 Portable'
-  ClientHeight = 663
+  Caption = 'SIBR Dump Tool v1.4.3 Portable'
+  ClientHeight = 664
   ClientWidth = 899
   Constraints.MinHeight = 663
   Constraints.MinWidth = 899
@@ -1897,11 +1897,11 @@ object CSV: TCSV
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDefaultPosOnly
-  SessionProperties = 'AutoFit.Checked;ChartPoints.Checked;ChartsLink.Checked;mVolts.Checked;PowerResets.Checked;ChartHeightControl.Position'
+  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;mVolts.Checked;PowerResets.Checked;Divider.Value;ZoneFromChart.Checked'
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 663
+    Height = 664
     Top = 0
     Width = 899
     ActivePage = MainTab
@@ -1915,7 +1915,7 @@ object CSV: TCSV
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object CSVFileBox: TGroupBox
         Left = 0
@@ -2774,9 +2774,9 @@ object CSV: TCSV
           TabOrder = 2
         end
         object PowerResets: TCheckBox
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 65
+          Top = 80
           Width = 121
           Caption = 'Show Power Resets'
           TabOrder = 3
@@ -2791,9 +2791,9 @@ object CSV: TCSV
           TabOrder = 4
         end
         object Label27: TLabel
-          Left = 480
+          Left = 481
           Height = 15
-          Top = 28
+          Top = 43
           Width = 32
           Caption = 'UTC +'
           Font.CharSet = ANSI_CHARSET
@@ -2804,9 +2804,9 @@ object CSV: TCSV
           ParentFont = False
         end
         object LocalTime: TSpinEdit
-          Left = 515
+          Left = 516
           Height = 23
-          Top = 25
+          Top = 40
           Width = 50
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -2854,9 +2854,9 @@ object CSV: TCSV
           TabOrder = 9
         end
         object AutoFit: TCheckBox
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 94
+          Top = 109
           Width = 60
           Caption = 'Auto fit'
           Checked = True
@@ -2864,9 +2864,9 @@ object CSV: TCSV
           TabOrder = 10
         end
         object TimeScale: TRadioButton
-          Left = 479
+          Left = 480
           Height = 19
-          Top = 128
+          Top = 143
           Width = 92
           Caption = 'Chart by time'
           Checked = True
@@ -2875,30 +2875,29 @@ object CSV: TCSV
           TabStop = True
         end
         object ByDots: TRadioButton
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 155
+          Top = 170
           Width = 91
           Caption = 'Chart by dots'
           OnChange = ByDotsChange
           TabOrder = 11
         end
         object mVolts: TCheckBox
-          Left = 479
+          Left = 481
           Height = 19
-          Top = 256
-          Width = 122
-          Caption = 'Amplitudes in volts'
+          Top = 271
+          Width = 123
+          Caption = 'Amplitudes in units'
           Checked = True
           OnChange = mVoltsChange
           State = cbChecked
           TabOrder = 12
-          Visible = False
         end
         object RTCBugs: TCheckBox
-          Left = 479
+          Left = 480
           Height = 19
-          Top = 220
+          Top = 235
           Width = 145
           Caption = 'Only synchronized time'
           Checked = True
@@ -2907,28 +2906,133 @@ object CSV: TCSV
           TabOrder = 14
         end
         object ByTemperature: TRadioButton
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 184
+          Top = 199
           Width = 133
           Caption = 'Chart by temperature'
           OnChange = ByTemperatureChange
           TabOrder = 15
         end
-        object Button4: TButton
-          Left = 520
-          Height = 25
-          Top = 323
-          Width = 75
-          Caption = 'Button4'
-          OnClick = Button4Click
+        object Image6: TImage
+          Left = 544
+          Height = 24
+          Top = 0
+          Width = 88
+          Picture.Data = {
+            0A544A706567496D616765A7090000FFD8FFE000104A46494600010101006000
+            600000FFE100224578696600004D4D002A000000080001011200030000000100
+            01000000000000FFDB0043000201010201010202020202020202030503030303
+            030604040305070607070706070708090B0908080A0807070A0D0A0A0B0C0C0C
+            0C07090E0F0D0C0E0B0C0C0CFFDB004301020202030303060303060C0807080C
+            0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C
+            0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0C0CFFC000110800180058030122000211
+            01031101FFC4001F000001050101010101010000000000000000010203040506
+            0708090A0BFFC400B5100002010303020403050504040000017D010203000411
+            05122131410613516107227114328191A1082342B1C11552D1F0243362728209
+            0A161718191A25262728292A3435363738393A434445464748494A5354555657
+            58595A636465666768696A737475767778797A838485868788898A9293949596
+            9798999AA2A3A4A5A6A7A8A9AAB2B3B4B5B6B7B8B9BAC2C3C4C5C6C7C8C9CAD2
+            D3D4D5D6D7D8D9DAE1E2E3E4E5E6E7E8E9EAF1F2F3F4F5F6F7F8F9FAFFC4001F
+            0100030101010101010101010000000000000102030405060708090A0BFFC400
+            B511000201020404030407050404000102770001020311040521310612415107
+            61711322328108144291A1B1C109233352F0156272D10A162434E125F1171819
+            1A262728292A35363738393A434445464748494A535455565758595A63646566
+            6768696A737475767778797A82838485868788898A92939495969798999AA2A3
+            A4A5A6A7A8A9AAB2B3B4B5B6B7B8B9BAC2C3C4C5C6C7C8C9CAD2D3D4D5D6D7D8
+            D9DAE2E3E4E5E6E7E8E9EAF2F3F4F5F6F7F8F9FAFFDA000C0301000211031100
+            3F00FB9BE377C5DF8F5F1CFF006A7F10F84FE1BF8A5B43B5D1269ADEDF4FB536
+            D197480AAC92C8F229258B670320004715CA7C61F881FB467867E2BF867C1107
+            C46D52CFC4D77A5D8DB5CDB2C96A44D7926ECB6E2B8F9B239CE38AE33FE09C7A
+            95C5C7FC175FE2C4325C4CF12CFE21C23484A8C5DC7DBDAB84FF0082B46BBE32
+            D2BFE0B03A737811AEDFC591C1A336890C5893CCBB0A7CB011BE43C91C371C57
+            EA983A74D632184853A765494AF28DEEFCDF6EA7E5988A951E1258C752777539
+            6C9F45DBCCFB7FC39FB407C43FD8ABF661BCB8F8B976DE28F881AB6AB32E896B
+            717309F361D910F99E21858918B13805BE603B9C788E99E21FDB3FF686B16F14
+            787F58D474FD1E7065B48AD21B2B1B7913391E52CABBE41E8C4B03EB5F1AFED6
+            9E35F8DBE21FDA2FE1FA7ED24BA8E96A24B7091CF1436D18D3CDD2FDA08107C9
+            8EA18FDEC05ED5FBF1636D6B6BA7431DAAC71DAC71848562E235403E50A07180
+            00C63B5791997B3CA69C2B7B3A752A55BB6ED782D768A3D3CBA33CD672A5ED67
+            4E14AC92BDA4F4DD9F0CFEC69FF0512F1B699F1661F867F1AAD63B7D6AE275B3
+            B6D4E4B75B59A39DB01229E300290E70164503258718E443FB747FC149FC656B
+            F15A4F861F056CE3BAF105BCC6D6EF538ED85E4CD38C130DB44C0A9DBF307770
+            402A7038CD784FFC1C2CFA7E87FB407C32B9D164FB3F8BE5D3E6372D6AE56E0C
+            69709F65271CE439902E7BD57FF837CCD86B7FB4F7C4AB8F11C9E778CA3D3639
+            2D3ED87FD24169E4178C0373BF262DE7AFCE7B1AEEFEC9C1FD4D67DEC97C37E4
+            E97E64AFFE1F2389E638DFADFF0061FB47BDB9EFADACDDBD4E4BC07FB767ED43
+            A7F88356BFB1F166AFE255F0AC66EB58B3B9D36DAEA0B78964DAE65544051376
+            54B291B704E4019AF73FDA33FE0A8DAE7C5CFD8574FF0013781F569FC0FE3BD3
+            7C496B61AF5BDA3A49B6392DEE183466446CC3234791901815233C64F03FF043
+            0297FF00B69FC6382F3CB9ACE4D22E564498068D94DFA82083C60AE411D08AF8
+            5FE2E5DDBD97C51F1D5AF8767B8FF845D7C417AB682273E435BA5CCA2D8FA636
+            72BFEF1C7535F431CAF058DCC5D1F6318BA5C92BA5A494AF78B5F8A67835B33C
+            6E0F2EF6AAACA4AAF3C6CDDDC6CD5A4BD7A9FACDFB467ED1FF00103C21FF0004
+            83F06F8F34CF155F59F8D3508F4B373AB469199A632C989320A15F9B8FE1ED5E
+            03E24F893FB5D6BFFB38E89F15340F19EA9FF086DAF869AFF54BE37562921922
+            9AE04CFE5B26F242A20E062BB6FDAC6461FF000408F876DB8EE68745E73EB357
+            71F0B4EEFF00837CB506CFCDFF000836ABC83FF4D6E2BE5F0BECB0D855555284
+            AF5DC1DD5FDD7D11F4B8A552BE25D37524946829E8EDAAEA78CFEC2FF127F6B7
+            FDA73C55A1F8934FF196A9AD781F4DF10C167AD99EE6CA0CC48D1C9326C2AAEC
+            0C4D9F979C1FC28AF70FF837D577FEC8DE26CF3FF155CFFF00A4D6E68AF0F8AB
+            1CA19954A14E9C22A0ECAD1B1EC70CE5AEAE5F4EBCEB546E4AEFDE3C57FE09ED
+            F023E22F843FE0B83F15BC4FAD7827C53A4F847509BC406CF57BBD3E48ACAE7C
+            CBA468CA48461B70048C7500D677FC164BF655F8E1E12FDBF3C33F1D3E16F84B
+            50F195BDADBE9F2462C2D3EDCFA6DF5A33E165801DCD1B2ED60C0609CA923028
+            A2B4A59AD68E634E7A7C0A2FB35DB717F66D2960274F5D26E49F54CED2DFF65D
+            F8ADFF00057FFD872EAEBE2F692BF0FBE2F7857C41729E199EEB48934F8E4B56
+            86DD9A39A2277347236E1BC0C82A0E300E7C2BC19F15BFE0A15FB1A686BF0F6D
+            7C1DE22D634FD363169A74EDA3C5AE24118C05F26EA3272806001267038C2E30
+            0A2B4C2E65275A7849C22E9A6DA8B574BD35D0CB1F804A8C31709CA3524ACE49
+            D9B5E7A1EB9FB027FC12C3E2E7C6CFDA2ADBE367ED293DD25F59DCC7A8D9E8F7
+            F7093DEDE4E843426611931C10C4DC88548C95036A2E41BFFF000502FF008259
+            FC50F865FB46DC7C6EFD9C669D754BBB97D42F347B3B84B7BBB4B97FF5CF6FE6
+            1092C52EE66789BB9600156C294571C788B19F5BE6D2D6E5E5B7BBCBDAC777FA
+            BF84782B34EF752E6BFBD7EF73E3EF827FB287ED68FE2AF1169BE18F0178E3C3
+            F79E3881EC75BB9B8B74D3629207937C8AD3C8542A3313B8212482474E0FD69F
+            14FF00E08A9E24F85BFF0004E5BED17C362DBC59F152E357B3D7755581F62DCC
+            70C72C7F64B767201D9E733E4E0B91D33814515ECE6BC4D8C8E269F272AD62DD
+            96F6D93D76F23C5CB786F06F0D5652BBB2695DED7D74D373E7DF1E7883F6B3F8
+            8FFB2E697F07F54F851E28FF00843F445B68ED923F0B4EB7405BB663DD28C827
+            A6703D6BEEEF86BF0A7C5561FF000428BFF09DC787758B7F163783753B51A3BD
+            AB0BDF35E59CAA797D77104607BD1454E719949D2A50842315CEA5A26AEFBBD4
+            794E057B4AB29CE527ECDC7577D3B6C5AFF8212FC2DF157C24FD95BC45A7F8BB
+            C3BACF8675097C4F35C476DA95B35BCAF11B680070ADDB21867D41A28A2BE5B3
+            AA8F118EAB5A7BB6DE87D4E490543034E943648FFFD9
+          }
+        end
+        object Divider: TSpinEdit
+          Left = 528
+          Height = 23
+          Top = 304
+          Width = 88
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          MaxValue = 1000000000
+          MinValue = 1
+          ParentFont = False
           TabOrder = 16
+          Value = 1
+        end
+        object LDivider: TLabel
+          Left = 481
+          Height = 15
+          Top = 308
+          Width = 37
+          Caption = 'Divider'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
         end
       end
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object ChartsLink: TCheckBox
         Left = 8
@@ -3106,16 +3210,16 @@ object CSV: TCSV
       end
       object ScrollBox1: TScrollBox
         Left = 0
-        Height = 584
+        Height = 585
         Top = 48
         Width = 889
         HorzScrollBar.Page = 1
         HorzScrollBar.Visible = False
-        VertScrollBar.Page = 584
+        VertScrollBar.Page = 585
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 584
+        ClientHeight = 585
         ClientWidth = 872
         TabOrder = 4
         object Chart2: TChart
@@ -3945,7 +4049,7 @@ object CSV: TCSV
     end
     object SondesChart: TTabSheet
       Caption = 'Sondes'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object Sondes: TChart
         Left = 0
@@ -4164,7 +4268,7 @@ object CSV: TCSV
     end
     object CSondes: TTabSheet
       Caption = 'C Sondes'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object Sondes2: TChart
         Left = 0
@@ -4383,7 +4487,7 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       Enabled = False
       object GroupBox3: TGroupBox
@@ -4490,7 +4594,7 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 1
-        Height = 504
+        Height = 505
         Top = 128
         Width = 888
         Anchors = [akTop, akLeft, akBottom]
@@ -4661,7 +4765,7 @@ object CSV: TCSV
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
@@ -4792,7 +4896,7 @@ object CSV: TCSV
     end
     object TabSheet2: TTabSheet
       Caption = 'Help'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object GroupBox8: TGroupBox
         Left = 8
@@ -4833,7 +4937,7 @@ object CSV: TCSV
     end
     object TabSheet3: TTabSheet
       Caption = 'Release Notes'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       object Label33: TLabel
         Left = 8
@@ -4851,7 +4955,7 @@ object CSV: TCSV
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
-      ClientHeight = 635
+      ClientHeight = 636
       ClientWidth = 891
       TabVisible = False
       object Chart9: TChart
@@ -4910,6 +5014,43 @@ object CSV: TCSV
         TabOrder = 1
       end
     end
+    object ParametersList: TTabSheet
+      Caption = 'Parameters List'
+      ClientHeight = 636
+      ClientWidth = 891
+      object ParamsGrid: TStringGrid
+        Left = 0
+        Height = 636
+        Top = 0
+        Width = 891
+        Align = alClient
+        ColCount = 2
+        DefaultColWidth = 80
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        MouseWheelOption = mwGrid
+        ParentFont = False
+        RowCount = 2
+        TabOrder = 0
+      end
+    end
+  end
+  object Label41: TLabel
+    Left = 424
+    Height = 15
+    Top = 56
+    Width = 10
+    Caption = 'X:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Name = 'Segoe UI Semibold'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
