@@ -1,0 +1,213 @@
+object PaneEdit: TPaneEdit
+  Left = 1820
+  Height = 413
+  Top = -696
+  Width = 420
+  HorzScrollBar.Visible = False
+  VertScrollBar.Visible = False
+  BorderStyle = bsDialog
+  Caption = 'Pane Edit'
+  ClientHeight = 413
+  ClientWidth = 420
+  Color = clWhite
+  Position = poOwnerFormCenter
+  LCLVersion = '2.2.4.0'
+  object PaneNumber: TLabel
+    Left = 16
+    Height = 25
+    Top = 0
+    Width = 41
+    Caption = 'Pane'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -19
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label1: TLabel
+    Left = 16
+    Height = 15
+    Top = 40
+    Width = 57
+    Caption = 'Parameter:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Parameter: TLabel
+    Left = 112
+    Height = 17
+    Top = 40
+    Width = 63
+    Caption = 'Parameter'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -13
+    Font.Name = 'Segoe UI Semibold'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label2: TLabel
+    Left = 16
+    Height = 15
+    Top = 80
+    Width = 80
+    Caption = 'Parameter title:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object ParameterTitle: TEdit
+    Left = 112
+    Height = 23
+    Top = 72
+    Width = 152
+    TabOrder = 0
+  end
+  object ColorBox: TColorBox
+    Left = 112
+    Height = 22
+    Top = 112
+    Width = 152
+    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor]
+    ColorDialog = ColorDialog1
+    ItemHeight = 16
+    TabOrder = 1
+  end
+  object Label3: TLabel
+    Left = 16
+    Height = 15
+    Top = 120
+    Width = 64
+    Caption = 'Curve color:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 16
+    Height = 15
+    Top = 160
+    Width = 61
+    Caption = 'Curve style:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object ChartComboBox1: TChartComboBox
+    Left = 112
+    Height = 22
+    Top = 152
+    Width = 152
+    PenPattern = '1|1'
+    PointerStyle = psNone
+    ItemHeight = 16
+    ItemIndex = 0
+    TabOrder = 2
+  end
+  object Label5: TLabel
+    Left = 19
+    Height = 15
+    Top = 200
+    Width = 67
+    Caption = 'Curve width:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object ChartComboBox2: TChartComboBox
+    Left = 112
+    Height = 22
+    Top = 192
+    Width = 152
+    Mode = ccmPenWidth
+    PenPattern = '1|1'
+    PointerStyle = psNone
+    ItemHeight = 16
+    ItemIndex = 0
+    TabOrder = 3
+  end
+  object ParameterList: TListBox
+    Left = 280
+    Height = 393
+    Top = 8
+    Width = 128
+    ItemHeight = 0
+    OnDrawItem = ParameterListDrawItem
+    OnSelectionChange = ParameterListSelectionChange
+    ParentFont = False
+    Style = lbOwnerDrawVariable
+    TabOrder = 4
+  end
+  object Save: TButton
+    Left = 168
+    Height = 25
+    Top = 232
+    Width = 96
+    Caption = 'Save to pane'
+    OnClick = SaveClick
+    TabOrder = 5
+  end
+  object CloseEdit: TButton
+    Left = 16
+    Height = 25
+    Top = 376
+    Width = 91
+    Caption = 'Close'
+    OnClick = CloseEditClick
+    TabOrder = 6
+  end
+  object AxisNumber: TLabel
+    Left = 176
+    Height = 15
+    Top = 8
+    Width = 43
+    Caption = 'Curve: 1'
+    ParentColor = False
+  end
+  object ColorDialog1: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    Left = 200
+    Top = 360
+  end
+end

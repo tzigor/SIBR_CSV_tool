@@ -1,11 +1,11 @@
 object CSV: TCSV
-  Left = 1811
-  Height = 664
-  Top = -710
+  Left = 2205
+  Height = 663
+  Top = -793
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.4.3 Portable'
-  ClientHeight = 664
+  ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
   Constraints.MinWidth = 899
@@ -1901,21 +1901,21 @@ object CSV: TCSV
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 664
+    Height = 663
     Top = 0
     Width = 899
-    ActivePage = MainTab
+    ActivePage = CurvesTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 10
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object CSVFileBox: TGroupBox
         Left = 0
@@ -2406,7 +2406,7 @@ object CSV: TCSV
         ParentBackground = False
         ParentColor = False
         TabOrder = 6
-        object Image1: TImage
+        object DrawBtnReleased: TImage
           Left = 320
           Height = 38
           Top = 352
@@ -2541,15 +2541,17 @@ object CSV: TCSV
             66747761726500417274776561766572204672656520372E30B0E96D7E000000
             0049454E44AE426082
           }
+          Visible = False
         end
-        object Image2: TImage
+        object DrawBtn: TImage
           Left = 320
           Height = 38
           Top = 352
           Width = 140
           AntialiasingMode = amOff
-          OnMouseDown = Image2MouseDown
-          OnMouseUp = Image2MouseUp
+          OnClick = DrawBtnClick
+          OnMouseDown = DrawBtnMouseDown
+          OnMouseUp = DrawBtnMouseUp
           Picture.Data = {
             1754506F727461626C654E6574776F726B477261706869630E10000089504E47
             0D0A1A0A0000000D494844520000008C000000260806000000164773B6000000
@@ -2682,6 +2684,7 @@ object CSV: TCSV
             6F66747761726500417274776561766572204672656520372E30B0E96D7E0000
             000049454E44AE426082
           }
+          Visible = False
         end
         object RawChannels: TListBox
           Left = 16
@@ -2919,6 +2922,7 @@ object CSV: TCSV
           Height = 24
           Top = 0
           Width = 88
+          OnClick = Image6Click
           Picture.Data = {
             0A544A706567496D616765A7090000FFD8FFE000104A46494600010101006000
             600000FFE100224578696600004D4D002A000000080001011200030000000100
@@ -3032,7 +3036,7 @@ object CSV: TCSV
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object ChartsLink: TCheckBox
         Left = 8
@@ -3210,16 +3214,16 @@ object CSV: TCSV
       end
       object ScrollBox1: TScrollBox
         Left = 0
-        Height = 585
+        Height = 584
         Top = 48
         Width = 889
         HorzScrollBar.Page = 1
         HorzScrollBar.Visible = False
-        VertScrollBar.Page = 585
+        VertScrollBar.Page = 584
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 585
+        ClientHeight = 584
         ClientWidth = 872
         TabOrder = 4
         object Chart2: TChart
@@ -3302,8 +3306,6 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
-          end
-          object Chart2LineSeries2: TLineSeries
           end
         end
         object Chart3: TChart
@@ -3388,8 +3390,6 @@ object CSV: TCSV
             Pointer.Style = psCircle
             Pointer.VertSize = 2
           end
-          object Chart3LineSeries2: TLineSeries
-          end
         end
         object Chart4: TChart
           Left = 0
@@ -3472,8 +3472,6 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
-          end
-          object Chart4LineSeries2: TLineSeries
           end
         end
         object Chart5: TChart
@@ -3558,8 +3556,6 @@ object CSV: TCSV
             Pointer.Style = psCircle
             Pointer.VertSize = 2
           end
-          object Chart5LineSeries2: TLineSeries
-          end
         end
         object Chart8: TChart
           Left = 0
@@ -3642,8 +3638,6 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
-          end
-          object Chart8LineSeries2: TLineSeries
           end
         end
         object Chart7: TChart
@@ -3728,8 +3722,6 @@ object CSV: TCSV
             Pointer.Style = psCircle
             Pointer.VertSize = 2
           end
-          object Chart7LineSeries2: TLineSeries
-          end
         end
         object Chart6: TChart
           Left = 0
@@ -3813,8 +3805,6 @@ object CSV: TCSV
             Pointer.Style = psCircle
             Pointer.VertSize = 2
           end
-          object Chart6LineSeries2: TLineSeries
-          end
         end
         object Chart1: TChart
           Left = 0
@@ -3896,8 +3886,6 @@ object CSV: TCSV
             Pointer.Pen.Color = clFuchsia
             Pointer.Style = psCircle
             Pointer.VertSize = 2
-          end
-          object Chart1LineSeries2: TLineSeries
           end
         end
       end
@@ -4049,7 +4037,7 @@ object CSV: TCSV
     end
     object SondesChart: TTabSheet
       Caption = 'Sondes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Sondes: TChart
         Left = 0
@@ -4268,7 +4256,7 @@ object CSV: TCSV
     end
     object CSondes: TTabSheet
       Caption = 'C Sondes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Sondes2: TChart
         Left = 0
@@ -4487,7 +4475,7 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       Enabled = False
       object GroupBox3: TGroupBox
@@ -4594,7 +4582,7 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 1
-        Height = 505
+        Height = 504
         Top = 128
         Width = 888
         Anchors = [akTop, akLeft, akBottom]
@@ -4765,7 +4753,7 @@ object CSV: TCSV
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
@@ -4896,7 +4884,7 @@ object CSV: TCSV
     end
     object TabSheet2: TTabSheet
       Caption = 'Help'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object GroupBox8: TGroupBox
         Left = 8
@@ -4937,7 +4925,7 @@ object CSV: TCSV
     end
     object TabSheet3: TTabSheet
       Caption = 'Release Notes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Label33: TLabel
         Left = 8
@@ -4955,14 +4943,14 @@ object CSV: TCSV
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       TabVisible = False
       object Chart9: TChart
         Left = 8
-        Height = 472
+        Height = 408
         Top = 8
-        Width = 880
+        Width = 720
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -4985,42 +4973,51 @@ object CSV: TCSV
         Color = clWhite
         object Chart9LineSeries1: TLineSeries
           LinePen.Color = clBlue
+          LinePen.Style = psClear
+          Pointer.Brush.Color = clRed
+          Pointer.HorizSize = 6
+          Pointer.Style = psCircle
+          Pointer.VertSize = 6
+          Pointer.Visible = True
+          ShowPoints = True
         end
         object Chart9LineSeries2: TLineSeries
-          LinePen.Color = clRed
-        end
-        object Chart9LineSeries3: TLineSeries
-          LinePen.Color = 2596096
-        end
-        object Chart9LineSeries4: TLineSeries
           LinePen.Color = clBlue
-          LinePen.Style = psDash
-        end
-        object Chart9LineSeries5: TLineSeries
-          LinePen.Color = clRed
-          LinePen.Style = psDash
-        end
-        object Chart9LineSeries6: TLineSeries
-          LinePen.Color = 163849
-          LinePen.Style = psDash
+          LinePen.Width = 2
         end
       end
       object Button8: TButton
-        Left = 400
+        Left = 368
         Height = 33
-        Top = 504
+        Top = 448
         Width = 128
-        Caption = 'Button8'
+        Caption = 'Draw'
+        OnClick = Button8Click
         TabOrder = 1
+      end
+      object Results: TMemo
+        Left = 736
+        Height = 376
+        Top = 16
+        Width = 144
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Lines.Strings = (
+          'Results'
+        )
+        ParentFont = False
+        TabOrder = 2
       end
     end
     object ParametersList: TTabSheet
       Caption = 'Parameters List'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object ParamsGrid: TStringGrid
         Left = 0
-        Height = 636
+        Height = 635
         Top = 0
         Width = 891
         Align = alClient
@@ -5034,6 +5031,1302 @@ object CSV: TCSV
         ParentFont = False
         RowCount = 2
         TabOrder = 0
+      end
+    end
+    object CurvesTab: TTabSheet
+      Caption = 'Curves'
+      ClientHeight = 635
+      ClientWidth = 891
+      Enabled = False
+      object ScrollBox2: TScrollBox
+        Left = -4
+        Height = 600
+        Top = 32
+        Width = 892
+        HorzScrollBar.Page = 892
+        VertScrollBar.Page = 50
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        AutoSize = True
+        BorderStyle = bsNone
+        ClientHeight = 583
+        ClientWidth = 892
+        TabOrder = 0
+        object Button9: TButton
+          Left = 0
+          Height = 25
+          Top = 0
+          Width = 75
+          Caption = 'Button9'
+          TabOrder = 0
+        end
+        object Pane1: TChart
+          Left = 0
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane1Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane1Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane1Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane1Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane2: TChart
+          Left = 88
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane2Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane2Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane2Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane2Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane3: TChart
+          Left = 176
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane3Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane3Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane3Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane3Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane4: TChart
+          Left = 264
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane4Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane4Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane4Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane4Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane5: TChart
+          Left = 352
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane5Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane5Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane5Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane5Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane6: TChart
+          Left = 440
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane6Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane6Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane6Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane6Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane7: TChart
+          Left = 528
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane7Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane7Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane7Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane7Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane8: TChart
+          Left = 616
+          Height = 583
+          Top = 0
+          Width = 88
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane8Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane8Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane8Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane8Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane9: TChart
+          Left = 704
+          Height = 583
+          Top = 0
+          Width = 100
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane9Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane9Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane9Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane9Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+        object Pane10: TChart
+          Left = 804
+          Height = 583
+          Top = 0
+          Width = 92
+          AxisList = <          
+            item
+              Grid.Color = clSilver
+              Alignment = calRight
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.LabelBrush.Style = bsClear
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations1
+            end          
+            item
+              Grid.Color = clSilver
+              Grid.Visible = False
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              MarginsForMarks = False
+              Marks.Alignment = taCenter
+              Marks.Distance = 0
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Marks.Range.Max = 18
+              Marks.Range.Min = 15
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.Distance = 1
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations2
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10'  '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations3
+            end          
+            item
+              Grid.Color = clSilver
+              Intervals.Count = 4
+              Intervals.MinLength = 50
+              Intervals.NiceSteps = '1'
+              Intervals.Tolerance = 1
+              Alignment = calTop
+              AxisPen.Color = clGray
+              AxisPen.Visible = True
+              Marks.Visible = False
+              Marks.LabelBrush.Style = bsClear
+              Minors = <>
+              Title.Alignment = taCenter
+              Title.LabelFont.Color = clGray
+              Title.Visible = True
+              Title.Caption = 'Click here to add curve'#13#10' '
+              Title.LabelBrush.Style = bsClear
+              Transformations = ChartAxisTransformations4
+            end>
+          Extent.YMax = 10
+          Title.Text.Strings = (
+            'TAChart'
+          )
+          Toolset = ChartToolset1
+          OnExtentChanged = Pane1ExtentChanged
+          Align = alLeft
+          object Pane10Curve1: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 1
+          end
+          object Pane10Curve2: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 2
+          end
+          object Pane10Curve3: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 3
+          end
+          object Pane10Curve4: TLineSeries
+            AxisIndexX = 0
+            AxisIndexY = 4
+          end
+        end
+      end
+      object SavePanel: TButton
+        Left = 0
+        Height = 25
+        Top = 0
+        Width = 88
+        Caption = 'Save Panel'
+        OnClick = SavePanelClick
+        TabOrder = 1
+      end
+      object Button10: TButton
+        Left = 760
+        Height = 25
+        Top = 0
+        Width = 75
+        Caption = 'Button10'
+        OnClick = Button10Click
+        TabOrder = 2
       end
     end
   end
@@ -5051,6 +6344,7 @@ object CSV: TCSV
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
+    OnClick = Label41Click
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
@@ -5094,6 +6388,10 @@ object CSV: TCSV
       Shift = [ssAlt, ssLeft]
       OnAfterMouseUp = ChartToolset1DataPointClickTool2AfterMouseUp
       OnPointClick = ChartToolset1DataPointClickTool2PointClick
+    end
+    object ChartToolset1AxisClickTool1: TAxisClickTool
+      Shift = [ssLeft]
+      OnClick = ChartToolset1AxisClickTool1Click
     end
   end
   object ChartExtentLink1: TChartExtentLink
@@ -5156,5 +6454,33 @@ object CSV: TCSV
     Mode = elmOnlyX
     Left = 664
     Top = 632
+  end
+  object ChartAxisTransformations1: TChartAxisTransformations
+    Left = 472
+    Top = 224
+    object ChartAxisTransformations1AutoScaleAxisTransform1: TAutoScaleAxisTransform
+      MaxValue = 10
+    end
+  end
+  object ChartAxisTransformations2: TChartAxisTransformations
+    Left = 472
+    Top = 272
+    object ChartAxisTransformations2AutoScaleAxisTransform1: TAutoScaleAxisTransform
+      MaxValue = 10
+    end
+  end
+  object ChartAxisTransformations3: TChartAxisTransformations
+    Left = 472
+    Top = 320
+    object ChartAxisTransformations3AutoScaleAxisTransform1: TAutoScaleAxisTransform
+      MaxValue = 10
+    end
+  end
+  object ChartAxisTransformations4: TChartAxisTransformations
+    Left = 472
+    Top = 368
+    object ChartAxisTransformations4AutoScaleAxisTransform1: TAutoScaleAxisTransform
+      MaxValue = 10
+    end
   end
 end

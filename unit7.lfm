@@ -1,0 +1,57 @@
+object PanelsLib: TPanelsLib
+  Left = 2301
+  Height = 397
+  Top = -665
+  Width = 243
+  HorzScrollBar.Visible = False
+  VertScrollBar.Visible = False
+  BorderStyle = bsDialog
+  Caption = 'PanelsLib'
+  ClientHeight = 397
+  ClientWidth = 243
+  Color = clWhite
+  Position = poMainFormCenter
+  LCLVersion = '2.2.4.0'
+  object PanelList: TListBox
+    Left = 8
+    Height = 320
+    Top = 0
+    Width = 227
+    ItemHeight = 0
+    OnSelectionChange = PanelListSelectionChange
+    TabOrder = 0
+  end
+  object CloseLib: TButton
+    Left = 144
+    Height = 25
+    Top = 360
+    Width = 91
+    Caption = 'CloseLib'
+    OnClick = CloseLibClick
+    TabOrder = 1
+  end
+  object SaveLib: TButton
+    Left = 8
+    Height = 25
+    Top = 360
+    Width = 91
+    Caption = 'SaveLib'
+    OnClick = SaveLibClick
+    TabOrder = 2
+  end
+  object PanelName: TEdit
+    Left = 48
+    Height = 23
+    Top = 328
+    Width = 187
+    TabOrder = 3
+  end
+  object Label1: TLabel
+    Left = 8
+    Height = 15
+    Top = 332
+    Width = 35
+    Caption = 'Name:'
+    ParentColor = False
+  end
+end

@@ -8,9 +8,9 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Unit3, Unit4, Types, TAChartUtils, TADataTools,
-  TAChartExtentLink, SpinEx, SynHighlighterCpp, LCLType, Spin,
-  IniPropStorage, Parameters, PQConnection, Math, uComplex;
+  DateTimePicker, Unit2, Unit3, Unit4, Unit6, Unit7, Types, TAChartUtils, TADataTools,
+  TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp, LCLType,
+  Spin, IniPropStorage, Parameters, PQConnection, Math, uComplex, TAChartAxisUtils, TAChartAxis;
 
 type
 
@@ -20,8 +20,67 @@ type
     App: TPageControl;
     AutoFit: TCheckBox;
     Button1: TButton;
+    Button10: TButton;
     Button2: TButton;
     Button3: TButton;
+    Pane10: TChart;
+    Pane3Curve2: TLineSeries;
+    Pane3Curve3: TLineSeries;
+    Pane3Curve4: TLineSeries;
+    Pane4Curve1: TLineSeries;
+    Pane4Curve2: TLineSeries;
+    Pane4Curve3: TLineSeries;
+    Pane4Curve4: TLineSeries;
+    Pane5Curve1: TLineSeries;
+    Pane5Curve2: TLineSeries;
+    Pane5Curve3: TLineSeries;
+    Pane5Curve4: TLineSeries;
+    Pane6Curve1: TLineSeries;
+    Pane6Curve2: TLineSeries;
+    Pane6Curve3: TLineSeries;
+    Pane6Curve4: TLineSeries;
+    Pane7Curve1: TLineSeries;
+    Pane7Curve2: TLineSeries;
+    Pane7Curve3: TLineSeries;
+    Pane7Curve4: TLineSeries;
+    Pane8Curve1: TLineSeries;
+    Pane8Curve2: TLineSeries;
+    Pane8Curve3: TLineSeries;
+    Pane8Curve4: TLineSeries;
+    Pane9Curve1: TLineSeries;
+    Pane9Curve2: TLineSeries;
+    Pane9Curve3: TLineSeries;
+    Pane9Curve4: TLineSeries;
+    Pane10Curve1: TLineSeries;
+    Pane10Curve2: TLineSeries;
+    Pane10Curve3: TLineSeries;
+    Pane10Curve4: TLineSeries;
+    Pane2Curve1: TLineSeries;
+    Pane2Curve2: TLineSeries;
+    Pane2Curve3: TLineSeries;
+    Pane2Curve4: TLineSeries;
+    Pane3Curve1: TLineSeries;
+    Pane2: TChart;
+    Pane3: TChart;
+    Pane4: TChart;
+    Pane5: TChart;
+    Pane6: TChart;
+    Pane7: TChart;
+    Pane8: TChart;
+    Pane9: TChart;
+    SavePanel: TButton;
+    Button9: TButton;
+
+    ChartAxisTransformations3: TChartAxisTransformations;
+    ChartAxisTransformations3AutoScaleAxisTransform1: TAutoScaleAxisTransform;
+    ChartAxisTransformations4: TChartAxisTransformations;
+    ChartAxisTransformations4AutoScaleAxisTransform1: TAutoScaleAxisTransform;
+    ChartAxisTransformations1: TChartAxisTransformations;
+    ChartAxisTransformations1AutoScaleAxisTransform1: TAutoScaleAxisTransform;
+    ChartAxisTransformations2: TChartAxisTransformations;
+    ChartAxisTransformations2AutoScaleAxisTransform1: TAutoScaleAxisTransform;
+    ChartToolset1AxisClickTool1: TAxisClickTool;
+    CurvesTab: TTabSheet;
     Image6: TImage;
     LDivider: TLabel;
     Label41: TLabel;
@@ -30,37 +89,32 @@ type
     Button6: TButton;
     Button7: TButton;
     Button8: TButton;
-    Chart1LineSeries2: TLineSeries;
-    Chart2LineSeries2: TLineSeries;
-    Chart3LineSeries2: TLineSeries;
-    Chart4LineSeries2: TLineSeries;
-    Chart5LineSeries2: TLineSeries;
-    Chart6LineSeries2: TLineSeries;
-    Chart7LineSeries2: TLineSeries;
-    Chart8LineSeries2: TLineSeries;
     Chart9: TChart;
     Chart9LineSeries1: TLineSeries;
     Chart9LineSeries2: TLineSeries;
-    Chart9LineSeries3: TLineSeries;
-    Chart9LineSeries4: TLineSeries;
-    Chart9LineSeries5: TLineSeries;
-    Chart9LineSeries6: TLineSeries;
     ChartExtentLink2: TChartExtentLink;
     ByTemperature: TRadioButton;
     Image4: TImage;
+    Results: TMemo;
+    Pane1: TChart;
+    Pane1Curve1: TLineSeries;
+    Pane1Curve2: TLineSeries;
+    Pane1Curve3: TLineSeries;
+    Pane1Curve4: TLineSeries;
     RTCBugs: TCheckBox;
     mVolts: TCheckBox;
     ParametersList: TTabSheet;
     ParamsGrid: TStringGrid;
     Divider: TSpinEdit;
+    ScrollBox2: TScrollBox;
     TimeScale: TRadioButton;
     ByDots: TRadioButton;
     ZoneFromChart: TCheckBox;
     CommonBar: TProgressBar;
     ComputedChannels: TListBox;
     GroupBox7: TGroupBox;
-    Image1: TImage;
-    Image2: TImage;
+    DrawBtnReleased: TImage;
+    DrawBtn: TImage;
     Label22: TLabel;
     Label23: TLabel;
     Label24: TLabel;
@@ -225,10 +279,17 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
+    procedure Button10Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
     procedure ByDotsChange(Sender: TObject);
     procedure ByTemperatureChange(Sender: TObject);
+    procedure ChartToolset1AxisClickTool1BeforeMouseUp(ATool: TChartTool;
+      APoint: TPoint);
+    procedure ChartToolset1AxisClickTool1Click(ASender: TChartTool;
+      Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
+    procedure DrawBtnClick(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
@@ -236,7 +297,11 @@ type
     procedure Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
       AMark: Double);
     procedure Image4Click(Sender: TObject);
+    procedure Image6Click(Sender: TObject);
+    procedure Label41Click(Sender: TObject);
+    procedure Pane1ExtentChanged(ASender: TChart);
     procedure RTCBugsChange(Sender: TObject);
+    procedure SavePanelClick(Sender: TObject);
     procedure ShowCSondesClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -261,9 +326,9 @@ type
     procedure EStatusLoChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Image1Click(Sender: TObject);
-    procedure Image2MouseDown(Sender: TObject; Button: TMouseButton;
+    procedure DrawBtnMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure Image2MouseUp(Sender: TObject; Button: TMouseButton;
+    procedure DrawBtnMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure Image3Click(Sender: TObject);
     procedure FitToWinClick(Sender: TObject);
@@ -291,6 +356,11 @@ type
 
 var
   CSV: TCSV;
+
+procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
+procedure ZoomCurveExtent(LineSerie: TLineSeries);
+procedure CurveTitle(LineSerie: TLineSeries; Title: String);
+procedure DrawCurveFromLib(CurrentCurve: TLineSeries; PaneNum, CurveNum: Byte);
 
 implementation
 
@@ -323,7 +393,7 @@ procedure TCSV.GenerateClick(Sender: TObject);
             CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine))), hrsPlus);
             if (SecondsBetween(PrevTime,CurrentTime) >= Rate ) and
                  (CompareDateTime(CurrentTime, StartTimeDT) = 1) and (CompareDateTime(CurrentTime, EndTimeDT) = -1) then begin;
-               PrevTime:= UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine)));
+               PrevTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, TextLine))), hrsPlus);
                WriteLn(NewCSVFile,TextLine);
             end;
             ProgressBar.Position:= ProgressBar.Position + 1;
@@ -400,15 +470,9 @@ begin
 end;
 
 procedure TCSV.ChartPointsChange(Sender: TObject);
+var i: Byte;
 begin
-  Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart2LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart3LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart4LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart5LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart6LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart7LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart8LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')).Pointer.Visible:= ChartPoints.Checked;
 end;
 
 procedure DeleteLabels(Chart1LineSeries: TLineSeries);
@@ -459,6 +523,30 @@ begin
   ZoneDuration.Caption:= IntToStr(MinutesBetween(StrToDateTime(ReportStartTime.Caption), StrToDateTime(ReportEndTime.Caption))) + ' min';
 end;
 
+procedure DrawCurveFromLib(CurrentCurve: TLineSeries; PaneNum, CurveNum: Byte);
+begin
+  CurrentCurve.ParentChart.ZoomFull();
+  CurrentCurve.ParentChart.AxisList[CurveNum + 1].Title.LabelFont.Color:= Pane.Curves[CurveNum].SerieColor;
+  CurrentCurve.ParentChart.AxisList[CurveNum + 1].AxisPen.Color:= Pane.Curves[CurveNum].SerieColor;
+  CurrentCurve.LinePen.Style:= Pane.Curves[CurveNum].PenStyle;
+  CurrentCurve.LinePen.Width:= Pane.Curves[CurveNum].PenWidth;
+  CurrentCurve.SeriesColor:= Pane.Curves[CurveNum].SerieColor;
+  DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter, 0);
+  CurveTitle(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
+end;
+
+procedure TCSV.Button10Click(Sender: TObject);
+var i, j: Byte;
+begin
+  for j:= 0 to 3 do begin
+    with PaneSet.Panes[0] do begin
+      if Pane.Curves[j].Parameter <> '' then begin
+         DrawCurveFromLib(TLineSeries(CSV.FindComponent('Curve' + IntToStr(j + 1))), 0, j);
+      end;
+    end;
+  end;
+end;
+
 procedure TCSV.Button3Click(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -466,6 +554,106 @@ begin
     ReportStartTime.Caption:= DateTimeToStr(StartZone);
     ReportEndTime.Caption:= DateTimeToStr(EndZone);
     ZoneDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
+  end;
+end;
+
+type TDoubleArray = array of Double;
+
+  // Пример входых данных для 8-ми точек
+const
+    Xi: array of Double = (0.215, 0.441, 0.638, 0.865, 1.05, 1.30, 1.55, 1.82);
+    Yi: array of Double = (5.82, 4.63, 4.10, 3.34, 3.0, 3.29, 4.32, 5.72);
+
+function Polinom(n, m: integer): TDoubleArray;
+// n - Степень полинома
+// m - кол-во точек
+
+var T: array [0..16] of Double;
+    C, A: array[0..8] of Double;
+    B: array [0..8, 0..9] of Double;
+    i, j, k: integer;
+    Y, Bik, Delta: Double;
+
+begin
+  CSV.Results.Text:= '';
+  for i:=0 to 16 do T[i]:= 0;
+  for i:=0 to 8 do begin
+    C[i]:=0; A[i]:= 0
+  end;
+  for i:=0 to 8 do
+    for j:=0 to 9 do B[i, j]:= 0;
+
+  for i:=1 to m do begin
+    // Вычисляем коэффициенты Т и С
+    for j:= 1 to 2*n do T[j]:= T[j] + exp(j * ln(Xi[i-1]));
+    for j:= 0 to n do C[j]:= C[j] + Yi[i-1] * exp(j * ln(Xi[i-1]));
+  end;
+
+  T[0]:= m;
+
+  // Формируем расширенную матрицу системы уравнений
+
+  for i:= 0 to n do
+    for j:= 0 to n do B[i, j]:= T[j + i];
+
+  for i:=0 to n do B[i, n + 1]:= C[i];
+
+  // Приводим её к треугольному виду (прямой ход метода Гаусса)
+
+  for k:= 0 to n-1 do
+    for i:= k to n do begin
+      Bik:= B[i, k];
+      for j:= k to n+1 do
+        if i = k then B[i, j]:= B[i, j] / Bik
+        else B[i, j]:= B[i, j] / Bik - B[k, j];
+  end;
+
+  // Вычисляем и выводим коэффициенты (обратный ход метода Гаусса)
+  CSV.Results.Text:= 'Коэффициенты полинома:' + Line;
+  for i:= n downto 0 do
+    A[i]:= (B[i,n+1] - B[i,1]*A[1] - B[i,2]*A[2] - B[i,3]*A[3] - B[i,4]*A[4] - B[i,5]*A[5] - B[i,6]*A[6] - B[i,7]*A[7] - B[i,8]*A[8]) / B[i,i];
+
+  for i:= 0 to n do CSV.Results.Text:= CSV.Results.Text + FloatToStrF(A[i], ffFixed, 10, 5) + Line;
+
+  // Вычисляем среднеквадратичное отклонениея
+
+  for i:=1 to m do begin
+    Y:=0;
+
+    // Вычисляем значение функции с помощью полинома
+
+    for j:= 0 to n do Y:= Y + A[j] * exp(j * ln(Xi[i-1]));
+
+    // Вычисляем сумму квадратов разностей экспериментального значения функции и рассчитанного с помощью полинома
+
+    Delta:= Delta + sqr(Y - Yi[i-1]);
+  end;
+
+  // Окончательное вычисление среднеквадратичного отклонения
+
+  Delta:= sqrt(Delta / m);
+
+  CSV.Results.Text:= CSV.Results.Text + Line + 'Cреднеквадратичное отклонение:' + Line;
+  CSV.Results.Text:= CSV.Results.Text + FloatToStrF(Delta, ffFixed, 10, 5);
+
+  Polinom:= A; // возвращаем коэффициента
+end;
+
+procedure TCSV.Button8Click(Sender: TObject);
+var i: Integer;
+    PoliCoeff: TDoubleArray;
+    Step, X, Y: Double;
+begin
+  PoliCoeff:= Polinom(3, 8);
+  for i:= 0 to 7 do begin
+     Chart9LineSeries1.AddXY(Xi[i], Yi[i]);
+  end;
+  Step:= (1.85 - 0.215) / 50;
+  X:= 0.1;
+  for i:= 1 to 60 do begin
+    X:= X + Step;
+    Y:= PoliCoeff[0] + PoliCoeff[1]*X + PoliCoeff[2]*X*X + PoliCoeff[3]*X*X*X;
+    Chart9LineSeries2.AddXY(X, Y);
   end;
 end;
 
@@ -477,6 +665,30 @@ end;
 procedure TCSV.ByTemperatureChange(Sender: TObject);
 begin
   NewChart:= true;
+end;
+
+procedure TCSV.ChartToolset1AxisClickTool1BeforeMouseUp(ATool: TChartTool;
+  APoint: TPoint);
+begin
+end;
+
+procedure TCSV.ChartToolset1AxisClickTool1Click(ASender: TChartTool;
+  Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
+var i: Integer;
+begin
+  PaneEdit.PaneNumber.Caption:= ASender.Chart.Name;
+  PaneEdit.ParameterList.Clear;
+  PaneEdit.AxisNumber.Caption:= 'Curve: ' + IntToStr(Axis.Index);
+  for i:=0 to Length(AmplitudesChannels)-1 do PaneEdit.ParameterList.Items.Add(AmplitudesChannels[i]);
+  for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
+  for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
+  for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
+  PaneEdit.Show;
+end;
+
+procedure TCSV.DrawBtnClick(Sender: TObject);
+begin
+
 end;
 
 procedure TCSV.GetRangeBtnClick(Sender: TObject);
@@ -544,20 +756,60 @@ begin
 end;
 
 procedure TCSV.Image4Click(Sender: TObject);
+var i: Byte;
 begin
-  ZoomCurrentExtent(Chart1LineSeries1);
-  ZoomCurrentExtent(Chart2LineSeries1);
-  ZoomCurrentExtent(Chart3LineSeries1);
-  ZoomCurrentExtent(Chart4LineSeries1);
-  ZoomCurrentExtent(Chart5LineSeries1);
-  ZoomCurrentExtent(Chart6LineSeries1);
-  ZoomCurrentExtent(Chart7LineSeries1);
-  ZoomCurrentExtent(Chart8LineSeries1);
+  for i:=1 to 8 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
+end;
+
+procedure TCSV.Image6Click(Sender: TObject);
+begin
+
+end;
+
+procedure TCSV.Label41Click(Sender: TObject);
+var i: Byte;
+begin
+  for i:=1 to 4 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Curve'+ IntToStr(i))));
 end;
 
 procedure TCSV.RTCBugsChange(Sender: TObject);
 begin
   NewChart:= true;
+end;
+
+procedure TCSV.SavePanelClick(Sender: TObject);
+var i, j: integer;
+    PanelEmpty: boolean;
+begin
+  PanelEmpty:= true;
+  for i:= 0 to 9 do begin
+    for j:= 0 to 3 do
+      //with PaneSet.Panes[i] do
+        if PaneSet.Panes[i].Curves[j].Parameter <> '' then PanelEmpty:= false;
+  end;
+  if Not PanelEmpty then begin
+    if FileExists('Panels.lib') then begin
+      PanelsLib.PanelList.Clear;
+      AssignFile(PanelsLibFile, 'Panels.lib');
+      Reset(PanelsLibFile);
+      try
+         while not eof(PanelsLibFile) do begin
+            Read(PanelsLibFile, CurvesPanel);
+            PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
+         end;
+         CloseFile(PanelsLibFile);
+      except
+         on E: EInOutError do ShowMessage('File read error: ' + E.Message);
+      end;
+    end
+    else begin
+       AssignFile(PanelsLibFile, 'Panels.lib');
+       ReWrite(PanelsLibFile);
+       CloseFile(PanelsLibFile);
+    end;
+    PanelsLib.Show;
+  end
+  else ShowMessage('Panel is empty');
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -575,15 +827,9 @@ begin
 end;
 
 procedure TCSV.ChartHeightControlChange(Sender: TObject);
+var i: Byte;
 begin
-  Chart1.Height:= ChartHeightControl.Position;
-  Chart2.Height:= ChartHeightControl.Position;
-  Chart3.Height:= ChartHeightControl.Position;
-  Chart4.Height:= ChartHeightControl.Position;
-  Chart5.Height:= ChartHeightControl.Position;
-  Chart6.Height:= ChartHeightControl.Position;
-  Chart7.Height:= ChartHeightControl.Position;
-  Chart8.Height:= ChartHeightControl.Position;
+  for i:=1 to 8 do TChart(CSV.FindComponent('Chart'+ IntToStr(i))).Height:= ChartHeightControl.Position;
 end;
 
 procedure SondesVisible(visible: Boolean);
@@ -792,7 +1038,7 @@ begin
   ShowSonde(Sondes2, Sondes3, 1);
 end;
 
-procedure DrawChart(Chart1LineSeries: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
+procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
 var i, CtrlTempPos: Longint;
     ParamPos, TimePos: Integer;
     PowerReset: boolean;
@@ -804,14 +1050,14 @@ begin
   TimePos:= GetParamPosition('RTCs');
   CtrlTempPos:= GetParamPosition('TEMP_CTRL');
   ParamPos:= GetParamPosition(SelectedParamName);
-  Chart1LineSeries.Clear;
-  Chart1LineSeries.ParentChart.Title.Text[0]:=SelectedParamName;
-  Chart1LineSeries.ParentChart.Title.Font.Color:= Chart1LineSeries.SeriesColor;
-  Chart1LineSeries.ParentChart.Height:= ChartHeight;
-  Chart1LineSeries.Pointer.Pen.Color:= Chart1LineSeries.SeriesColor;
-  Chart1LineSeries.Pointer.Brush.Color:= Chart1LineSeries.SeriesColor;
+  LineSerie.Clear;
+  LineSerie.ParentChart.Title.Text[0]:=SelectedParamName;
+  LineSerie.ParentChart.Title.Font.Color:= LineSerie.SeriesColor;
+  LineSerie.ParentChart.Height:= ChartHeight;
+  LineSerie.Pointer.Pen.Color:= LineSerie.SeriesColor;
+  LineSerie.Pointer.Brush.Color:= LineSerie.SeriesColor;
   PrevTime:= UnixToDateTime(0);
-  CSV.CommonBar.Max:= CSVContent.Count-1;
+  CSV.CommonBar.Max:= CSVContent.Count - 1;
   CSV.CommonBar.Position:= 0;
   for i:=1 to CSVContent.Count-1 do begin
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
@@ -834,9 +1080,11 @@ begin
        if Time < PrevTime then Sticker:= 'Back shift in time';
        if ShowPR and PowerReset then Sticker:= 'P';
        if y <> ParameterError then begin
-          if CSV.TimeScale.Checked then Chart1LineSeries.AddXY(x, y, Sticker)
-          else if CSV.ByDots.Checked then Chart1LineSeries.AddXY(i, y, Sticker)
-               else Chart1LineSeries.AddXY(xCtrlTemp, y, Sticker)
+          if CSV.TimeScale.Checked then begin
+             LineSerie.AddXY(x, y, Sticker)
+          end
+          else if CSV.ByDots.Checked then LineSerie.AddXY(i, y, Sticker)
+               else LineSerie.AddXY(xCtrlTemp, y, Sticker)
        end;
        PowerReset:= false;
        PrevTime:= Time;
@@ -845,62 +1093,141 @@ begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
     end;
 
-    CSV.ParamsGrid.Cells[0, i]:= DateTimeToStr(x);
-    if frac(y) = 0 then CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 0)
-    else CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 3);
+    if ParamNumber > 0 then begin
+      CSV.ParamsGrid.Cells[0, i]:= DateTimeToStr(x);
+      if frac(y) = 0 then CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 0)
+      else CSV.ParamsGrid.Cells[ParamNumber + 1, i]:= FloatToStrF(y, ffFixed, 10, 3);
+    end;
 
     CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
   end;
   CSV.CommonBar.Position:= 0;
-  Chart1LineSeries.ParentChart.Visible:= True;
+  LineSerie.ParentChart.Visible:= True;
+end;
+
+procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
+var PRMem, DotsMem, MVoltsMem, TimeScaleMem, ByTemperatureMem: boolean;
+    DividerMem: Integer;
+begin
+  TimeScaleMem:= CSV.TimeScale.Checked;
+  ByTemperatureMem:= CSV.ByTemperature.Checked;
+  DotsMem:= CSV.ByDots.Checked;
+  MVoltsMem:= CSV.MVolts.Checked;
+  PRMem:= CSV.PowerResets.Checked;
+  DividerMem:= CSV.Divider.Value;
+  CSV.ByDots.Checked:= true;
+  CSV.MVolts.Checked:= false;
+  CSV.PowerResets.Checked:= false;
+  CSV.Divider.Value:= 1;
+  DrawChart(LineSerie, SelectedParamName, ParamNumber);
+  CSV.ByDots.Checked:= DotsMem;
+  CSV.PowerResets.Checked:= PRMem;
+  CSV.MVolts.Checked:= MVoltsMem;
+  CSV.Divider.Value:= DividerMem;
+  CSV.TimeScale.Checked:= TimeScaleMem;
+  CSV.ByTemperature.Checked:= ByTemperatureMem;
+end;
+
+function GetExtentMinMax(LineSerie: TLineSeries): TMinMax;
+var Max, Min: Double;
+    dr: TDoubleRect;
+    i, start, count: Longint;
+begin
+  if LineSerie.Count > 0 then begin
+    start:= 0;
+    dr:= LineSerie.ParentChart.CurrentExtent;
+    if dr.a.Y > 0 then start:= Trunc(dr.a.Y);
+    count:= LineSerie.Count-1;
+    if dr.b.Y < count then count:= Trunc(dr.b.Y);
+
+    Min:= LineSerie.ListSource.Item[start]^.Y;
+    Max:= Min;
+
+    for i:=start to count do begin
+      if LineSerie.ListSource.Item[i]^.Y < Min then Min:= LineSerie.ListSource.Item[i]^.Y;
+      if LineSerie.ListSource.Item[i]^.Y > Max then Max:= LineSerie.ListSource.Item[i]^.Y;
+    end;
+  end;
+  GetExtentMinMax.Min:= Min;
+  GetExtentMinMax.Max:= Max;
+end;
+
+function GetFullMinMax(LineSerie: TLineSeries): TMinMax;
+begin
+  GetFullMinMax.Min:= LineSerie.GetYMin;
+  GetFullMinMax.Max:= LineSerie.GetYMax;
+end;
+
+procedure ZoomCurveExtent(LineSerie: TLineSeries);
+var MinMax, FullMinMax: TMinMax;
+    dr: TDoubleRect;
+    coeff: Double;
+begin
+  FullMinMax:= GetFullMinMax(LineSerie);
+  MinMax:= GetExtentMinMax(LineSerie);
+  dr:= LineSerie.ParentChart.CurrentExtent;
+
+  coeff:= (FullMinMax.Max - FullMinMax.Min) / 10;
+  dr.a.X:= (MinMax.Min - FullMinMax.Min) / coeff;
+  dr.b.X:= (MinMax.Max - FullMinMax.Min) / coeff;
+
+  LineSerie.ParentChart.LogicalExtent:= dr;
+end;
+
+procedure CurveTitle(LineSerie: TLineSeries; Title: String);
+var YMax, YMin: String;
+    YMinMax: TminMax;
+    dr: TDoubleRect;
+    i, start, count: Longint;
+    Axis: TChartAxis;
+begin
+  if LineSerie.Count > 0 then begin
+
+    YMinMax:= GetExtentMinMax(LineSerie);
+
+    if YMinMax.Max < 1000000 then YMax:= FloatToStrF(YMinMax.Max, ffFixed, 10, 1)
+    else YMax:= FloatToStrF(YMinMax.Max, ffExponent, 1,0);
+    if YMinMax.Min < 1000000 then YMin:= FloatToStrF(YMinMax.Min, ffFixed, 10, 1)
+    else YMin:= FloatToStrF(YMinMax.Min, ffExponent, 1,0);
+    LineSerie.GetAxisY.Title.Caption:= Title + Line + YMin + '                            ' + YMax;
+  end
+  else begin
+    LineSerie.GetAxisY.Title.Caption:= 'Click here to add curve' + Line + '                     ';
+    LineSerie.GetAxisY.Title.LabelFont.Color:= clGray;
+    LineSerie.GetAxisY.AxisPen.Color:= clGray;
+  end;
+end;
+
+procedure TCSV.Pane1ExtentChanged(ASender: TChart);
+var i: Integer;
+    TitleUp: String;
+begin
+ if ASender.SeriesCount > 0 then
+   for i := 0 to ASender.SeriesCount-1 do begin
+     TitleUp:= Copy2Symb(ASender.AxisList[i + 1].Title.Caption, chr(13));
+     //ASender.AxisList[i + 1].Title.Caption:= CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
+     CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
+   end;
 end;
 
 procedure ChartsVisible(visible: Boolean);
+var i: byte;
 begin
-  CSV.Chart1.Visible:= visible;
-  CSV.Chart2.Visible:= visible;
-  CSV.Chart3.Visible:= visible;
-  CSV.Chart4.Visible:= visible;
-  CSV.Chart5.Visible:= visible;
-  CSV.Chart6.Visible:= visible;
-  CSV.Chart7.Visible:= visible;
-  CSV.Chart8.Visible:= visible;
+ for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible:= visible;
 end;
 
 procedure ResetZoom;
+var i: byte;
 begin
-  CSV.Chart1.ZoomFull;
-  CSV.Chart2.ZoomFull;
-  CSV.Chart3.ZoomFull;
-  CSV.Chart4.ZoomFull;
-  CSV.Chart5.ZoomFull;
-  CSV.Chart6.ZoomFull;
-  CSV.Chart7.ZoomFull;
-  CSV.Chart8.ZoomFull;
+ for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).ZoomFull();
 end;
 
 procedure ResetSeries;
+var i, j: byte;
 begin
-  CSV.Chart1LineSeries1.Clear;
-  CSV.Chart2LineSeries1.Clear;
-  CSV.Chart3LineSeries1.Clear;
-  CSV.Chart4LineSeries1.Clear;
-  CSV.Chart5LineSeries1.Clear;
-  CSV.Chart6LineSeries1.Clear;
-  CSV.Chart7LineSeries1.Clear;
-  CSV.Chart8LineSeries1.Clear;
-end;
-
-procedure ResetCompareSeries;
-begin
-  CSV.Chart1LineSeries2.Clear;
-  CSV.Chart2LineSeries2.Clear;
-  CSV.Chart3LineSeries2.Clear;
-  CSV.Chart4LineSeries2.Clear;
-  CSV.Chart5LineSeries2.Clear;
-  CSV.Chart6LineSeries2.Clear;
-  CSV.Chart7LineSeries2.Clear;
-  CSV.Chart8LineSeries2.Clear;
+ for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart' + IntToStr(i) +'LineSeries1')).Clear;
+ for i:=1 to 10 do
+   for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Clear;
 end;
 
 procedure ResetCharts;
@@ -921,51 +1248,34 @@ end;
 
 // ***************** DRAW ******************************************************
 procedure TCSV.DrawClick(Sender: TObject);
-  var i, counter: Integer;
+  var i: Integer;
 begin
-  LabelSticked:= false;
-  DrawClicked:= true;
-  ReDraw:= true;
-  ShowPR:= PowerResets.Checked;
-  ChartHeight:= ChartHeightControl.Position;
-  ResetCharts;
-  for i:=0 to NumOsCharts - 1 do SelectedParams[i]:= '';
-  counter:= 0;
-  ParamsGrid.ColCount:= SelectedChannels.Items.Count + 1;
-  ParamsGrid.RowCount:= CSVContent.Count;
-  ParamsGrid.ColWidths[0]:= 110;
-  ParamsGrid.Cells[0, 0]:= 'Date/Time';
-  ParamsGrid.Visible:= true;
-  if SelectedChannels.Items.Count > 0 then begin
-     for i:=0 to SelectedChannels.Items.Count - 1 do begin
-        SelectedParams[counter]:= SelectedChannels.Items[i];
-        ParamsGrid.Cells[i+1, 0]:= SelectedChannels.Items[i];
-        counter:= counter + 1;
-     end;
-     if SelectedParams[0] <> '' then DrawChart(Chart1LineSeries1, SelectedParams[0], 0);
-     if SelectedParams[1] <> '' then DrawChart(Chart2LineSeries1, SelectedParams[1], 1);
-     if SelectedParams[2] <> '' then DrawChart(Chart3LineSeries1, SelectedParams[2], 2);
-     if SelectedParams[3] <> '' then DrawChart(Chart4LineSeries1, SelectedParams[3], 3);
-     if SelectedParams[4] <> '' then DrawChart(Chart5LineSeries1, SelectedParams[4], 4);
-     if SelectedParams[5] <> '' then DrawChart(Chart6LineSeries1, SelectedParams[5], 5);
-     if SelectedParams[6] <> '' then DrawChart(Chart7LineSeries1, SelectedParams[6], 6);
-     if SelectedParams[7] <> '' then DrawChart(Chart8LineSeries1, SelectedParams[7], 7);
-     App.ActivePage:= Graphs;
-     if NewChart then ChartsCurrentExtent:= Chart1.GetFullExtent;
-     if ChartsLink.Checked and Not NewChart and DrawClicked then begin
-        SetHorizontalExtent(Chart1);
-        SetHorizontalExtent(Chart2);
-        SetHorizontalExtent(Chart3);
-        SetHorizontalExtent(Chart4);
-        SetHorizontalExtent(Chart5);
-        SetHorizontalExtent(Chart6);
-        SetHorizontalExtent(Chart7);
-        SetHorizontalExtent(Chart8);
-     end;
-     if AutoFit.Checked then FitToWinClick(Sender);
-     NewChart:= false;
-  end
-  else ShowMessage('No parameters selected.');
+    LabelSticked:= false;
+    DrawClicked:= true;
+    ReDraw:= true;
+    ShowPR:= PowerResets.Checked;
+    ChartHeight:= ChartHeightControl.Position;
+    ResetCharts;
+    ParamsGrid.Clear;
+    ParamsGrid.ColCount:= SelectedChannels.Items.Count + 1;
+    ParamsGrid.RowCount:= CSVContent.Count;
+    ParamsGrid.ColWidths[0]:= 110;
+    ParamsGrid.Cells[0, 0]:= 'Date/Time';
+    ParamsGrid.Visible:= true;
+    if SelectedChannels.Items.Count > 0 then begin
+       for i:=0 to SelectedChannels.Items.Count - 1 do begin
+          ParamsGrid.Cells[i+1, 0]:= SelectedChannels.Items[i];
+          DrawChart(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i+1) +'LineSeries1')), SelectedChannels.Items[i], i);
+       end;
+       App.ActivePage:= Graphs;
+       if NewChart then ChartsCurrentExtent:= Chart1.GetFullExtent;
+       if ChartsLink.Checked and Not NewChart and DrawClicked then begin
+         for i:=1 to 8 do SetHorizontalExtent(TChart(CSV.FindComponent('Chart'+ IntToStr(i))));
+       end;
+       if AutoFit.Checked then FitToWinClick(Sender);
+       NewChart:= false;
+    end
+    else ShowMessage('No parameters selected.');
 end;
 
 procedure TCSV.Chart1ExtentChanged(ASender: TChart);
@@ -1068,22 +1378,16 @@ end;
 
 procedure TCSV.ChartToolset1DataPointClickTool2AfterMouseUp(ATool: TChartTool;
   APoint: TPoint);
+var i: Byte;
 begin
  if LabelSticked then begin
-    StickLabel(Chart1LineSeries1);
-    StickLabel(Chart2LineSeries1);
-    StickLabel(Chart3LineSeries1);
-    StickLabel(Chart4LineSeries1);
-    StickLabel(Chart5LineSeries1);
-    StickLabel(Chart6LineSeries1);
-    StickLabel(Chart7LineSeries1);
-    StickLabel(Chart8LineSeries1);
-    LabelSticked:= false;
+   for i:=1 to 8 do StickLabel(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
+   LabelSticked:= false;
   end;
 end;
 
 function SWHint(SW: Integer; SWDecr: array of String70; DT: TDateTime): String;
-var i: Integer;
+var i: Byte;
     wStr: String;
     zero: Boolean;
 begin
@@ -1155,8 +1459,7 @@ begin
 end;
 
 procedure TCSV.RawChannelsSelectionChange(Sender: TObject; User: boolean);
-var
-    Pos: TPoint;
+var Pos: TPoint;
     i:   Integer;
 begin
   Pos:= Mouse.CursorPos;
@@ -1178,6 +1481,7 @@ begin
 end;
 
 procedure TCSV.FormCreate(Sender: TObject);
+var i: Byte;
 begin
   AmplsInmVolts:= mVolts.Checked;
   if AmplsInmVolts then begin
@@ -1201,14 +1505,7 @@ begin
   TestType.ItemIndex:= 0;
   TestDate.Date:= Date;
   ChartHeightControl.Max:= CSV.Height - 30;
-  Chart1LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart2LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart3LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart4LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart5LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart6LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart7LineSeries1.Pointer.Visible:= ChartPoints.Checked;
-  Chart8LineSeries1.Pointer.Visible:= ChartPoints.Checked;
+  for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')).Pointer.Visible:= ChartPoints.Checked;
 end;
 
 procedure TCSV.Image1Click(Sender: TObject);
@@ -1216,16 +1513,16 @@ begin
   DrawClick(Sender);
 end;
 
-procedure TCSV.Image2MouseDown(Sender: TObject; Button: TMouseButton;
+procedure TCSV.DrawBtnMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  Image2.Visible:= false;
+  DrawBtn.Visible:= false;
 end;
 
-procedure TCSV.Image2MouseUp(Sender: TObject; Button: TMouseButton;
+procedure TCSV.DrawBtnMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  Image2.Visible:= true;
+  DrawBtn.Visible:= true;
   DrawClick(Sender);
 end;
 
@@ -1235,29 +1532,17 @@ begin
 end;
 
 procedure TCSV.FitToWinClick(Sender: TObject);
+var i: Byte;
 begin
   if SelectedChannels.Items.Count > 1 then ChartHeightControl.Position:= (CSV.Height - 90) div SelectedChannels.Items.Count;
   if SelectedChannels.Items.Count = 1 then ChartHeightControl.Position:= CSV.Height - 30;
-  Chart1.Height:= ChartHeightControl.Position;
-  Chart2.Height:= ChartHeightControl.Position;
-  Chart3.Height:= ChartHeightControl.Position;
-  Chart4.Height:= ChartHeightControl.Position;
-  Chart5.Height:= ChartHeightControl.Position;
-  Chart6.Height:= ChartHeightControl.Position;
-  Chart7.Height:= ChartHeightControl.Position;
-  Chart8.Height:= ChartHeightControl.Position;
+  for i:=1 to 8 do TChart(CSV.FindComponent('Chart'+ IntToStr(i))).Height:= ChartHeightControl.Position;
 end;
 
 procedure TCSV.Image5Click(Sender: TObject);
+var i: Byte;
 begin
-   DeleteLabels(Chart1LineSeries1);
-   DeleteLabels(Chart2LineSeries1);
-   DeleteLabels(Chart3LineSeries1);
-   DeleteLabels(Chart4LineSeries1);
-   DeleteLabels(Chart5LineSeries1);
-   DeleteLabels(Chart6LineSeries1);
-   DeleteLabels(Chart7LineSeries1);
-   DeleteLabels(Chart8LineSeries1);
+  for i:=1 to 8 do DeleteLabels(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
 end;
 
 procedure TCSV.LocalTimeChange(Sender: TObject);
@@ -1388,6 +1673,7 @@ begin
       ComputedChannels.Clear;
       SelectedChannels.Clear;
       ReportText.Text:= '';
+      CurvesTab.Enabled:= false;
       ReportTab.Enabled:= false;
       ShowTool.Enabled:= false;
       ShowSondes.Enabled:= false;
@@ -1476,6 +1762,9 @@ begin
         EstimateFast.Enabled:= True;
         ShowSondes.Enabled:= True;
         ShowCSondes.Enabled:= True;
+        CurvesTab.Enabled:= True;
+        DrawBtn.Visible:= True;
+        DrawBtnReleased.Visible:= True;
 
         ReportStartTime.Text:= StartTime.Text;
         ReportEndTime.Text:= EndTime.Text;
