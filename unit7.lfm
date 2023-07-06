@@ -1,12 +1,12 @@
 object PanelsLib: TPanelsLib
-  Left = 2301
+  Left = 2972
   Height = 397
-  Top = -665
+  Top = -758
   Width = 243
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderStyle = bsDialog
-  Caption = 'PanelsLib'
+  Caption = 'Library'
   ClientHeight = 397
   ClientWidth = 243
   Color = clWhite
@@ -26,7 +26,7 @@ object PanelsLib: TPanelsLib
     Height = 25
     Top = 360
     Width = 91
-    Caption = 'CloseLib'
+    Caption = 'Close'
     OnClick = CloseLibClick
     TabOrder = 1
   end
@@ -35,7 +35,7 @@ object PanelsLib: TPanelsLib
     Height = 25
     Top = 360
     Width = 91
-    Caption = 'SaveLib'
+    Caption = 'Save'
     OnClick = SaveLibClick
     TabOrder = 2
   end
@@ -53,5 +53,14 @@ object PanelsLib: TPanelsLib
     Width = 35
     Caption = 'Name:'
     ParentColor = False
+  end
+  object LoadLib: TButton
+    Left = 24
+    Height = 25
+    Top = 360
+    Width = 91
+    Caption = 'Load'
+    OnClick = LoadLibClick
+    TabOrder = 4
   end
 end

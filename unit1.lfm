@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = 2205
+  Left = 2193
   Height = 663
-  Top = -793
+  Top = -774
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v1.4.3 Portable'
@@ -2549,7 +2549,6 @@ object CSV: TCSV
           Top = 352
           Width = 140
           AntialiasingMode = amOff
-          OnClick = DrawBtnClick
           OnMouseDown = DrawBtnMouseDown
           OnMouseUp = DrawBtnMouseUp
           Picture.Data = {
@@ -2922,7 +2921,6 @@ object CSV: TCSV
           Height = 24
           Top = 0
           Width = 88
-          OnClick = Image6Click
           Picture.Data = {
             0A544A706567496D616765A7090000FFD8FFE000104A46494600010101006000
             600000FFE100224578696600004D4D002A000000080001011200030000000100
@@ -5039,26 +5037,18 @@ object CSV: TCSV
       ClientWidth = 891
       Enabled = False
       object ScrollBox2: TScrollBox
-        Left = -4
+        Left = 0
         Height = 600
         Top = 32
-        Width = 892
-        HorzScrollBar.Page = 892
+        Width = 888
+        HorzScrollBar.Page = 888
         VertScrollBar.Page = 50
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
         ClientHeight = 583
-        ClientWidth = 892
+        ClientWidth = 888
         TabOrder = 0
-        object Button9: TButton
-          Left = 0
-          Height = 25
-          Top = 0
-          Width = 75
-          Caption = 'Button9'
-          TabOrder = 0
-        end
         object Pane1: TChart
           Left = 0
           Height = 583
@@ -5164,7 +5154,6 @@ object CSV: TCSV
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           object Pane1Curve1: TLineSeries
@@ -5292,6 +5281,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane2Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -5417,6 +5407,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane3Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -5542,6 +5533,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane4Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -5667,6 +5659,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane5Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -5792,6 +5785,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane6Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -5917,6 +5911,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane7Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -6042,6 +6037,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane8Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -6167,6 +6163,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane9Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -6292,6 +6289,7 @@ object CSV: TCSV
           Toolset = ChartToolset1
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
+          Visible = False
           object Pane10Curve1: TLineSeries
             AxisIndexX = 0
             AxisIndexY = 1
@@ -6311,7 +6309,7 @@ object CSV: TCSV
         end
       end
       object SavePanel: TButton
-        Left = 0
+        Left = 232
         Height = 25
         Top = 0
         Width = 88
@@ -6327,6 +6325,51 @@ object CSV: TCSV
         Caption = 'Button10'
         OnClick = Button10Click
         TabOrder = 2
+      end
+      object AddPane: TButton
+        Left = 0
+        Height = 25
+        Top = 0
+        Width = 75
+        Caption = 'Add track'
+        OnClick = AddPaneClick
+        TabOrder = 3
+      end
+      object LoadPane: TButton
+        Left = 328
+        Height = 25
+        Top = 0
+        Width = 88
+        Caption = 'Load Panel'
+        OnClick = LoadPaneClick
+        TabOrder = 4
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'TabSheet5'
+      ClientHeight = 635
+      ClientWidth = 891
+      object Memo1: TMemo
+        Left = 23
+        Height = 576
+        Top = 16
+        Width = 361
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        ScrollBars = ssAutoBoth
+        TabOrder = 0
+      end
+      object Button4: TButton
+        Left = 624
+        Height = 25
+        Top = 73
+        Width = 75
+        Caption = 'Button4'
+        OnClick = Button4Click
+        TabOrder = 1
       end
     end
   end
@@ -6459,28 +6502,24 @@ object CSV: TCSV
     Left = 472
     Top = 224
     object ChartAxisTransformations1AutoScaleAxisTransform1: TAutoScaleAxisTransform
-      MaxValue = 10
     end
   end
   object ChartAxisTransformations2: TChartAxisTransformations
     Left = 472
     Top = 272
     object ChartAxisTransformations2AutoScaleAxisTransform1: TAutoScaleAxisTransform
-      MaxValue = 10
     end
   end
   object ChartAxisTransformations3: TChartAxisTransformations
     Left = 472
     Top = 320
     object ChartAxisTransformations3AutoScaleAxisTransform1: TAutoScaleAxisTransform
-      MaxValue = 10
     end
   end
   object ChartAxisTransformations4: TChartAxisTransformations
     Left = 472
     Top = 368
     object ChartAxisTransformations4AutoScaleAxisTransform1: TAutoScaleAxisTransform
-      MaxValue = 10
     end
   end
 end

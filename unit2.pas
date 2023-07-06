@@ -143,8 +143,8 @@ var
   ReportParams: array[0..62] of TSibrReportParam;
   TimePosition: Longint;
   SondeError: Boolean;
-  Pane: TPane;
-  PaneSet: TPaneSet;
+  //Pane: TPane;
+  //PaneSet: TPaneSet;
   CurvesPanel: TPanel;
   PanelsLibFile: file of TPanel;
 

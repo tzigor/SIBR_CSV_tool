@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
   TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Unit3, Unit4, Unit6, Unit7, Types, TAChartUtils, TADataTools,
+  DateTimePicker, Unit2, Unit3, Unit4, Unit6, Unit7, Panel, Types, TAChartUtils, TADataTools,
   TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp, LCLType,
   Spin, IniPropStorage, Parameters, PQConnection, Math, uComplex, TAChartAxisUtils, TAChartAxis;
 
@@ -23,6 +23,10 @@ type
     Button10: TButton;
     Button2: TButton;
     Button3: TButton;
+    AddPane: TButton;
+    Button4: TButton;
+    LoadPane: TButton;
+    Memo1: TMemo;
     Pane10: TChart;
     Pane3Curve2: TLineSeries;
     Pane3Curve3: TLineSeries;
@@ -69,7 +73,6 @@ type
     Pane8: TChart;
     Pane9: TChart;
     SavePanel: TButton;
-    Button9: TButton;
 
     ChartAxisTransformations3: TChartAxisTransformations;
     ChartAxisTransformations3AutoScaleAxisTransform1: TAutoScaleAxisTransform;
@@ -107,6 +110,7 @@ type
     ParamsGrid: TStringGrid;
     Divider: TSpinEdit;
     ScrollBox2: TScrollBox;
+    TabSheet5: TTabSheet;
     TimeScale: TRadioButton;
     ByDots: TRadioButton;
     ZoneFromChart: TCheckBox;
@@ -279,17 +283,16 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
+    procedure AddPaneClick(Sender: TObject);
     procedure Button10Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure ByDotsChange(Sender: TObject);
     procedure ByTemperatureChange(Sender: TObject);
-    procedure ChartToolset1AxisClickTool1BeforeMouseUp(ATool: TChartTool;
-      APoint: TPoint);
     procedure ChartToolset1AxisClickTool1Click(ASender: TChartTool;
       Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
-    procedure DrawBtnClick(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
@@ -297,8 +300,8 @@ type
     procedure Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
       AMark: Double);
     procedure Image4Click(Sender: TObject);
-    procedure Image6Click(Sender: TObject);
     procedure Label41Click(Sender: TObject);
+    procedure LoadPaneClick(Sender: TObject);
     procedure Pane1ExtentChanged(ASender: TChart);
     procedure RTCBugsChange(Sender: TObject);
     procedure SavePanelClick(Sender: TObject);
@@ -357,10 +360,7 @@ type
 var
   CSV: TCSV;
 
-procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
-procedure ZoomCurveExtent(LineSerie: TLineSeries);
-procedure CurveTitle(LineSerie: TLineSeries; Title: String);
-procedure DrawCurveFromLib(CurrentCurve: TLineSeries; PaneNum, CurveNum: Byte);
+procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
 
 implementation
 
@@ -523,30 +523,6 @@ begin
   ZoneDuration.Caption:= IntToStr(MinutesBetween(StrToDateTime(ReportStartTime.Caption), StrToDateTime(ReportEndTime.Caption))) + ' min';
 end;
 
-procedure DrawCurveFromLib(CurrentCurve: TLineSeries; PaneNum, CurveNum: Byte);
-begin
-  CurrentCurve.ParentChart.ZoomFull();
-  CurrentCurve.ParentChart.AxisList[CurveNum + 1].Title.LabelFont.Color:= Pane.Curves[CurveNum].SerieColor;
-  CurrentCurve.ParentChart.AxisList[CurveNum + 1].AxisPen.Color:= Pane.Curves[CurveNum].SerieColor;
-  CurrentCurve.LinePen.Style:= Pane.Curves[CurveNum].PenStyle;
-  CurrentCurve.LinePen.Width:= Pane.Curves[CurveNum].PenWidth;
-  CurrentCurve.SeriesColor:= Pane.Curves[CurveNum].SerieColor;
-  DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter, 0);
-  CurveTitle(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
-end;
-
-procedure TCSV.Button10Click(Sender: TObject);
-var i, j: Byte;
-begin
-  for j:= 0 to 3 do begin
-    with PaneSet.Panes[0] do begin
-      if Pane.Curves[j].Parameter <> '' then begin
-         DrawCurveFromLib(TLineSeries(CSV.FindComponent('Curve' + IntToStr(j + 1))), 0, j);
-      end;
-    end;
-  end;
-end;
-
 procedure TCSV.Button3Click(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -555,6 +531,32 @@ begin
     ReportEndTime.Caption:= DateTimeToStr(EndZone);
     ZoneDuration.Caption:= IntToStr(MinutesBetween(StartZone, EndZone)) + ' min';
   end;
+end;
+
+procedure TCSV.Button4Click(Sender: TObject);
+  var i, j: Byte;
+begin
+  Memo1.Text:= '';
+    if FileExists('Panels.lib') then begin
+       AssignFile(PanelsLibFile, 'Panels.lib');
+       Reset(PanelsLibFile);
+       try
+         Seek(PanelsLibFile, GetLibIndex('2 Curves'));
+         Read(PanelsLibFile, CurvesPanel);
+         CloseFile(PanelsLibFile);
+         for i:= 0 to 9 do begin
+           Memo1.Text:= Memo1.Text + 'Pane ' + IntToStr(i+1) + Line;
+           for j:= 0 to 3 do begin
+             Memo1.Text:= Memo1.Text + '    Parameter: ' + CurvesPanel.PaneSet.Panes[i].Curves[j].Parameter + Line;
+             Memo1.Text:= Memo1.Text + '    ParameterTitle: ' + CurvesPanel.PaneSet.Panes[i].Curves[j].ParameterTitle + Line;
+           end;
+         end;
+
+       except
+         on E: EInOutError do ShowMessage('File read error: ' + E.Message);
+       end;
+    end
+    else ShowMessage('Panels.lib');
 end;
 
 type TDoubleArray = array of Double;
@@ -667,30 +669,6 @@ begin
   NewChart:= true;
 end;
 
-procedure TCSV.ChartToolset1AxisClickTool1BeforeMouseUp(ATool: TChartTool;
-  APoint: TPoint);
-begin
-end;
-
-procedure TCSV.ChartToolset1AxisClickTool1Click(ASender: TChartTool;
-  Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
-var i: Integer;
-begin
-  PaneEdit.PaneNumber.Caption:= ASender.Chart.Name;
-  PaneEdit.ParameterList.Clear;
-  PaneEdit.AxisNumber.Caption:= 'Curve: ' + IntToStr(Axis.Index);
-  for i:=0 to Length(AmplitudesChannels)-1 do PaneEdit.ParameterList.Items.Add(AmplitudesChannels[i]);
-  for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
-  for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
-  for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
-  PaneEdit.Show;
-end;
-
-procedure TCSV.DrawBtnClick(Sender: TObject);
-begin
-
-end;
-
 procedure TCSV.GetRangeBtnClick(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -761,55 +739,40 @@ begin
   for i:=1 to 8 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
 end;
 
-procedure TCSV.Image6Click(Sender: TObject);
-begin
-
-end;
-
 procedure TCSV.Label41Click(Sender: TObject);
 var i: Byte;
 begin
   for i:=1 to 4 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Curve'+ IntToStr(i))));
 end;
 
+procedure TCSV.LoadPaneClick(Sender: TObject);
+begin
+  if FileExists('Panels.lib') then begin
+     PanelsLib.PanelList.Clear;
+     AssignFile(PanelsLibFile, 'Panels.lib');
+     Reset(PanelsLibFile);
+     try
+       while not eof(PanelsLibFile) do begin
+          Read(PanelsLibFile, CurvesPanel);
+          PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
+       end;
+       CloseFile(PanelsLibFile);
+     except
+       on E: EInOutError do ShowMessage('File read error: ' + E.Message);
+     end;
+     PanelsLib.PanelList.ItemIndex:= 0;
+     PanelsLib.Label1.Visible:= false;
+     PanelsLib.PanelName.Visible:= false;
+     PanelsLib.SaveLib.Visible:= false;
+     PanelsLib.LoadLib.Visible:= true;
+     PanelsLib.Show;
+  end
+  else ShowMessage('Panels.lib');
+end;
+
 procedure TCSV.RTCBugsChange(Sender: TObject);
 begin
   NewChart:= true;
-end;
-
-procedure TCSV.SavePanelClick(Sender: TObject);
-var i, j: integer;
-    PanelEmpty: boolean;
-begin
-  PanelEmpty:= true;
-  for i:= 0 to 9 do begin
-    for j:= 0 to 3 do
-      //with PaneSet.Panes[i] do
-        if PaneSet.Panes[i].Curves[j].Parameter <> '' then PanelEmpty:= false;
-  end;
-  if Not PanelEmpty then begin
-    if FileExists('Panels.lib') then begin
-      PanelsLib.PanelList.Clear;
-      AssignFile(PanelsLibFile, 'Panels.lib');
-      Reset(PanelsLibFile);
-      try
-         while not eof(PanelsLibFile) do begin
-            Read(PanelsLibFile, CurvesPanel);
-            PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
-         end;
-         CloseFile(PanelsLibFile);
-      except
-         on E: EInOutError do ShowMessage('File read error: ' + E.Message);
-      end;
-    end
-    else begin
-       AssignFile(PanelsLibFile, 'Panels.lib');
-       ReWrite(PanelsLibFile);
-       CloseFile(PanelsLibFile);
-    end;
-    PanelsLib.Show;
-  end
-  else ShowMessage('Panel is empty');
 end;
 
 procedure TCSV.FormResize(Sender: TObject);
@@ -819,6 +782,7 @@ begin
   Sondes1.Height:= (CSV.Height - 50) div 2;
   Sondes2.Height:= (CSV.Height - 50) div 2;
   Sondes3.Height:= (CSV.Height - 50) div 2;
+  FitPanesToWindow;
 end;
 
 procedure TCSV.ShowToolClick(Sender: TObject);
@@ -1105,121 +1069,18 @@ begin
   LineSerie.ParentChart.Visible:= True;
 end;
 
-procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
-var PRMem, DotsMem, MVoltsMem, TimeScaleMem, ByTemperatureMem: boolean;
-    DividerMem: Integer;
-begin
-  TimeScaleMem:= CSV.TimeScale.Checked;
-  ByTemperatureMem:= CSV.ByTemperature.Checked;
-  DotsMem:= CSV.ByDots.Checked;
-  MVoltsMem:= CSV.MVolts.Checked;
-  PRMem:= CSV.PowerResets.Checked;
-  DividerMem:= CSV.Divider.Value;
-  CSV.ByDots.Checked:= true;
-  CSV.MVolts.Checked:= false;
-  CSV.PowerResets.Checked:= false;
-  CSV.Divider.Value:= 1;
-  DrawChart(LineSerie, SelectedParamName, ParamNumber);
-  CSV.ByDots.Checked:= DotsMem;
-  CSV.PowerResets.Checked:= PRMem;
-  CSV.MVolts.Checked:= MVoltsMem;
-  CSV.Divider.Value:= DividerMem;
-  CSV.TimeScale.Checked:= TimeScaleMem;
-  CSV.ByTemperature.Checked:= ByTemperatureMem;
-end;
-
-function GetExtentMinMax(LineSerie: TLineSeries): TMinMax;
-var Max, Min: Double;
-    dr: TDoubleRect;
-    i, start, count: Longint;
-begin
-  if LineSerie.Count > 0 then begin
-    start:= 0;
-    dr:= LineSerie.ParentChart.CurrentExtent;
-    if dr.a.Y > 0 then start:= Trunc(dr.a.Y);
-    count:= LineSerie.Count-1;
-    if dr.b.Y < count then count:= Trunc(dr.b.Y);
-
-    Min:= LineSerie.ListSource.Item[start]^.Y;
-    Max:= Min;
-
-    for i:=start to count do begin
-      if LineSerie.ListSource.Item[i]^.Y < Min then Min:= LineSerie.ListSource.Item[i]^.Y;
-      if LineSerie.ListSource.Item[i]^.Y > Max then Max:= LineSerie.ListSource.Item[i]^.Y;
-    end;
-  end;
-  GetExtentMinMax.Min:= Min;
-  GetExtentMinMax.Max:= Max;
-end;
-
-function GetFullMinMax(LineSerie: TLineSeries): TMinMax;
-begin
-  GetFullMinMax.Min:= LineSerie.GetYMin;
-  GetFullMinMax.Max:= LineSerie.GetYMax;
-end;
-
-procedure ZoomCurveExtent(LineSerie: TLineSeries);
-var MinMax, FullMinMax: TMinMax;
-    dr: TDoubleRect;
-    coeff: Double;
-begin
-  FullMinMax:= GetFullMinMax(LineSerie);
-  MinMax:= GetExtentMinMax(LineSerie);
-  dr:= LineSerie.ParentChart.CurrentExtent;
-
-  coeff:= (FullMinMax.Max - FullMinMax.Min) / 10;
-  dr.a.X:= (MinMax.Min - FullMinMax.Min) / coeff;
-  dr.b.X:= (MinMax.Max - FullMinMax.Min) / coeff;
-
-  LineSerie.ParentChart.LogicalExtent:= dr;
-end;
-
-procedure CurveTitle(LineSerie: TLineSeries; Title: String);
-var YMax, YMin: String;
-    YMinMax: TminMax;
-    dr: TDoubleRect;
-    i, start, count: Longint;
-    Axis: TChartAxis;
-begin
-  if LineSerie.Count > 0 then begin
-
-    YMinMax:= GetExtentMinMax(LineSerie);
-
-    if YMinMax.Max < 1000000 then YMax:= FloatToStrF(YMinMax.Max, ffFixed, 10, 1)
-    else YMax:= FloatToStrF(YMinMax.Max, ffExponent, 1,0);
-    if YMinMax.Min < 1000000 then YMin:= FloatToStrF(YMinMax.Min, ffFixed, 10, 1)
-    else YMin:= FloatToStrF(YMinMax.Min, ffExponent, 1,0);
-    LineSerie.GetAxisY.Title.Caption:= Title + Line + YMin + '                            ' + YMax;
-  end
-  else begin
-    LineSerie.GetAxisY.Title.Caption:= 'Click here to add curve' + Line + '                     ';
-    LineSerie.GetAxisY.Title.LabelFont.Color:= clGray;
-    LineSerie.GetAxisY.AxisPen.Color:= clGray;
-  end;
-end;
-
-procedure TCSV.Pane1ExtentChanged(ASender: TChart);
-var i: Integer;
-    TitleUp: String;
-begin
- if ASender.SeriesCount > 0 then
-   for i := 0 to ASender.SeriesCount-1 do begin
-     TitleUp:= Copy2Symb(ASender.AxisList[i + 1].Title.Caption, chr(13));
-     //ASender.AxisList[i + 1].Title.Caption:= CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
-     CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
-   end;
-end;
-
 procedure ChartsVisible(visible: Boolean);
-var i: byte;
+var i, j: byte;
 begin
  for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible:= visible;
+ for i:=2 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= visible;
 end;
 
 procedure ResetZoom;
-var i: byte;
+var i, j: byte;
 begin
  for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).ZoomFull();
+ for i:=1 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
 end;
 
 procedure ResetSeries;
@@ -1232,6 +1093,7 @@ end;
 
 procedure ResetCharts;
 begin
+  ResetPanes(2);
   ResetSeries;
   ResetZoom;
   ChartsVisible(false);
@@ -1506,6 +1368,7 @@ begin
   TestDate.Date:= Date;
   ChartHeightControl.Max:= CSV.Height - 30;
   for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')).Pointer.Visible:= ChartPoints.Checked;
+  CSV.Pane1.Width:= CSV.Width Div 2;
 end;
 
 procedure TCSV.Image1Click(Sender: TObject);
@@ -2008,6 +1871,89 @@ begin
    end;
 end;
 
+procedure TCSV.ChartToolset1AxisClickTool1Click(ASender: TChartTool;
+  Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
+var i: Integer;
+begin
+  PaneEdit.ParameterList.Clear;
+  PaneEdit.PaneNumber.Caption:= 'Track ' + StringReplace(ASender.Chart.Name, 'Pane', '', [rfReplaceAll]);
+  PaneEdit.AxisNumber.Caption:= 'Curve: ' + IntToStr(Axis.Index);
+  PaneEdit.Parameter.Caption:= '';
+  PaneEdit.ParameterTitle.Text:= '';
+  for i:=0 to Length(AmplitudesChannels)-1 do PaneEdit.ParameterList.Items.Add(AmplitudesChannels[i]);
+  for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
+  for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
+  for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
+  PaneEdit.Show;
+end;
+
+procedure TCSV.AddPaneClick(Sender: TObject);
+var i: Byte;
+begin
+  for i:=1 to 10 do begin
+     if TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible = false then begin
+        TChart(CSV.FindComponent('Pane' + IntToStr(i))).Left:= 10000;
+        TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= true;
+        Break;
+     end;
+  end;
+  FitPanesToWindow;
+end;
+
+procedure TCSV.SavePanelClick(Sender: TObject);
+var i, j: integer;
+    PanelEmpty: boolean;
+begin
+  PanelEmpty:= true;
+  for i:= 0 to 9 do begin
+    for j:= 0 to 3 do
+        if CurvesPanel.PaneSet.Panes[i].Curves[j].Parameter <> '' then PanelEmpty:= false;
+  end;
+  if Not PanelEmpty then begin
+    if FileExists('Panels.lib') then begin
+      PanelsLib.PanelList.Clear;
+      AssignFile(PanelsLibFile, 'Panels.lib');
+      Reset(PanelsLibFile);
+      try
+         while not eof(PanelsLibFile) do begin
+            Read(PanelsLibFile, CurvesPanel);
+            PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
+         end;
+         CloseFile(PanelsLibFile);
+      except
+         on E: EInOutError do ShowMessage('File read error: ' + E.Message);
+      end;
+    end
+    else begin
+       AssignFile(PanelsLibFile, 'Panels.lib');
+       ReWrite(PanelsLibFile);
+       CloseFile(PanelsLibFile);
+    end;
+    PanelsLib.Label1.Visible:= true;
+    PanelsLib.PanelName.Visible:= true;
+    PanelsLib.SaveLib.Visible:= true;
+    PanelsLib.LoadLib.Visible:= false;
+    PanelsLib.Show;
+  end
+  else ShowMessage('Panel is empty');
+end;
+
+procedure TCSV.Pane1ExtentChanged(ASender: TChart);
+var i: Integer;
+    TitleUp: String;
+begin
+ if ASender.SeriesCount > 0 then
+   for i := 0 to ASender.SeriesCount-1 do begin
+     TitleUp:= Copy2Symb(ASender.AxisList[i + 1].Title.Caption, chr(13));
+     CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
+   end;
+end;
+
+procedure TCSV.Button10Click(Sender: TObject);
+var i, j: Byte;
+begin
+  ZoomCurveExtent(Pane1Curve1);
+end;
 
 end.
 

@@ -1,12 +1,12 @@
 object PaneEdit: TPaneEdit
-  Left = 1820
+  Left = 1936
   Height = 413
-  Top = -696
+  Top = -741
   Width = 420
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderStyle = bsDialog
-  Caption = 'Pane Edit'
+  Caption = 'Track Edit'
   ClientHeight = 413
   ClientWidth = 420
   Color = clWhite
@@ -16,8 +16,8 @@ object PaneEdit: TPaneEdit
     Left = 16
     Height = 25
     Top = 0
-    Width = 41
-    Caption = 'Pane'
+    Width = 43
+    Caption = 'Track'
     Font.CharSet = ANSI_CHARSET
     Font.Height = -19
     Font.Pitch = fpVariable
@@ -162,7 +162,7 @@ object PaneEdit: TPaneEdit
     Height = 25
     Top = 232
     Width = 96
-    Caption = 'Save to pane'
+    Caption = 'Save to track'
     OnClick = SaveClick
     TabOrder = 5
   end
@@ -182,6 +182,24 @@ object PaneEdit: TPaneEdit
     Width = 43
     Caption = 'Curve: 1'
     ParentColor = False
+  end
+  object DeleteCurve: TButton
+    Left = 168
+    Height = 25
+    Top = 264
+    Width = 96
+    Caption = 'Delete Curve'
+    OnClick = DeleteCurveClick
+    TabOrder = 7
+  end
+  object DeletePane: TButton
+    Left = 16
+    Height = 25
+    Top = 304
+    Width = 91
+    Caption = 'Delete track'
+    OnClick = DeletePaneClick
+    TabOrder = 8
   end
   object ColorDialog1: TColorDialog
     Color = clBlack

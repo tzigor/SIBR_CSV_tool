@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
-  Grids, ComboEx, TAStyles, TAChartCombos, Types, Unit2, StrUtils, LCLType,
+  Grids, ComboEx, TAStyles, TAChartCombos, Types, Unit2, Panel, StrUtils, LCLType,
   TAGraph, TASeries;
 
 type
@@ -14,6 +14,8 @@ type
   { TPaneEdit }
 
   TPaneEdit = class(TForm)
+    DeletePane: TButton;
+    DeleteCurve: TButton;
     CloseEdit: TButton;
     AxisNumber: TLabel;
     Save: TButton;
@@ -31,6 +33,8 @@ type
     Parameter: TLabel;
     PaneNumber: TLabel;
     procedure CloseEditClick(Sender: TObject);
+    procedure DeleteCurveClick(Sender: TObject);
+    procedure DeletePaneClick(Sender: TObject);
     procedure ParameterListDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure ParameterListSelectionChange(Sender: TObject; User: boolean);
@@ -75,6 +79,31 @@ begin
   Close;
 end;
 
+procedure TPaneEdit.DeleteCurveClick(Sender: TObject);
+var PaneNum, CurveNum: Byte;
+    CurrentCurve: TLineSeries;
+begin
+  PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Track ', '', [rfReplaceAll])) - 1;
+  CurveNum:= StrToInt(StringReplace(AxisNumber.Caption, 'Curve: ', '', [rfReplaceAll])) - 1;
+  if (CurveNum >= 0) And (CurveNum < 4) then begin
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].Parameter:= '';
+      CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
+      CurrentCurve.Clear;
+      CurveTitle(CurrentCurve, '');
+      PaneEdit.Close;
+  end;
+end;
+
+procedure TPaneEdit.DeletePaneClick(Sender: TObject);
+var PaneNum, i: Byte;
+begin
+  PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Track ', '', [rfReplaceAll])) - 1;
+  for i:=1 to 4 do CurvesPanel.PaneSet.Panes[PaneNum].Curves[i].Parameter:= '';
+  TChart(CSV.FindComponent('Pane' + IntToStr(PaneNum))).Visible:= false;
+  PaneEdit.Close;
+  FitPanesToWindow;
+end;
+
 procedure TPaneEdit.ParameterListSelectionChange(Sender: TObject; User: boolean);
   var Pos: TPoint;
     i:   Integer;
@@ -91,17 +120,17 @@ var PaneNum, CurveNum: Byte;
     CurrentCurve: TLineSeries;
 begin
   if Parameter.Caption <> '' then begin
-    PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Pane', '', [rfReplaceAll])) - 1;
+    PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Track ', '', [rfReplaceAll])) - 1;
     CurveNum:= StrToInt(StringReplace(AxisNumber.Caption, 'Curve: ', '', [rfReplaceAll])) - 1;
     if (CurveNum >= 0) And (CurveNum < 4) then begin
-      Pane.Curves[CurveNum].Parameter:= Parameter.Caption;
-      Pane.Curves[CurveNum].ParameterTitle:= ParameterTitle.Text;
-      Pane.Curves[CurveNum].SerieColor:= ColorBox.Selected;
-      Pane.Curves[CurveNum].PenWidth:= ChartComboBox2.PenWidth;
-      Pane.Curves[CurveNum].PenStyle:= ChartComboBox1.PenStyle;
-      PaneSet.Panes[PaneNum]:= Pane;
-      CurrentCurve:= TLineSeries(CSV.FindComponent('Curve' + IntToStr(CurveNum + 1)));
-      DrawCurveFromLib(CurrentCurve, PaneNum, CurveNum);
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].Parameter:= Parameter.Caption;
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].ParameterTitle:= ParameterTitle.Text;
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].SerieColor:= ColorBox.Selected;
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenWidth:= ChartComboBox2.PenWidth;
+      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenStyle:= ChartComboBox1.PenStyle;
+      //PaneSet.Panes[PaneNum]:= Pane;
+      CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
+      DrawCurveFromPane(CurrentCurve, CurvesPanel.PaneSet.Panes[PaneNum], PaneNum, CurveNum);
       PaneEdit.Close;
     end;
   end;
