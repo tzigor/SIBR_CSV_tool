@@ -5,7 +5,8 @@ unit Unit7;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, Unit2, TAGraph, TASeries;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
+  Unit2, Options, TAGraph, TASeries;
 
 type
 
@@ -61,6 +62,7 @@ end;
 
 procedure TPanelsLib.LoadLibClick(Sender: TObject);
 var i, j: Byte;
+    LastPane: String;
 begin
   if PanelList.Items.Count > 0 then
     if FileExists('Panels.lib') then begin
@@ -71,15 +73,7 @@ begin
          Seek(PanelsLibFile, GetLibIndex(PanelList.Items[PanelList.ItemIndex]));
          Read(PanelsLibFile, CurvesPanel);
          CloseFile(PanelsLibFile);
-
-         CSV.Memo1.Text:= '';
-         for i:= 0 to 9 do begin
-           CSV.Memo1.Text:= CSV.Memo1.Text + 'Pane ' + IntToStr(i+1) + Line;
-           for j:= 0 to 3 do begin
-             CSV.Memo1.Text:= CSV.Memo1.Text + '    Parameter: ' + CurvesPanel.PaneSet.Panes[i].Curves[j].Parameter + Line;
-             CSV.Memo1.Text:= CSV.Memo1.Text + '    ParameterTitle: ' + CurvesPanel.PaneSet.Panes[i].Curves[j].ParameterTitle + Line;
-           end;
-         end;
+         SetOptions(CurvesPanel.ChartBGColor, CurvesPanel.ChartColor, CurvesPanel.GridColor);
 
          for i:= 1 to 10 do
            for j:= 1 to 4 do
@@ -87,7 +81,11 @@ begin
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Left:= 10000;
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= true;
                 DrawCurveFromPane(TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))), CurvesPanel.PaneSet.Panes[i-1], i-1, j-1);
+                LastPane:= 'Pane' + IntToStr(i);
              end;
+         if CSV.ShowDateTime.Checked then
+            TChart(CSV.FindComponent(LastPane)).AxisList[0].Marks.Visible:= True;
+
        except
          on E: EInOutError do ShowMessage('File read error: ' + E.Message);
        end;
@@ -109,7 +107,6 @@ begin
     try
       Reset(PanelsLibFile);
       CurvesPanel.Name:= PanelName.Text;
-      //CurvesPanel.CurvesPanel.PaneSet:= CurvesPanel.PaneSet;
       Seek(PanelsLibFile, GetLibIndex(PanelName.Text));
       Write(PanelsLibFile, CurvesPanel);
       CloseFile(PanelsLibFile);

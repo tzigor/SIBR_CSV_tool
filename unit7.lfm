@@ -1,7 +1,7 @@
 object PanelsLib: TPanelsLib
-  Left = 2972
+  Left = 1114
   Height = 397
-  Top = -758
+  Top = 42
   Width = 243
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False

@@ -47,6 +47,10 @@ end;
 type TPanel = record
     Name: ShortString;
     PaneSet: TPaneSet;
+    ChartBGColor: TColor;
+    ChartColor: TColor;
+    GridColor: TColor;
+    ShowTime: Boolean;
 end;
 
 type TMinMax = record

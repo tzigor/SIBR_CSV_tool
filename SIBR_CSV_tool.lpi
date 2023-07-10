@@ -50,7 +50,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="11">
+    <Units Count="12">
       <Unit0>
         <Filename Value="SIBR_CSV_tool.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -117,6 +117,14 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="Panel"/>
       </Unit10>
+      <Unit11>
+        <Filename Value="options.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="OptionsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Options"/>
+      </Unit11>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

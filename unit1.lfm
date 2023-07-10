@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 2193
+  Left = 1803
   Height = 663
-  Top = -774
+  Top = -741
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.4.3 Portable'
+  Caption = 'SIBR Dump Tool v1.5.0 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1897,21 +1897,21 @@ object CSV: TCSV
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDefaultPosOnly
-  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;mVolts.Checked;PowerResets.Checked;Divider.Value;ZoneFromChart.Checked'
+  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;mVolts.Checked;PowerResets.Checked;ZoneFromChart.Checked;ShowDateTime.Checked;FastMode.Checked'
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = CurvesTab
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 10
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2776,9 +2776,9 @@ object CSV: TCSV
           TabOrder = 2
         end
         object PowerResets: TCheckBox
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 80
+          Top = 104
           Width = 121
           Caption = 'Show Power Resets'
           TabOrder = 3
@@ -2856,9 +2856,9 @@ object CSV: TCSV
           TabOrder = 9
         end
         object AutoFit: TCheckBox
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 109
+          Top = 133
           Width = 60
           Caption = 'Auto fit'
           Checked = True
@@ -2866,9 +2866,9 @@ object CSV: TCSV
           TabOrder = 10
         end
         object TimeScale: TRadioButton
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 143
+          Top = 167
           Width = 92
           Caption = 'Chart by time'
           Checked = True
@@ -2877,18 +2877,18 @@ object CSV: TCSV
           TabStop = True
         end
         object ByDots: TRadioButton
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 170
+          Top = 194
           Width = 91
           Caption = 'Chart by dots'
           OnChange = ByDotsChange
           TabOrder = 11
         end
         object mVolts: TCheckBox
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 271
+          Top = 295
           Width = 123
           Caption = 'Amplitudes in units'
           Checked = True
@@ -2897,9 +2897,9 @@ object CSV: TCSV
           TabOrder = 12
         end
         object RTCBugs: TCheckBox
-          Left = 480
+          Left = 481
           Height = 19
-          Top = 235
+          Top = 259
           Width = 145
           Caption = 'Only synchronized time'
           Checked = True
@@ -2908,9 +2908,9 @@ object CSV: TCSV
           TabOrder = 14
         end
         object ByTemperature: TRadioButton
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 199
+          Top = 223
           Width = 133
           Caption = 'Chart by temperature'
           OnChange = ByTemperatureChange
@@ -3003,9 +3003,9 @@ object CSV: TCSV
           }
         end
         object Divider: TSpinEdit
-          Left = 528
+          Left = 529
           Height = 23
-          Top = 304
+          Top = 328
           Width = 88
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -3018,9 +3018,9 @@ object CSV: TCSV
           Value = 1
         end
         object LDivider: TLabel
-          Left = 481
+          Left = 482
           Height = 15
-          Top = 308
+          Top = 332
           Width = 37
           Caption = 'Divider'
           Font.CharSet = ANSI_CHARSET
@@ -3029,6 +3029,14 @@ object CSV: TCSV
           Font.Quality = fqDraft
           ParentColor = False
           ParentFont = False
+        end
+        object FastMode: TCheckBox
+          Left = 481
+          Height = 19
+          Top = 76
+          Width = 75
+          Caption = 'Fast mode'
+          TabOrder = 17
         end
       end
     end
@@ -5057,11 +5065,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5084,7 +5095,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5110,7 +5120,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5129,7 +5138,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5148,12 +5156,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           object Pane1Curve1: TLineSeries
@@ -5181,11 +5190,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5208,7 +5220,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5234,7 +5245,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5253,7 +5263,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5272,13 +5281,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5307,11 +5316,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5334,7 +5346,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5360,7 +5371,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5379,7 +5389,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5398,13 +5407,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5433,11 +5442,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5460,7 +5472,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5486,7 +5497,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5505,7 +5515,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5524,13 +5533,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5559,11 +5568,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5586,7 +5598,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5612,7 +5623,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5631,7 +5641,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5650,13 +5659,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5685,11 +5694,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5712,7 +5724,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5738,7 +5749,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5757,7 +5767,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5776,13 +5785,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5811,11 +5820,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5838,7 +5850,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5864,7 +5875,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -5883,7 +5893,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -5902,13 +5911,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -5937,11 +5946,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -5964,7 +5976,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -5990,7 +6001,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -6009,7 +6019,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -6028,13 +6037,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -6063,11 +6072,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -6090,7 +6102,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -6116,7 +6127,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -6135,7 +6145,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -6154,13 +6163,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -6189,11 +6198,14 @@ object CSV: TCSV
           AxisList = <          
             item
               Grid.Color = clSilver
+              Intervals.MaxLength = 100
+              Intervals.MinLength = 50
               Alignment = calRight
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.LabelBrush.Style = bsClear
+              OnGetMarkText = Pane1AxisList0GetMarkText
             end          
             item
               Grid.Color = clSilver
@@ -6216,7 +6228,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations1
             end          
             item
               Grid.Color = clSilver
@@ -6242,7 +6253,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations2
             end          
             item
               Grid.Color = clSilver
@@ -6261,7 +6271,6 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10'  '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations3
             end          
             item
               Grid.Color = clSilver
@@ -6280,13 +6289,13 @@ object CSV: TCSV
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
-              Transformations = ChartAxisTransformations4
             end>
+          BackColor = clWhite
           Extent.YMax = 10
           Title.Text.Strings = (
             'TAChart'
           )
-          Toolset = ChartToolset1
+          Toolset = ChartToolset2
           OnExtentChanged = Pane1ExtentChanged
           Align = alLeft
           Visible = False
@@ -6308,41 +6317,179 @@ object CSV: TCSV
           end
         end
       end
-      object SavePanel: TButton
-        Left = 232
-        Height = 25
-        Top = 0
-        Width = 88
-        Caption = 'Save Panel'
-        OnClick = SavePanelClick
-        TabOrder = 1
-      end
-      object Button10: TButton
-        Left = 760
-        Height = 25
-        Top = 0
-        Width = 75
-        Caption = 'Button10'
-        OnClick = Button10Click
-        TabOrder = 2
-      end
       object AddPane: TButton
-        Left = 0
+        Left = 88
         Height = 25
         Top = 0
         Width = 75
         Caption = 'Add track'
         OnClick = AddPaneClick
-        TabOrder = 3
+        TabOrder = 1
       end
-      object LoadPane: TButton
-        Left = 328
+      object OptionsBtn: TImage
+        Left = 856
+        Height = 23
+        Hint = 'Options'
+        Top = 5
+        Width = 23
+        OnClick = OptionsBtnClick
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B477261706869633B06000089504E47
+          0D0A1A0A0000000D4948445200000017000000170806000000E02AD4A0000000
+          097048597300000B1300000B1301009A9C18000005C64944415478DA95557B34
+          D4691836F7316298716B621552B36ED9AD29562763919C0A5BBAB045B148252A
+          92904BD9766A45CBE67284DA74311BA910B99524652C62EC52EC24925B61C6DC
+          7FFB7DD57442E7D47E7FCEBCDFF3BEEFF33DCFF343297DC1E9ED1F3248BE723B
+          44201493F038AC68AF8743EA2203DA3F9FBB87FA12707665E306AFB8F48B6289
+          9480C5A025B951FE3E5ECE36F9FF0B5C2A93A16B399D4C8148ACBCCA6A51CD1C
+          65227F60F8F55CBFC4ECECB2876DABDFD7232ED616A5D947FC76E852D55F8186
+          D887ED4F5780BBD8954B16DDC56230F259E010F87643EB9ADDA7CEA78D8DF3D5
+          19A6468DC67A3ADD6DDDCF2D1ADA9F2E97C9E558452D9CDECE8A5E63BF945ED5
+          3B303CFF465DF33A020E2B4E3DB07DCF6AD058D1E00338B7E7C562F78894A2BF
+          792F4D666C84009EC514559551220127148A24CAA3137C0D30317E060388214D
+          AB273F6E97E77233E387D3C047C727D5BD8E9ECD2F6B687386BF2308A2442212
+          044E0CD30A4F27EB7C5343BD272A44C2245F2852697FD6679E5FFEC0B3BCB1DD
+          5120149150A87730FADA145EF1C9D0F54B4C0C5A66719E5554ED17C8CA4D9723
+          0886AAA63212B3D32D6EB3E38ACB90AE96AEE796BA54F280C332D33B66467A6D
+          503979B7EEF9C49F2B3A3A32CEA7C2FB3E2EB6B919113B7F029B4A67815F2CBB
+          EFE99D909587C3622489811B23776F744883EB6616D5044665B013C6F9536A7A
+          DA943ED034DEDBC5360F51425069EC3BBB23D3D98942B14439DECF3D26DAD73D
+          61D6830E8D8D53037FC9C9BC56DBE4EEC4302B4F0FF7095426E0A77435D50785
+          22313EBDB02AE868D6B5B837A0014D53A3BFF044B03BE0B6113C3E794B74DA95
+          F2C6274E5045B9D1FEDBB534D446DE823FED1B34ACE170ED0AAA1E79543575D8
+          03AE5119877604007EF980D71F9343BD8217D0B47B270542D2E6A8D4829207AD
+          2E709B981DAEF171FE1B6221C8B9E2DA9D01AC9C0CC0BDDC11D0B681B98CADAF
+          43E1A158176E1E3A9C5E705C2E47D0B099065045794A98637D6B976D684A7ED2
+          1A6B8BB2A460CFFD408A68F8E0CD5D3C2B0818E06A979116EEB30B8346238FB9
+          CFBE71DA77B2626C824F818D3168941C87C58A5189B9C5478E64B08F29E8994B
+          25F757A51E66828D8C3DC0A422B19400F50E4DC21B1CF94A2A93E30097F21341
+          9B22C2B7AD3D09EF74F6F69BD8EFF9B97A60E40D6D9A434F5F2ADD1FF1FBD544
+          B15406758BA2009554A4843B1ACCD5ECF58ECFBC5052DFB206515242CF7036B2
+          C99E71F5CCFE6D7B75A8E4214E678F95E33E56C5E87BD580E608309214F572F8
+          B54E35A783995752E753D5C46542CEB3237DFDB6BBAC3C0F278AC9FA33A1F271
+          C7F7807355185A12990C07B621429742FDB3F66C09035275F6051101AC81627C
+          6DD8F8C3AA6F0B8DF4B4BB3F568BA6FF8973994577396E6B6D2C6FFD019C469E
+          439A98E04FCDE9E8EDA7838CA169A892C61E719F318EE5144701D59061030F26
+          A3E0E5E81BDD6A0E97E9BCC2BC2C13E85C5F87FA6296CE932F970583474C2611
+          F082537BB71EF4735D95051E46F6710D9025E1ECB5CAA0D8ECC2D871BE500D2A
+          44F11F94AFBF1B33EB93C17500A8E34C414530A44697421E3C0E8C041D0AD251
+          F0718329D02029BFF4607CCEF56818C38A7788F5758B8B0206830A9A060EF95D
+          179674B3BBEFD54245B12A8938B9EEBB25C55B9DAC2FD1E7D33A60D6C02C01B5
+          F4BCD23A6F48A1E49D10DE1E33C3796DD759A1AE86F3B47BA68177F4BCA0431D
+          FFD5C5B35404D7DB02140A01344D6969A8BE828E05532B0F8D4D6881CC27CD4C
+          4F4B63FDD64B09415BE8F3E775CEE2BCE14937230044C0F0EB092D87A5A67716
+          800885AEBDDFD665034C8651D481B5A5E063526B63BEB0BEF3DF81C535CD9D76
+          BA14B541E86C1B0B93FA599C2B4E4B17CF5C2295E2CD8DF45B09789CA4077C3F
+          B782EC801F0C18AD70235B0B933A38215405E4BF89DBB39444C44F81A86D46BF
+          E7FB93E09F3ABF5E2C3910967A9905CD8406EA381DE21912BC69F56F9FBBF745
+          E037EE71D66E8C4C658BA55202E05D50CC0A59EFC030ABFCDCBDFF001027CF30
+          5CD0BBD90000001B74455874536F667477617265004172747765617665722046
+          72656520372E30B0E96D7E0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object NewPanel: TToggleBox
+        Left = 0
         Height = 25
         Top = 0
-        Width = 88
-        Caption = 'Load Panel'
-        OnClick = LoadPaneClick
-        TabOrder = 4
+        Width = 75
+        Caption = 'New Panel'
+        OnChange = NewPanelChange
+        TabOrder = 2
+      end
+      object Image1: TImage
+        Left = 272
+        Height = 20
+        Hint = 'Open'
+        Top = 5
+        Width = 20
+        OnClick = Image1Click
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B477261706869637103000089504E47
+          0D0A1A0A0000000D49484452000000140000001408060000008D891D0D000000
+          097048597300000B1300000B1301009A9C18000002FC4944415478DA9DD4DD4F
+          52611C07F0EF730EAF53C92594226EC998349B7967A5D35ADD6462A5CBADFE87
+          1433A76977B5F54A4977E9F2AA56ABDBE42A372F6A6A39ED452D37BBF00D2401
+          07A688E71C383DE740B81496FAB0873306CF67DFDFF3FC1E88CB35212E78D6A1
+          5232C8376682655958AD7A188D3A484314450882204F9EE7934F69FAFC118C4F
+          FE861805CACA4C386C35809CB3758B0BF36B2084A118038655A0A3BD12757547
+          645002388E4324B281818119CCCE05A15633283FA1C7D0F0027A7AC6118BC560
+          361FC4F5962A90B3354F45F7FC2A055980A20CC3E266C749D4D7172731294D38
+          1CC1ADDB8318FEE885C1A041E78D128C4F2CA1B777928251B00A2D1A1A4AE2A0
+          C7CDD32C31399104767654E1C279AB8CFD9DEBEB1BB87377049F46BCD0EB3568
+          6B2DC6C4E4129EBF98A3FBC2D03080295F9D003D141437C1F6B60AD86A2CDBC0
+          078ECF181DF5617F8E0A2DF6227CFFE1C7CB576EBA8A85485FC65C556AB0B5E5
+          38AAAB0B9358BCE40D7439BF616CCC4F41351AAF9A3135B58CD76F16D38151BA
+          173C184270E5F25154949BC00BF454797AAAF25EF2181CF2C2ED0E43A3213856
+          968DE99F21F4F70768B9294124F751AD5640A954483D136F1DE94B31F193C4BB
+          F410A23170BC48B78F6C07352A06050519B464422723CFD4430249F213C74531
+          3BBB024ED8025ACC3ADA4725585B0BD29E32C3A0D7D375444E99C824F79BD4E8
+          52F3131247BDDE10ECCD2E78BC917FC122CB3E381E5643AB55D14531DA924CB2
+          64391189DF1A24F311F9222C0756D1DCE28274DBB6814F9CB5D0E9349BCEFF06
+          957D4B2B686C7A9B1AECEAB221334BB3432D3EFC14B437F7A5036B9095A5DD15
+          E8F351D09E067CFC484AB83BD0EF0BA1F95A1AD02925D4ED32212DB9696BC245
+          8F40411D9C4EDB1EC0103D943EB83D11E4E52941EA2E3D134B4B0FE1D76290FE
+          CB9CDA43C92B70383EE0406E36BE7E9901A9BDD823B2AC1619EB41DCAB1490AD
+          26BB02BDAB31740EAAC169F7212A8441BA7BDE8BFDEFA6615245D05E1844A662
+          A74D181F018EE0FE4C0E02512D4E9FB1E00F97D4C1E2094E6A430000001B7445
+          5874536F66747761726500417274776561766572204672656520372E30B0E96D
+          7E0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object Image2: TImage
+        Left = 312
+        Height = 20
+        Hint = 'Open'
+        Top = 5
+        Width = 23
+        OnClick = Image2Click
+        ParentShowHint = False
+        Picture.Data = {
+          1754506F727461626C654E6574776F726B47726170686963C303000089504E47
+          0D0A1A0A0000000D494844520000001700000014080600000066BEA60E000000
+          097048597300000B1300000B1301009A9C180000034E4944415478DAA5545B48
+          1451183EE7CCEC6556777669F396B1E4AD35CD324D50BBF860695B504624F4E0
+          4BB74D8A2E1804F5202182105116AB612F1ABD153D58541044BBA441A1461951
+          F81294A521B2EDB83BEBAEE7EFCC6C6EE3BAA6D8993933E79CFF9BEFFFFEFFFC
+          73305A66A394E26179B8C4800DB243707C4884C1CB257F2DBDAE3831D178CB4C
+          CC52A7ADC355602A184E483E1309F3093D134209E168FCFA803450E61A73DD1E
+          9407376084A14AA8EAEF4CEF3CEE30393ECEF97EF463F71913EDDB8A30E61062
+          3752FC286F4048700C266736B4F37AB37FF683B7FEB7A5AEAFAEAE37A1379B00
+          40154730A1D5A66AAF3BD3EDCA4BCAFB1C23F776A486CB0B2739AC468151ACB3
+          3BA21383A194B3EDC9F6D3AD8417A686A50F1B1BBF3476BD0ABEDAAC12E3A886
+          5907354935CFDD6BDC8DD949D9232AB9E7A6152A0B7EFD45C5B588D11690C5BD
+          4FFC9C6DBC33F0724BDFF460D13B1AC13E34375B36104245A692A13DD67DBD27
+          EDA7AE093A41C69EEB8CBC50895A0BD64852C61C4194BD64B624B15ECF6CFD44
+          83676BBB90FD7B77F1A3DDC9E6EC4F46CE28738403ECB91A558E1584A6760027
+          2EA400031D60BD8FCC55EEC4F6D19ED2C7CE24316B04612E42887E1A7BAE30F2
+          759AB43052301A11CC28499F9FAA19655319F9A42648CC60366C94D78BA5433C
+          6F0A8231639CCF696AC5DE362B94E7FF51AE3C8D064427992A7F78C17D58AC01
+          D6515A7EA3197B5A2D50E990A244AC662288918FCAD139A0B9BF9976FE0F1B35
+          A44EE89CBD75D8DB62818AB592AA7C46AF43A10965D7C24B538812FEE240B30E
+          3C323B7B0E616F3323CF93545488185058514D6131710BDA801342FADA9EA3C9
+          8507EF62EF250B94E74A08780E4DB17DA5BFC231707C51C6CFB58E62B6D4B221
+          6BFDC3DD3A73DA0FECB92042454E80A9E651606C9AC5040BB3C533CEB37154BF
+          BDF5B275DBF916A2D67993C89407912F8051D8A7C9F5623949E4C86CFFB6A2E1
+          8953482F78AF9ABDE74428CE0A21DFCF0882C8BC0370C90D58B51B4A8EDC49D9
+          EF3EC6F17A5525F69CB3C25A5B10C9BEE9E5967594DC60F1AF6CB85F2FE6EF78
+          1ACBD2B39322E4085388FE876AA5E97277BE5875F85E9DCE64F1C5C81F1C4983
+          0C7D500D0C94E305933F6350C700543D12942B6A87F958F6585DD772D15E7BA6
+          4DEBF037429160D1C464DAEB0000001B74455874536F66747761726500417274
+          776561766572204672656520372E30B0E96D7E0000000049454E44AE426082
+        }
+        ShowHint = True
+      end
+      object ShowDateTime: TCheckBox
+        Left = 736
+        Height = 19
+        Top = 6
+        Width = 107
+        Caption = 'Show Date/Time'
+        OnChange = ShowDateTimeChange
+        TabOrder = 3
       end
     end
     object TabSheet5: TTabSheet
@@ -6432,10 +6579,6 @@ object CSV: TCSV
       OnAfterMouseUp = ChartToolset1DataPointClickTool2AfterMouseUp
       OnPointClick = ChartToolset1DataPointClickTool2PointClick
     end
-    object ChartToolset1AxisClickTool1: TAxisClickTool
-      Shift = [ssLeft]
-      OnClick = ChartToolset1AxisClickTool1Click
-    end
   end
   object ChartExtentLink1: TChartExtentLink
     LinkedCharts = <    
@@ -6495,31 +6638,76 @@ object CSV: TCSV
         Chart = Sondes3
       end>
     Mode = elmOnlyX
-    Left = 664
+    Left = 408
     Top = 632
   end
-  object ChartAxisTransformations1: TChartAxisTransformations
-    Left = 472
-    Top = 224
-    object ChartAxisTransformations1AutoScaleAxisTransform1: TAutoScaleAxisTransform
+  object ChartToolset2: TChartToolset
+    Left = 704
+    Top = 632
+    object ChartToolset2ZoomMouseWheelTool1: TZoomMouseWheelTool
+      Shift = [ssShift]
+      ZoomFactor = 1.1
+    end
+    object ChartToolset2ZoomMouseWheelTool2: TZoomMouseWheelTool
+      Shift = [ssCtrl]
+      ZoomRatio = 1.1
+    end
+    object ChartToolset2ZoomMouseWheelTool3: TZoomMouseWheelTool
+      Shift = [ssAlt]
+      ZoomFactor = 1.1
+      ZoomRatio = 0.90909
+    end
+    object ChartToolset2PanDragTool1: TPanDragTool
+      Shift = [ssLeft]
+    end
+    object ChartToolset2ZoomDragTool1: TZoomDragTool
+      Shift = [ssRight]
+      Brush.Style = bsClear
+      RestoreExtentOn = [zreClick]
+    end
+    object ChartToolset2AxisClickTool1: TAxisClickTool
+      Shift = [ssLeft]
+      OnClick = ChartToolset2AxisClickTool1Click
+    end
+    object ChartToolset2DataPointHintTool1: TDataPointHintTool
+      OnAfterKeyDown = ChartToolset2DataPointHintTool1AfterKeyDown
+      ActiveCursor = crCross
+      OnHint = ChartToolset2DataPointHintTool1Hint
     end
   end
-  object ChartAxisTransformations2: TChartAxisTransformations
-    Left = 472
-    Top = 272
-    object ChartAxisTransformations2AutoScaleAxisTransform1: TAutoScaleAxisTransform
-    end
-  end
-  object ChartAxisTransformations3: TChartAxisTransformations
-    Left = 472
-    Top = 320
-    object ChartAxisTransformations3AutoScaleAxisTransform1: TAutoScaleAxisTransform
-    end
-  end
-  object ChartAxisTransformations4: TChartAxisTransformations
-    Left = 472
-    Top = 368
-    object ChartAxisTransformations4AutoScaleAxisTransform1: TAutoScaleAxisTransform
-    end
+  object ChartExtentLink3: TChartExtentLink
+    LinkedCharts = <    
+      item
+        Chart = Pane1
+      end    
+      item
+        Chart = Pane2
+      end    
+      item
+        Chart = Pane3
+      end    
+      item
+        Chart = Pane4
+      end    
+      item
+        Chart = Pane5
+      end    
+      item
+        Chart = Pane6
+      end    
+      item
+        Chart = Pane7
+      end    
+      item
+        Chart = Pane8
+      end    
+      item
+        Chart = Pane9
+      end    
+      item
+        Chart = Pane10
+      end>
+    Left = 760
+    Top = 632
   end
 end

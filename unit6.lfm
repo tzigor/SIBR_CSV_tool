@@ -1,7 +1,7 @@
 object PaneEdit: TPaneEdit
-  Left = 1936
+  Left = 831
   Height = 413
-  Top = -741
+  Top = 132
   Width = 420
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -80,6 +80,7 @@ object PaneEdit: TPaneEdit
     Width = 152
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor]
     ColorDialog = ColorDialog1
+    DropDownCount = 10
     ItemHeight = 16
     TabOrder = 1
   end

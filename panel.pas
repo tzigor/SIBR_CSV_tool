@@ -6,11 +6,10 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
-  TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, TAIntervalSources,
-  DateTimePicker, Unit2, Unit3, Unit4, Unit7, Types, TAChartUtils, TADataTools,
-  TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp, LCLType,
-  Spin, IniPropStorage, Parameters, PQConnection, Math, uComplex, TAChartAxisUtils, TAChartAxis;
+  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, LConvEncoding,
+  TAGraph, TACustomSource, LazSysUtils, TASeries, TATools,
+  Unit2, Unit7, Options, Types, TAChartUtils, TADataTools, TATransformations,
+  SpinEx, SynHighlighterCpp, LCLType, Spin, PQConnection, TAChartAxis;
 
 function GetVisiblePanesCount: Byte;
 procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
@@ -26,6 +25,9 @@ procedure PanesResetSeries;
 procedure ResetPanes(n: Byte);
 procedure PaneSetInit;
 procedure PanesResetAxises;
+procedure InitTransformations;
+procedure HideRightAxises;
+procedure SetDateTimeVisible;
 
 implementation
 
@@ -159,6 +161,17 @@ begin
   CurveTitle(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
 end;
 
+procedure SetDateTimeVisible;
+var i: Byte;
+    LastPane: String;
+begin
+  HideRightAxises;
+  for i:=1 to 10 do begin
+     if TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible = true then LastPane:= 'Pane' + IntToStr(i);
+  end;
+  TChart(CSV.FindComponent(LastPane)).AxisList[0].Marks.Visible:= True;
+end;
+
 procedure PaneSetInit;
 var i, j: byte;
 begin
@@ -186,6 +199,13 @@ begin
    for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Clear;
 end;
 
+procedure HideRightAxises;
+var i, j: byte;
+begin
+ for i:=1 to 10 do
+   for j:=1 to 4 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[0].Marks.Visible:= false;
+end;
+
 procedure PanesResetAxises;
 var i, j: byte;
 begin
@@ -197,13 +217,39 @@ begin
    end;
 end;
 
+procedure InitTransformations;
+var i, j: byte;
+    T: TChartAxisTransformations;
+    transf: TAxisTransform;
+begin
+ for i:=1 to 10 do
+   for j:=1 to 4 do begin
+     T := TChartAxisTransformations.Create(TChart(CSV.FindComponent('Pane' + IntToStr(i))));
+     TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[j].Transformations := T;
+     transf := TAutoscaleAxisTransform.Create(T);
+     transf.Transformations := T;
+   end;
+end;
+
+procedure InitPanelColors;
+begin
+  CurvesPanel.ChartBGColor:= clWhite;
+  CurvesPanel.ChartColor:= clForm;
+  CurvesPanel.GridColor:= clSilver;
+  CurvesPanel.ShowTime:= false;
+  SetOptions(CurvesPanel.ChartBGColor, CurvesPanel.ChartColor, CurvesPanel.GridColor);
+end;
+
 procedure ResetPanes(n: Byte);
 begin
+  InitPanelColors;
   PanesResetAxises;
+  HideRightAxises;
   PaneSetInit;
   PanesVisible(false, n);
   PanesResetZoom;
   PanesResetSeries;
+  FitPanesToWindow;
 end;
 
 end.
