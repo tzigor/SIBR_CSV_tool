@@ -6,13 +6,13 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, LConvEncoding,
-  TAGraph, TACustomSource, LazSysUtils, TASeries, TATools,
-  Unit2, Unit7, Options, Types, TAChartUtils, TADataTools, TATransformations,
+  ComCtrls, MaskEdit, DateUtils, Clipbrd, LConvEncoding,
+  TAGraph, TACustomSource, TASeries, TATools,
+  Unit2, Options, TAChartUtils, TADataTools, TATransformations,
   SpinEx, SynHighlighterCpp, LCLType, Spin, PQConnection, TAChartAxis;
 
 function GetVisiblePanesCount: Byte;
-procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
+procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String);
 function GetExtentMinMax(LineSerie: TLineSeries): TMinMax;
 function GetFullMinMax(LineSerie: TLineSeries): TMinMax;
 procedure ZoomCurveExtent(LineSerie: TLineSeries);
@@ -56,8 +56,8 @@ begin
       TChart(CSV.FindComponent('Pane' + IntToStr(i))).Width:= CSV.Width Div 2;
 end;
 
-procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String; ParamNumber: Byte);
-var PRMem, DotsMem, MVoltsMem, TimeScaleMem, ByTemperatureMem: boolean;
+procedure DrawCurve(LineSerie: TLineSeries; SelectedParamName: String);
+var PRMem, DotsMem, MVoltsMem, TimeScaleMem, ByTemperatureMem, MFastMode: boolean;
     DividerMem: Integer;
 begin
   TimeScaleMem:= CSV.TimeScale.Checked;
@@ -65,18 +65,21 @@ begin
   DotsMem:= CSV.ByDots.Checked;
   MVoltsMem:= CSV.MVolts.Checked;
   PRMem:= CSV.PowerResets.Checked;
+  MFastMode:= CSV.FastMode.Checked;
   DividerMem:= CSV.Divider.Value;
   CSV.ByDots.Checked:= true;
   CSV.MVolts.Checked:= false;
   CSV.PowerResets.Checked:= false;
   CSV.Divider.Value:= 1;
-  DrawChart(LineSerie, SelectedParamName, ParamNumber);
+  CSV.FastMode.Checked:= true;
+  DrawChart(LineSerie, SelectedParamName, 0);
   CSV.ByDots.Checked:= DotsMem;
   CSV.PowerResets.Checked:= PRMem;
   CSV.MVolts.Checked:= MVoltsMem;
   CSV.Divider.Value:= DividerMem;
   CSV.TimeScale.Checked:= TimeScaleMem;
   CSV.ByTemperature.Checked:= ByTemperatureMem;
+  CSV.FastMode.Checked:= MFastMode;
 end;
 
 function GetExtentMinMax(LineSerie: TLineSeries): TMinMax;
@@ -128,9 +131,6 @@ end;
 procedure CurveTitle(LineSerie: TLineSeries; Title: String);
 var YMax, YMin: String;
     YMinMax: TminMax;
-    dr: TDoubleRect;
-    i, start, count: Longint;
-    Axis: TChartAxis;
 begin
   if LineSerie.Count > 0 then begin
 
@@ -157,7 +157,7 @@ begin
   CurrentCurve.LinePen.Style:= Pane.Curves[CurveNum].PenStyle;
   CurrentCurve.LinePen.Width:= Pane.Curves[CurveNum].PenWidth;
   CurrentCurve.SeriesColor:= Pane.Curves[CurveNum].SerieColor;
-  DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter, 0);
+  DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter);
   CurveTitle(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
 end;
 
@@ -181,13 +181,13 @@ begin
 end;
 
 procedure PanesVisible(visible: Boolean; n: Byte);
-var i, j: byte;
+var i: byte;
 begin
  for i:=n to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= visible;
 end;
 
 procedure PanesResetZoom;
-var i, j: byte;
+var i: byte;
 begin
  for i:=1 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
 end;

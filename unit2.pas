@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  ComCtrls, DateUtils, StrUtils, LConvEncoding, TAGraph, TASeries, TATools, Types, TAChartUtils, uComplex, Math, Unit3;
+  ComCtrls, DateUtils, StrUtils, LConvEncoding, TAGraph, TASeries, TATools, TAChartUtils, uComplex, Math, Unit3;
 
 type String70 = String[70];
 type ShortString = String[24];
@@ -172,7 +172,7 @@ function PhaseShift(nParam, n: Integer): Double;
 procedure FillCoplexParams(n: Integer; Freq: Byte);
 
 implementation
-uses Unit1, Unit6;
+uses Unit1;
 
 function DateTimePlusLocal(DateTime: String): String;
 begin

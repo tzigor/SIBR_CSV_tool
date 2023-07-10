@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
-  Grids, ComboEx, TAStyles, TAChartCombos, Types, Unit2, Panel, StrUtils, LCLType,
+  TAChartCombos, Types, Unit2, Panel, StrUtils, LCLType,
   TAGraph, TASeries;
 
 type
@@ -116,13 +116,13 @@ begin
 end;
 
 procedure TPaneEdit.SaveClick(Sender: TObject);
-var PaneNum, CurveNum: Byte;
+var PaneNum, CurveNum: Integer;
     CurrentCurve: TLineSeries;
 begin
   if Parameter.Caption <> '' then begin
     PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Track ', '', [rfReplaceAll])) - 1;
     CurveNum:= StrToInt(StringReplace(AxisNumber.Caption, 'Curve: ', '', [rfReplaceAll])) - 1;
-    if (CurveNum >= 0) And (CurveNum < 4) then begin
+    if (PaneNum >= 0) And (CurveNum >= 0) then begin
       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].Parameter:= Parameter.Caption;
       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].ParameterTitle:= ParameterTitle.Text;
       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].SerieColor:= ColorBox.Selected;
@@ -131,7 +131,8 @@ begin
       CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
       DrawCurveFromPane(CurrentCurve, CurvesPanel.PaneSet.Panes[PaneNum], PaneNum, CurveNum);
       PaneEdit.Close;
-    end;
+    end
+    else ShowMessage('Track or Curve number is incorrect');
   end;
 end;
 

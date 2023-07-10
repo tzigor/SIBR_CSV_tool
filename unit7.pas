@@ -85,7 +85,7 @@ begin
              end;
          if CSV.ShowDateTime.Checked then
             TChart(CSV.FindComponent(LastPane)).AxisList[0].Marks.Visible:= True;
-
+         CSV.PanelTitle.Caption:= PanelList.Items[PanelList.ItemIndex];
        except
          on E: EInOutError do ShowMessage('File read error: ' + E.Message);
        end;
@@ -110,6 +110,7 @@ begin
       Seek(PanelsLibFile, GetLibIndex(PanelName.Text));
       Write(PanelsLibFile, CurvesPanel);
       CloseFile(PanelsLibFile);
+      CSV.PanelTitle.Caption:= PanelName.Text;
     except
       on E: EInOutError do ShowMessage('File write error: ' + E.ClassName + '/' + E.Message)
     end;

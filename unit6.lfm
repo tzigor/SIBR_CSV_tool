@@ -1,7 +1,7 @@
 object PaneEdit: TPaneEdit
-  Left = 831
+  Left = 559
   Height = 413
-  Top = 132
+  Top = 60
   Width = 420
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -178,11 +178,16 @@ object PaneEdit: TPaneEdit
   end
   object AxisNumber: TLabel
     Left = 176
-    Height = 15
-    Top = 8
-    Width = 43
+    Height = 21
+    Top = 4
+    Width = 57
     Caption = 'Curve: 1'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -16
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
     ParentColor = False
+    ParentFont = False
   end
   object DeleteCurve: TButton
     Left = 168
