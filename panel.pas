@@ -151,6 +151,7 @@ end;
 
 procedure DrawCurveFromPane(CurrentCurve: TLineSeries; Pane: TPane; PaneNum, CurveNum: Byte);
 begin
+  ShowMessage(CurrentCurve.Name);
   CurrentCurve.ParentChart.ZoomFull();
   CurrentCurve.ParentChart.AxisList[CurveNum + 1].Title.LabelFont.Color:= Pane.Curves[CurveNum].SerieColor;
   CurrentCurve.ParentChart.AxisList[CurveNum + 1].AxisPen.Color:= Pane.Curves[CurveNum].SerieColor;

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
   TAChartCombos, Types, Unit2, Panel, StrUtils, LCLType,
-  TAGraph, TASeries;
+  TAGraph, TASeries, RS232Port;
 
 type
 

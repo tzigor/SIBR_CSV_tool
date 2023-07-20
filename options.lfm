@@ -1,7 +1,7 @@
 object OptionsForm: TOptionsForm
-  Left = 847
+  Left = 2305
   Height = 282
-  Top = 63
+  Top = -728
   Width = 320
   BorderStyle = bsDialog
   Caption = 'OptionsForm'

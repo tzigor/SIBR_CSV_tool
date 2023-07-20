@@ -74,9 +74,9 @@ begin
          Read(PanelsLibFile, CurvesPanel);
          CloseFile(PanelsLibFile);
          SetOptions(CurvesPanel.ChartBGColor, CurvesPanel.ChartColor, CurvesPanel.GridColor);
-
          for i:= 1 to 10 do
            for j:= 1 to 4 do
+             CSV.Memo1.Text:= CSV.Memo1.Text + CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter + Line;
              if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then begin
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Left:= 10000;
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= true;

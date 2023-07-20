@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
-  Unit2, TAGraph, TASeries;
+  Unit2, TAGraph, TASeries, CheckBoxThemed;
 
 type
 

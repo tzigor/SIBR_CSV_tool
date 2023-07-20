@@ -1,7 +1,7 @@
 object PaneEdit: TPaneEdit
-  Left = 559
+  Left = 1854
   Height = 413
-  Top = 60
+  Top = -712
   Width = 420
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False

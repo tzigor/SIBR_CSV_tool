@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 2180
+  Left = 2236
   Height = 664
-  Top = -741
+  Top = -729
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v1.5.0 Portable'
+  Caption = 'SIBR Dump Tool v2.0.0 Portable'
   ClientHeight = 664
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1897,21 +1897,21 @@ object CSV: TCSV
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDefaultPosOnly
-  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;mVolts.Checked;PowerResets.Checked;ZoneFromChart.Checked;ShowDateTime.Checked;FastMode.Checked'
+  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;FastMode.Checked;mVolts.Checked;PowerResets.Checked;ShowDateTime.Checked;ZoneFromChart.Checked;TimeOnBottom.Checked'
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
     Height = 664
     Top = 0
     Width = 899
-    ActivePage = TabSheet5
+    ActivePage = CurvesTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 11
+    TabIndex = 10
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2776,7 +2776,7 @@ object CSV: TCSV
           TabOrder = 2
         end
         object PowerResets: TCheckBox
-          Left = 482
+          Left = 483
           Height = 19
           Top = 152
           Width = 121
@@ -2856,7 +2856,7 @@ object CSV: TCSV
           TabOrder = 9
         end
         object AutoFit: TCheckBox
-          Left = 482
+          Left = 483
           Height = 19
           Top = 181
           Width = 60
@@ -2866,9 +2866,9 @@ object CSV: TCSV
           TabOrder = 10
         end
         object TimeScale: TRadioButton
-          Left = 481
+          Left = 482
           Height = 19
-          Top = 215
+          Top = 240
           Width = 92
           Caption = 'Chart by time'
           Checked = True
@@ -2877,18 +2877,18 @@ object CSV: TCSV
           TabStop = True
         end
         object ByDots: TRadioButton
-          Left = 482
+          Left = 483
           Height = 19
-          Top = 242
+          Top = 267
           Width = 91
           Caption = 'Chart by dots'
           OnChange = ByDotsChange
           TabOrder = 11
         end
         object mVolts: TCheckBox
-          Left = 482
+          Left = 483
           Height = 19
-          Top = 343
+          Top = 361
           Width = 123
           Caption = 'Amplitudes in units'
           Checked = True
@@ -2897,9 +2897,9 @@ object CSV: TCSV
           TabOrder = 12
         end
         object RTCBugs: TCheckBox
-          Left = 481
+          Left = 483
           Height = 19
-          Top = 307
+          Top = 329
           Width = 145
           Caption = 'Only synchronized time'
           Checked = True
@@ -2908,16 +2908,16 @@ object CSV: TCSV
           TabOrder = 14
         end
         object ByTemperature: TRadioButton
-          Left = 482
+          Left = 483
           Height = 19
-          Top = 271
+          Top = 296
           Width = 133
           Caption = 'Chart by temperature'
           OnChange = ByTemperatureChange
           TabOrder = 15
         end
         object Image6: TImage
-          Left = 544
+          Left = 552
           Height = 24
           Top = 0
           Width = 88
@@ -3003,9 +3003,9 @@ object CSV: TCSV
           }
         end
         object Divider: TSpinEdit
-          Left = 529
+          Left = 530
           Height = 23
-          Top = 368
+          Top = 385
           Width = 88
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -3018,9 +3018,9 @@ object CSV: TCSV
           Value = 1
         end
         object LDivider: TLabel
-          Left = 482
+          Left = 483
           Height = 15
-          Top = 372
+          Top = 388
           Width = 37
           Caption = 'Divider'
           Font.CharSet = ANSI_CHARSET
@@ -3095,6 +3095,15 @@ object CSV: TCSV
           ParentColor = False
           ParentFont = False
           Visible = False
+        end
+        object RemoveExtremes: TCheckBox
+          Left = 483
+          Height = 19
+          Top = 208
+          Width = 114
+          Caption = 'Remove extremes'
+          OnChange = RemoveExtremesChange
+          TabOrder = 19
         end
       end
     end
