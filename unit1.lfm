@@ -1,11 +1,11 @@
 object CSV: TCSV
-  Left = 2236
-  Height = 664
-  Top = -729
+  Left = 1877
+  Height = 663
+  Top = -708
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v2.0.0 Portable'
-  ClientHeight = 664
+  ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
   Constraints.MinWidth = 899
@@ -1901,7 +1901,7 @@ object CSV: TCSV
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
-    Height = 664
+    Height = 663
     Top = 0
     Width = 899
     ActivePage = CurvesTab
@@ -1915,7 +1915,7 @@ object CSV: TCSV
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object CSVFileBox: TGroupBox
         Left = 0
@@ -3109,7 +3109,7 @@ object CSV: TCSV
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object ChartsLink: TCheckBox
         Left = 0
@@ -3287,16 +3287,16 @@ object CSV: TCSV
       end
       object ScrollBox1: TScrollBox
         Left = 0
-        Height = 585
+        Height = 584
         Top = 48
         Width = 889
         HorzScrollBar.Page = 1
         HorzScrollBar.Visible = False
-        VertScrollBar.Page = 585
+        VertScrollBar.Page = 584
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 585
+        ClientHeight = 584
         ClientWidth = 872
         TabOrder = 4
         object Chart2: TChart
@@ -3320,6 +3320,7 @@ object CSV: TCSV
               Intervals.NiceSteps = '0.1|0.5|1.0'
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3350,6 +3351,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3403,6 +3405,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3433,6 +3436,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3486,6 +3490,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3516,6 +3521,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3569,6 +3575,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3599,6 +3606,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3652,6 +3660,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3682,6 +3691,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3735,6 +3745,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3765,6 +3776,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3818,6 +3830,7 @@ object CSV: TCSV
               Intervals.Options = [aipUseMaxLength, aipUseMinLength]
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3848,6 +3861,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -3900,6 +3914,7 @@ object CSV: TCSV
               Intervals.NiceSteps = '1'
               Intervals.Tolerance = 1
               Alignment = calBottom
+              MarginsForMarks = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
               Title.Margins.Left = 0
@@ -3930,6 +3945,7 @@ object CSV: TCSV
             'May-01 11:00'
           )
           Foot.Visible = True
+          MarginsExternal.Right = 15
           Title.Alignment = taRightJustify
           Title.Margins.Top = 0
           Title.Brush.Color = clBtnFace
@@ -4119,7 +4135,7 @@ object CSV: TCSV
     end
     object SondesChart: TTabSheet
       Caption = 'Sondes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Sondes: TChart
         Left = 0
@@ -4338,7 +4354,7 @@ object CSV: TCSV
     end
     object CSondes: TTabSheet
       Caption = 'C Sondes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Sondes2: TChart
         Left = 0
@@ -4557,7 +4573,7 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       Enabled = False
       object GroupBox3: TGroupBox
@@ -4664,7 +4680,7 @@ object CSV: TCSV
       end
       object ReportText: TMemo
         Left = 1
-        Height = 505
+        Height = 504
         Top = 128
         Width = 888
         Anchors = [akTop, akLeft, akBottom]
@@ -4681,7 +4697,7 @@ object CSV: TCSV
       object Report: TButton
         Left = 688
         Height = 32
-        Top = 72
+        Top = 71
         Width = 96
         Caption = 'Report'
         OnClick = ReportClick
@@ -4835,7 +4851,7 @@ object CSV: TCSV
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
@@ -4966,7 +4982,7 @@ object CSV: TCSV
     end
     object TabSheet2: TTabSheet
       Caption = 'Help'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object GroupBox8: TGroupBox
         Left = 8
@@ -5007,7 +5023,7 @@ object CSV: TCSV
     end
     object TabSheet3: TTabSheet
       Caption = 'Release Notes'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object Label33: TLabel
         Left = 8
@@ -5025,7 +5041,7 @@ object CSV: TCSV
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       TabVisible = False
       object Chart9: TChart
@@ -5095,11 +5111,11 @@ object CSV: TCSV
     end
     object ParametersList: TTabSheet
       Caption = 'Parameters List'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       object ParamsGrid: TStringGrid
         Left = 0
-        Height = 636
+        Height = 635
         Top = 0
         Width = 891
         Align = alClient
@@ -5117,12 +5133,12 @@ object CSV: TCSV
     end
     object CurvesTab: TTabSheet
       Caption = 'Curves'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
       Enabled = False
       object ScrollBox2: TScrollBox
         Left = 0
-        Height = 601
+        Height = 600
         Top = 32
         Width = 888
         HorzScrollBar.Page = 888
@@ -5130,12 +5146,12 @@ object CSV: TCSV
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 584
+        ClientHeight = 583
         ClientWidth = 888
         TabOrder = 0
         object Pane1: TChart
           Left = 0
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5144,6 +5160,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5260,7 +5278,7 @@ object CSV: TCSV
         end
         object Pane2: TChart
           Left = 88
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5269,6 +5287,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5386,7 +5406,7 @@ object CSV: TCSV
         end
         object Pane3: TChart
           Left = 176
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5395,6 +5415,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5512,7 +5534,7 @@ object CSV: TCSV
         end
         object Pane4: TChart
           Left = 264
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5521,6 +5543,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5638,7 +5662,7 @@ object CSV: TCSV
         end
         object Pane5: TChart
           Left = 352
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5647,6 +5671,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5764,7 +5790,7 @@ object CSV: TCSV
         end
         object Pane6: TChart
           Left = 440
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5773,6 +5799,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -5890,7 +5918,7 @@ object CSV: TCSV
         end
         object Pane7: TChart
           Left = 528
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -5899,6 +5927,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -6016,7 +6046,7 @@ object CSV: TCSV
         end
         object Pane8: TChart
           Left = 616
-          Height = 584
+          Height = 583
           Top = 0
           Width = 88
           AxisList = <          
@@ -6025,6 +6055,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -6142,7 +6174,7 @@ object CSV: TCSV
         end
         object Pane9: TChart
           Left = 704
-          Height = 584
+          Height = 583
           Top = 0
           Width = 100
           AxisList = <          
@@ -6151,6 +6183,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -6268,7 +6302,7 @@ object CSV: TCSV
         end
         object Pane10: TChart
           Left = 804
-          Height = 584
+          Height = 583
           Top = 0
           Width = 92
           AxisList = <          
@@ -6277,6 +6311,8 @@ object CSV: TCSV
               Intervals.MaxLength = 100
               Intervals.MinLength = 50
               Alignment = calRight
+              Arrow.Inverted = True
+              Inverted = True
               Marks.Visible = False
               Marks.LabelBrush.Style = bsClear
               Minors = <>
@@ -6478,7 +6514,7 @@ object CSV: TCSV
         Left = 224
         Height = 20
         Hint = 'Open'
-        Top = 4
+        Top = 3
         Width = 20
         OnClick = Image1Click
         ParentShowHint = False
@@ -6584,8 +6620,9 @@ object CSV: TCSV
     end
     object TabSheet5: TTabSheet
       Caption = 'TabSheet5'
-      ClientHeight = 636
+      ClientHeight = 635
       ClientWidth = 891
+      TabVisible = False
       object Memo1: TMemo
         Left = 23
         Height = 576
@@ -6732,7 +6769,7 @@ object CSV: TCSV
     Top = 632
   end
   object ChartToolset2: TChartToolset
-    Left = 704
+    Left = 680
     Top = 632
     object ChartToolset2ZoomMouseWheelTool1: TZoomMouseWheelTool
       Shift = [ssShift]

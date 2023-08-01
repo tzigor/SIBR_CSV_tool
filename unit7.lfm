@@ -63,4 +63,14 @@ object PanelsLib: TPanelsLib
     OnClick = LoadLibClick
     TabOrder = 4
   end
+  object LoadProgress: TProgressBar
+    Left = 8
+    Height = 12
+    Top = 344
+    Width = 227
+    Max = 40
+    Step = 1
+    TabOrder = 5
+    Visible = False
+  end
 end

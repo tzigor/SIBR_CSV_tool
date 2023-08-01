@@ -7,13 +7,14 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ColorBox,
   TAChartCombos, Types, Unit2, Panel, StrUtils, LCLType,
-  TAGraph, TASeries, RS232Port;
+  TAGraph, TASeries;
 
 type
 
   { TPaneEdit }
 
   TPaneEdit = class(TForm)
+    PrevTrackStyle: TCheckBox;
     DeletePane: TButton;
     DeleteCurve: TButton;
     CloseEdit: TButton;
@@ -123,14 +124,14 @@ begin
     PaneNum:= StrToInt(StringReplace(PaneNumber.Caption, 'Track ', '', [rfReplaceAll])) - 1;
     CurveNum:= StrToInt(StringReplace(AxisNumber.Caption, 'Curve: ', '', [rfReplaceAll])) - 1;
     if (PaneNum >= 0) And (CurveNum >= 0) then begin
-      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].Parameter:= Parameter.Caption;
-      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].ParameterTitle:= ParameterTitle.Text;
-      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].SerieColor:= ColorBox.Selected;
-      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenWidth:= ChartComboBox2.PenWidth;
-      CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenStyle:= ChartComboBox1.PenStyle;
-      CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
-      DrawCurveFromPane(CurrentCurve, CurvesPanel.PaneSet.Panes[PaneNum], PaneNum, CurveNum);
-      PaneEdit.Close;
+       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].Parameter:= Parameter.Caption;
+       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].ParameterTitle:= ParameterTitle.Text;
+       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].SerieColor:= ColorBox.Selected;
+       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenWidth:= ChartComboBox2.PenWidth;
+       CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenStyle:= ChartComboBox1.PenStyle;
+       CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
+       DrawCurveFromPane(CurrentCurve, CurvesPanel.PaneSet.Panes[PaneNum], PaneNum, CurveNum);
+       PaneEdit.Close;
     end
     else ShowMessage('Track or Curve number is incorrect');
   end;

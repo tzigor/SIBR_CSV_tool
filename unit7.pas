@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Unit2, Options, TAGraph, TASeries;
+  ComCtrls, Unit2, Options, TAGraph, TASeries;
 
 type
 
@@ -16,6 +16,7 @@ type
     LoadLib: TButton;
     Label1: TLabel;
     PanelName: TEdit;
+    LoadProgress: TProgressBar;
     SaveLib: TButton;
     CloseLib: TButton;
     PanelList: TListBox;
@@ -61,7 +62,7 @@ begin
 end;
 
 procedure TPanelsLib.LoadLibClick(Sender: TObject);
-var i, j: Byte;
+var i, j, n: Byte;
     LastPane: String;
 begin
   if PanelList.Items.Count > 0 then
@@ -74,17 +75,24 @@ begin
          Read(PanelsLibFile, CurvesPanel);
          CloseFile(PanelsLibFile);
          SetOptions(CurvesPanel.ChartBGColor, CurvesPanel.ChartColor, CurvesPanel.GridColor);
+         n:=0 ;
          for i:= 1 to 10 do
            for j:= 1 to 4 do
-             CSV.Memo1.Text:= CSV.Memo1.Text + CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter + Line;
+             if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then n:= n +1;
+         LoadProgress.Max:= n;
+         LoadProgress.Position:= 0;
+         for i:= 1 to 10 do
+           for j:= 1 to 4 do begin
+             //CSV.Memo1.Text:= CSV.Memo1.Text + CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter + Line;
              if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then begin
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Left:= 10000;
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= true;
                 DrawCurveFromPane(TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))), CurvesPanel.PaneSet.Panes[i-1], i-1, j-1);
                 LastPane:= 'Pane' + IntToStr(i);
              end;
-         if CSV.ShowDateTime.Checked then
-            TChart(CSV.FindComponent(LastPane)).AxisList[0].Marks.Visible:= True;
+             LoadProgress.Position:= LoadProgress.Position + 1;
+           end;
+         if CSV.ShowDateTime.Checked then TChart(CSV.FindComponent(LastPane)).AxisList[0].Marks.Visible:= True;
          CSV.PanelTitle.Caption:= PanelList.Items[PanelList.ItemIndex];
        except
          on E: EInOutError do ShowMessage('File read error: ' + E.Message);

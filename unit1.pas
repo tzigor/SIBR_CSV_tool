@@ -11,7 +11,7 @@ uses
   Unit2, Unit3, Unit4, Unit6, Unit7, Panel, Options, Types, TAChartUtils,
   TADataTools, TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp,
   LCLType, Spin, IniPropStorage, Parameters, PQConnection, Math, uComplex,
-  TAChartAxisUtils, TAChartAxis, RS232Port;
+  TAChartAxisUtils, TAChartAxis;
 
 type
 
@@ -660,16 +660,17 @@ end;
 
 procedure TCSV.Chart1AxisList1GetMarkText(Sender: TObject; var AText: String; AMark: Double);
 var DateTime: TDateTime;
+    year, month, day: Word;
 begin
    if ByDots.Checked then begin
      if (AMark >= 1) And (AMark < CSVContent.Count) then begin
        DateTime:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(AMark)])));
-       AText:= TimeToStr(DateTime) + Line + DateToStr(DateTime);
+       AText:= TimeToStr(DateTime) + Line + FormatDateTime('DD MMM', DateTime);
      end
      else AText:= '';
    end
    else if TimeScale.Checked then begin
-           AText:= TimeToStr(AMark) + Line + DateToStr(AMark);
+           AText:= TimeToStr(AMark) + Line + FormatDateTime('DD MMM', AMark);
         end
         else AText:= FloatToStrF(AMark, ffFixed, 3, 1);
 end;
@@ -709,6 +710,7 @@ begin
     PanelsLib.SaveLib.Visible:= true;
     PanelsLib.LoadLib.Visible:= false;
     PanelsLib.PanelList.Height:= 320;
+    PanelsLib.LoadProgress.Visible:= false;
     PanelsLib.Show;
   end
   else ShowMessage('Panel is empty');
@@ -734,7 +736,8 @@ begin
      PanelsLib.PanelName.Visible:= false;
      PanelsLib.SaveLib.Visible:= false;
      PanelsLib.LoadLib.Visible:= true;
-     PanelsLib.PanelList.Height:= 351;
+     PanelsLib.PanelList.Height:= 336;
+     PanelsLib.LoadProgress.Visible:= true;
      PanelsLib.Show;
   end
   else ShowMessage('Panels.lib not found');
@@ -763,7 +766,7 @@ var DateTime: TDateTime;
 begin
   if CSVContent is TStringList  then begin
      if (AMark >= 1) And (AMark < CSVContent.Count) then begin
-       DateTime:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(AMark)])));
+       DateTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(AMark)]))), hrsPlus);
        AText:= TimeToStr(DateTime) + Line + DateToStr(DateTime);
      end
      else AText:= '';
@@ -952,11 +955,13 @@ end;
 
 procedure ShowSonde(Sonde1, Sonde2: TChart; zType: Byte);
 var x, Time: TDateTime;
-    i, j, TimePos, StepCoefficient: Integer;
+    i, j, TimePos, StepCoefficient, MiliSecPos: Integer;
+    MiliSec: LongInt;
 begin
   if CSV.ZoneFromChart.Checked and (StartZone = EndZone) then ShowMessage('Time zone is not defined')
   else begin
       TimePos:= GetParamPosition('RTCs');
+      MiliSecPos:= GetParamPosition('RTCms');
       if zType = 0 then begin
         ResetSondes;
         Sonde1.Title.Text[0]:='Uncompensated Sondes - Amplitudes';
@@ -982,7 +987,9 @@ begin
           if i >= CSVContent.Count then i:= CSVContent.Count-1;
           CSV.CommonBar.Position:= CSV.CommonBar.Position + StepCoefficient;
         end;
+        MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]));
         Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+        Time:= IncMilliSecond(Time, MiliSec);
         if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
            if CSV.TimeScale.Checked then x:= IncHour(Time, hrsPlus);
            if CSV.ZoneFromChart.Checked then begin
@@ -1022,8 +1029,8 @@ begin
 end;
 
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
-var i, j, n, CtrlTempPos, ParamPos, ParamLine: Longint;
-    TimePos, StepCoefficient: Integer;
+var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
+    TimePos, MiliSecPos, StepCoefficient: Integer;
     PowerReset: boolean;
     y, yRaw, xCtrlTemp: Double;
     x, Time, PrevTime: TDateTime;
@@ -1031,6 +1038,7 @@ var i, j, n, CtrlTempPos, ParamPos, ParamLine: Longint;
 begin
   PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
+  MiliSecPos:= GetParamPosition('RTCms');
   CtrlTempPos:= GetParamPosition('TEMP_CTRL');
   ParamPos:= GetParamPosition(SelectedParamName);
   LineSerie.Clear;
@@ -1046,7 +1054,7 @@ begin
   StepCoefficient:= Trunc(CSVContent.Count / CSV.RecordsNumber.Position);
   if StepCoefficient = 0 then StepCoefficient:= 1;
   if Not CSV.FastMode.Checked then StepCoefficient:= 1;
-  i:= 1;
+  i:= 0;
   n:= 1;
   ParamLine:= 1;
   while i < CSVContent.Count do begin
@@ -1054,10 +1062,13 @@ begin
       for j:=1 to StepCoefficient do begin
         i:= i + 1;
       end;
-      if i >= CSVContent.Count then i:= CSVContent.Count-1;
       CSV.CommonBar.Position:= CSV.CommonBar.Position + StepCoefficient;
-    end;
+    end
+    else i:= i + 1;
+    if i >= CSVContent.Count then break;
+    MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]));
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+    Time:= IncMilliSecond(Time, MiliSec);
     if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
        if  SelectedParamName in CondChannels then y:= GetSonde(SelectedParamName, i)
        else if SelectedParamName in CondCompChannels then y:= GetCompSonde(SelectedParamName, i)
@@ -1101,7 +1112,7 @@ begin
     end;
 
     CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
-    i:= i + 1;
+    //i:= i + 1;
     n:= n + 1;
   end;
   CSV.CommonBar.Position:= 0;
@@ -1166,28 +1177,23 @@ procedure ChartsVisible(visible: Boolean);
 var i: byte;
 begin
  for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible:= visible;
- for i:=2 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= visible;
 end;
 
 procedure ResetZoom;
 var i: byte;
 begin
  for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).ZoomFull();
- for i:=1 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
 end;
 
 procedure ResetSeries;
 var i, j: byte;
 begin
  for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart' + IntToStr(i) +'LineSeries1')).Clear;
- for i:=1 to 10 do
-   for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Clear;
 end;
 
 procedure ResetCharts;
 begin
   NewChart:= true;
-  ResetPanes(2);
   ResetSeries;
   ResetZoom;
   ChartsVisible(false);
@@ -1280,9 +1286,9 @@ begin
   if Not ReDraw and DrawClicked then ChartsCurrentExtent:= Chart1.CurrentExtent;
   ReDraw:= false;
   dr:= Chart1.CurrentExtent;
-  if dr.a.X <= 0 then dr.a.X:= 1;
-  if CSV.TimeScale.Checked then ASender.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X)
-  else if CSV.ByDots.Checked then ASender.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(dr.a.X)]))));
+  if dr.a.X < 1 then dr.a.X:= 1;
+  if CSV.TimeScale.Checked then ASender.Foot.Text[0]:= FormatDateTime('yyyy-mmm-dd hh:mm', dr.a.X)
+  else if CSV.ByDots.Checked then ASender.Foot.Text[0]:= FormatDateTime('yyyy-mmm-dd hh:mm', UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(dr.a.X)]))));
   StartZone:= dr.a.X;
   EndZone:= dr.b.X;
   if TimeScale.Checked then begin
@@ -1308,9 +1314,9 @@ begin
   end
   else ASender.Foot.Visible:= true;
   dr:= ASender.CurrentExtent;
-  if dr.a.X <= 0 then dr.a.X:= 1;
-  if CSV.TimeScale.Checked then ASender.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', dr.a.X)
-  else if CSV.ByDots.Checked then ASender.Foot.Text[0]:= FormatDateTime('mmm-dd hh:mm', UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(dr.a.X)]))));
+  if dr.a.X < 1 then dr.a.X:= 1;
+  if CSV.TimeScale.Checked then ASender.Foot.Text[0]:= FormatDateTime('yyyy-mmm-dd hh:mm', dr.a.X)
+  else if CSV.ByDots.Checked then ASender.Foot.Text[0]:= FormatDateTime('yyyy-mmm-dd hh:mm', UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(dr.a.X)]))));
 end;
 
 procedure TCSV.ChartsLinkChange(Sender: TObject);
@@ -2019,18 +2025,28 @@ end;
 
 procedure TCSV.ChartToolset2AxisClickTool1Click(ASender: TChartTool;
   Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
-var i: Integer;
+var i, TrackNumber: Integer;
 begin
-  PaneEdit.ParameterList.Clear;
-  PaneEdit.PaneNumber.Caption:= 'Track ' + StringReplace(ASender.Chart.Name, 'Pane', '', [rfReplaceAll]);
-  PaneEdit.AxisNumber.Caption:= 'Curve: ' + IntToStr(Axis.Index);
-  PaneEdit.Parameter.Caption:= '';
-  PaneEdit.ParameterTitle.Text:= '';
-  for i:=0 to Length(AmplitudesChannels)-1 do PaneEdit.ParameterList.Items.Add(AmplitudesChannels[i]);
-  for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
-  for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
-  for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
-  PaneEdit.Show;
+  TrackNumber:= StrToInt(StringReplace(ASender.Chart.Name, 'Pane', '', [rfReplaceAll]));
+  if (TrackNumber > 0) And (Axis.Index > 0) then begin
+    PaneEdit.ParameterList.Clear;
+    PaneEdit.PaneNumber.Caption:= 'Track ' + StringReplace(ASender.Chart.Name, 'Pane', '', [rfReplaceAll]);
+    PaneEdit.AxisNumber.Caption:= 'Curve: ' + IntToStr(Axis.Index);
+    PaneEdit.Parameter.Caption:= '';
+    PaneEdit.ParameterTitle.Text:= '';
+    for i:=0 to Length(AmplitudesChannels)-1 do PaneEdit.ParameterList.Items.Add(AmplitudesChannels[i]);
+    for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
+    for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
+    for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
+
+    if TrackNumber > 1 then begin
+        PaneEdit.ColorBox.Selected:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].SerieColor;
+        PaneEdit.ChartComboBox2.PenWidth:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].PenWidth;
+        PaneEdit.ChartComboBox1.PenStyle:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].PenStyle;
+    end;
+
+    PaneEdit.Show;
+  end;
 end;
 
 procedure TCSV.ChartToolset2DataPointHintTool1Hint(ATool: TDataPointHintTool;

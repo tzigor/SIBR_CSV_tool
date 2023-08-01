@@ -140,7 +140,7 @@ begin
     else YMax:= FloatToStrF(YMinMax.Max, ffExponent, 1,0);
     if YMinMax.Min < 1000000 then YMin:= FloatToStrF(YMinMax.Min, ffFixed, 10, 1)
     else YMin:= FloatToStrF(YMinMax.Min, ffExponent, 1,0);
-    LineSerie.GetAxisY.Title.Caption:= Title + Line + YMin + '                            ' + YMax;
+    LineSerie.GetAxisY.Title.Caption:= Title + Line + YMin + '                                    ' + YMax;
   end
   else begin
     LineSerie.GetAxisY.Title.Caption:= 'Click here to add curve' + Line + '                     ';
@@ -151,7 +151,6 @@ end;
 
 procedure DrawCurveFromPane(CurrentCurve: TLineSeries; Pane: TPane; PaneNum, CurveNum: Byte);
 begin
-  ShowMessage(CurrentCurve.Name);
   CurrentCurve.ParentChart.ZoomFull();
   CurrentCurve.ParentChart.AxisList[CurveNum + 1].Title.LabelFont.Color:= Pane.Curves[CurveNum].SerieColor;
   CurrentCurve.ParentChart.AxisList[CurveNum + 1].AxisPen.Color:= Pane.Curves[CurveNum].SerieColor;
