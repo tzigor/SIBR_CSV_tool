@@ -14,7 +14,6 @@ type
   { TPaneEdit }
 
   TPaneEdit = class(TForm)
-    PrevTrackStyle: TCheckBox;
     DeletePane: TButton;
     DeleteCurve: TButton;
     CloseEdit: TButton;

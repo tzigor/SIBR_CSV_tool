@@ -151,6 +151,8 @@ var
   //PaneSet: TPaneSet;
   CurvesPanel: TPanel;
   PanelsLibFile: file of TPanel;
+  LibFileName: String;
+  NumberOfPoints: Longint;
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;

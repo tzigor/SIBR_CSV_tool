@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 1877
+  Left = 1884
   Height = 663
-  Top = -708
+  Top = -727
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v2.0.0 Portable'
+  Caption = 'SIBR Dump Tool v2.0.1 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1904,14 +1904,14 @@ object CSV: TCSV
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = CurvesTab
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 10
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -2064,35 +2064,6 @@ object CSV: TCSV
           ParentFont = False
         end
       end
-      object OpenCSVFast: TButton
-        Left = 101
-        Height = 32
-        Top = 184
-        Width = 131
-        Caption = 'Open CSV'
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = clSilver
-        Font.Height = -16
-        Font.Pitch = fpVariable
-        Font.Quality = fqDraft
-        OnClick = OpenCSVFastClick
-        ParentFont = False
-        TabOrder = 1
-      end
-      object Button2: TButton
-        Left = 776
-        Height = 32
-        Top = 601
-        Width = 112
-        Caption = 'Close'
-        Font.CharSet = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Pitch = fpVariable
-        Font.Quality = fqDraft
-        OnClick = Button2Click
-        ParentFont = False
-        TabOrder = 2
-      end
       object GroupBox4: TGroupBox
         Left = 0
         Height = 368
@@ -2103,7 +2074,7 @@ object CSV: TCSV
         ClientWidth = 228
         ParentBackground = False
         ParentColor = False
-        TabOrder = 3
+        TabOrder = 1
         object Label11: TLabel
           Left = 8
           Height = 15
@@ -2382,7 +2353,7 @@ object CSV: TCSV
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 2
         Text = 'File:'
       end
       object Button7: TButton
@@ -2392,7 +2363,7 @@ object CSV: TCSV
         Width = 64
         Caption = 'Copy'
         OnClick = Button7Click
-        TabOrder = 5
+        TabOrder = 3
       end
       object GroupBox7: TGroupBox
         Left = 240
@@ -2405,7 +2376,7 @@ object CSV: TCSV
         Color = clWhite
         ParentBackground = False
         ParentColor = False
-        TabOrder = 6
+        TabOrder = 4
         object DrawBtnReleased: TImage
           Left = 320
           Height = 38
@@ -3105,6 +3076,78 @@ object CSV: TCSV
           OnChange = RemoveExtremesChange
           TabOrder = 19
         end
+      end
+      object OpenCSV: TBitBtn
+        Left = 88
+        Height = 32
+        Top = 184
+        Width = 144
+        Caption = 'Open CSV'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clNavy
+        Font.Height = -16
+        Font.Name = 'Segoe UI'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Glyph.Data = {
+          6E040000424D6E040000000000003600000028000000120000000F0000000100
+          20000000000038040000640000006400000000000000000000001365B5FF0B6A
+          CBFF0A69CAFF0B6ACAFF0B6ACAFF0B69CAFF0B69CAFF0B6ACAFF0C6ACAFF0B6A
+          CAFF0A6ACAFF0B69CAFF0B6ACBFF136FCCF593BCE672FDFDFE01000000000000
+          00000D70C4FF0378E0FF0172DDFF0171DDFF0171DDFF0171DDFF0171DDFF0171
+          DDFF0171DDFF0171DDFF0171DDFF0171DDFF0171DDFF0473DDFC529DE5AFE8F1
+          FA1700000000000000000D76C9FF0586EAFF0179E1FF0177E1FF0177E1FF0177
+          E1FF0177E1FF0177E1FF0177E1FF0177E1FF0177E1FF0177E1FF0177E1FF0177
+          E1FE2489E2DDB3D5F24EFDFDFE01000000000C79CAFF0593F3FF0386E8FF017E
+          E5FF017EE5FF017DE5FF017EE5FF017EE5FF017DE5FF017EE5FF017DE5FF017D
+          E5FF017EE5FF017DE5FE0982E5F769B1EC99E9F3FB17000000000C7FCBFF049D
+          F8FF0595F0FF0186EAFF0184E9FF0184E9FF0184E9FF0184E9FF0184E9FF0184
+          E9FF0184E9FF0184E9FF0184E9FF0184E9FF0184E9FE2996EBD8B7DBF64AFCFD
+          FE020C84CBFF03A3FAFF06A3F6FF0391EFFF018AEEFF018AEDFF018AEEFF018A
+          EEFF018AEDFF018AEDFF018AEDFF018AEDFF018AEEFF018AEEFF018AEDFF0A8D
+          EDF676BEF28DF1F8FD0E0C89CBFF02A9FBFF04ABFAFF05A1F4FF0191F2FF0190
+          F2FF0190F2FF0190F2FF0190F2FF0190F2FF0190F2FF0190F2FF0190F2FF0190
+          F2FF0190F2FF0190F2FE2FA3F1D3CEE8FA330D8DCBFF02AEFAFF01AEFBFF07B0
+          F8FF049EF6FF0197F6FF0197F6FF0197F6FF0197F6FF0197F6FF0197F6FF0197
+          F6FF0197F6FF0197F6FF0197F6FF0197F6FF0899F5F992D0F6780D91CBFF01B3
+          FAFF01B3FBFF03B5FAFF07B4F9FF07B0F8FF06AEF8FF06AEF8FF06AEF8FF06AE
+          F7FF07AECCFF07AFB3FF07AFB2FF07AFB4FE1BB3D0EB48C0F7BF58C5F8B1BAE5
+          FA4F0D95CBFF01B8FBFF01B8FBFF01B8FBFF02B9FBFF02B9FAFF02B9FAFF03BA
+          FAFF03BAF9FF03BAF2FF03BA65FF02BB15FF02BB13FF04BB18FD45C776BED7F0
+          F42BEDF9FC13FAFDFE050D99CBFF01BCFBFF01BCFBFF01BCFBFF01BCFBFF01BC
+          FBFF0ABFF9F935C9F3D237C9D3CF12C396F303C132FE01C102FF01C101FF02C1
+          03FD2AC73DD795E19C6CDFF4DF200000000026A5D0E813C3F8F113C3F9F215C3
+          F9F216C3F9F21DC5F8EC63D6F4A6C9EFF83ACDF1E33476DE848D15CC1AEB01C9
+          01FE01C901FF02C902FD20CD22E08DE28E75EAF8EA1500000000B4E2EE5495E1
+          F47497E2F47699E2F4769BE2F476A7E5F567DFF5FA23FDFEFE0200000000E9F9
+          E91674E3748D10D310F001D001FE18D418E887E6877BEDFAED12000000000000
+          000000000000FDFDFE01FDFDFE01FDFDFE01FDFDFE01FDFEFE01000000000000
+          00000000000000000000E2F9E21D6FE66F9324DC23DE81E98181EBFAEB150000
+          0000000000000000000000000000000000000000000000000000000000000000
+          000000000000000000000000000000000000FDFEFD01DFF8DF21B6F2B64DE6FA
+          E61A00000000000000000000000000000000
+        }
+        OnClick = OpenCSVClick
+        ParentFont = False
+        Spacing = 10
+        TabOrder = 5
+      end
+      object CloseForm: TBitBtn
+        Left = 776
+        Height = 30
+        Top = 600
+        Width = 107
+        Caption = 'Close'
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clMaroon
+        Font.Height = -16
+        Font.Name = 'Segoe UI Semibold'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        OnClick = CloseFormClick
+        ParentFont = False
+        TabOrder = 6
       end
     end
     object Graphs: TTabSheet
@@ -4995,10 +5038,10 @@ object CSV: TCSV
         TabOrder = 0
         object Label25: TLabel
           Left = 8
-          Height = 105
+          Height = 120
           Top = 8
           Width = 188
-          Caption = 'Vertical and horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'#13#10'Stick label on datapoint to all charts'
+          Caption = 'Vertical and horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'#13#10'Stick label on datapoint to all charts'#13#10'Delete point'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
           Font.Pitch = fpVariable
@@ -5008,10 +5051,10 @@ object CSV: TCSV
         end
         object Label26: TLabel
           Left = 240
-          Height = 105
+          Height = 120
           Top = 8
           Width = 298
-          Caption = '- SHIFT + mousewheel'#13#10'- CTRL + mousewheel'#13#10'- ALT + mousewheel'#13#10'- by left button'#13#10'- by right button'#13#10'- Move cursor on datapoint and click CTRL +  left button'#13#10'- Move cursor on datapoint and click ALT +  left button'
+          Caption = '- SHIFT + mousewheel'#13#10'- CTRL + mousewheel'#13#10'- ALT + mousewheel'#13#10'- by left button'#13#10'- by right button'#13#10'- Move cursor on datapoint and click CTRL +  left button'#13#10'- Move cursor on datapoint and click ALT +  left button'#13#10'- SHIFT + left button'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -5185,7 +5228,10 @@ object CSV: TCSV
               Minors = <>
               Title.Alignment = taCenter
               Title.Distance = 1
+              Title.LabelFont.CharSet = ANSI_CHARSET
               Title.LabelFont.Color = clGray
+              Title.LabelFont.Pitch = fpVariable
+              Title.LabelFont.Quality = fqDraft
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
@@ -5210,7 +5256,12 @@ object CSV: TCSV
               Minors = <>
               Title.Alignment = taCenter
               Title.Distance = 1
+              Title.LabelFont.CharSet = ANSI_CHARSET
               Title.LabelFont.Color = clGray
+              Title.LabelFont.Height = -12
+              Title.LabelFont.Name = 'Segoe UI'
+              Title.LabelFont.Pitch = fpVariable
+              Title.LabelFont.Quality = fqDraft
               Title.Visible = True
               Title.Caption = 'Click here to add curve'#13#10' '
               Title.LabelBrush.Style = bsClear
@@ -6432,18 +6483,19 @@ object CSV: TCSV
       object AddPane: TButton
         Left = 88
         Height = 25
-        Top = -1
+        Top = 2
         Width = 75
         Caption = 'Add track'
         OnClick = AddPaneClick
         TabOrder = 1
       end
       object OptionsBtn: TImage
-        Left = 856
-        Height = 23
+        Left = 868
+        Height = 635
         Hint = 'Options'
-        Top = 5
+        Top = 0
         Width = 23
+        Align = alRight
         OnClick = OptionsBtnClick
         ParentShowHint = False
         Picture.Data = {
@@ -6500,21 +6552,22 @@ object CSV: TCSV
           72656520372E30B0E96D7E0000000049454E44AE426082
         }
         ShowHint = True
+        Visible = False
       end
       object NewPanel: TToggleBox
         Left = 0
         Height = 25
-        Top = -1
+        Top = 2
         Width = 75
         Caption = 'New Panel'
         OnChange = NewPanelChange
         TabOrder = 2
       end
       object Image1: TImage
-        Left = 224
+        Left = 200
         Height = 20
         Hint = 'Open'
-        Top = 3
+        Top = 4
         Width = 20
         OnClick = Image1Click
         ParentShowHint = False
@@ -6550,12 +6603,13 @@ object CSV: TCSV
           7E0000000049454E44AE426082
         }
         ShowHint = True
+        Visible = False
       end
       object Image2: TImage
-        Left = 256
+        Left = 232
         Height = 20
         Hint = 'Open'
-        Top = 5
+        Top = 3
         Width = 23
         OnClick = Image2Click
         ParentShowHint = False
@@ -6593,6 +6647,7 @@ object CSV: TCSV
           776561766572204672656520372E30B0E96D7E0000000049454E44AE426082
         }
         ShowHint = True
+        Visible = False
       end
       object ShowDateTime: TCheckBox
         Left = 736
@@ -6604,9 +6659,9 @@ object CSV: TCSV
         TabOrder = 3
       end
       object PanelTitle: TLabel
-        Left = 312
+        Left = 336
         Height = 21
-        Top = 3
+        Top = 2
         Width = 67
         Caption = 'Panel title'
         Font.CharSet = ANSI_CHARSET
@@ -6616,6 +6671,34 @@ object CSV: TCSV
         Font.Quality = fqDraft
         ParentColor = False
         ParentFont = False
+      end
+      object Inverted: TCheckBox
+        Left = 648
+        Height = 19
+        Top = 5
+        Width = 63
+        Caption = 'Inverted'
+        Checked = True
+        OnChange = InvertedChange
+        State = cbChecked
+        TabOrder = 4
+      end
+      object Import: TBitBtn
+        Left = 264
+        Height = 22
+        Top = 3
+        Width = 50
+        Caption = 'Import'
+        Color = clWhite
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Name = 'Segoe UI Semibold'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        Font.Style = [fsBold]
+        OnClick = ImportClick
+        ParentFont = False
+        TabOrder = 5
       end
     end
     object TabSheet5: TTabSheet
@@ -6642,7 +6725,6 @@ object CSV: TCSV
         Top = 73
         Width = 75
         Caption = 'Button4'
-        OnClick = Button4Click
         TabOrder = 1
       end
     end
@@ -6687,6 +6769,7 @@ object CSV: TCSV
     end
     object ChartToolset1DataPointClickTool1: TDataPointClickTool
       Shift = [ssCtrl, ssLeft]
+      OnAfterKeyDown = ChartToolset1DataPointClickTool1AfterKeyDown
       OnPointClick = ChartToolset1DataPointClickTool1PointClick
     end
     object ChartToolset1DataPointHintTool1: TDataPointHintTool
@@ -6703,8 +6786,14 @@ object CSV: TCSV
     end
     object ChartToolset1DataPointClickTool2: TDataPointClickTool
       Shift = [ssAlt, ssLeft]
+      OnAfterKeyDown = ChartToolset1DataPointClickTool2AfterKeyDown
       OnAfterMouseUp = ChartToolset1DataPointClickTool2AfterMouseUp
       OnPointClick = ChartToolset1DataPointClickTool2PointClick
+    end
+    object ChartToolset1DataPointClickTool3: TDataPointClickTool
+      Shift = [ssShift, ssLeft]
+      OnAfterKeyDown = ChartToolset1DataPointClickTool3AfterKeyDown
+      OnPointClick = ChartToolset1DataPointClickTool3PointClick
     end
   end
   object ChartExtentLink1: TChartExtentLink
@@ -6797,8 +6886,14 @@ object CSV: TCSV
       OnClick = ChartToolset2AxisClickTool1Click
     end
     object ChartToolset2DataPointHintTool1: TDataPointHintTool
+      OnAfterKeyDown = ChartToolset2DataPointHintTool1AfterKeyDown
       ActiveCursor = crCross
       OnHint = ChartToolset2DataPointHintTool1Hint
+    end
+    object ChartToolset2DataPointClickTool1: TDataPointClickTool
+      Shift = [ssShift, ssLeft]
+      OnAfterKeyDown = ChartToolset2DataPointClickTool1AfterKeyDown
+      OnPointClick = ChartToolset2DataPointClickTool1PointClick
     end
   end
   object ChartExtentLink3: TChartExtentLink
@@ -6835,5 +6930,11 @@ object CSV: TCSV
       end>
     Left = 760
     Top = 632
+  end
+  object OpenDialog2: TOpenDialog
+    DefaultExt = '.lib'
+    Filter = '*.lib|*.lib'
+    Left = 224
+    Top = 635
   end
 end

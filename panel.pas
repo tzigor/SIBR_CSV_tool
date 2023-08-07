@@ -28,6 +28,7 @@ procedure PanesResetAxises;
 procedure InitTransformations;
 procedure HideRightAxises;
 procedure SetDateTimeVisible;
+procedure CurveInvert(invert: boolean);
 
 implementation
 
@@ -83,27 +84,36 @@ begin
 end;
 
 function GetExtentMinMax(LineSerie: TLineSeries): TMinMax;
-var Max, Min: Double;
+var wMax, wMin, K: Double;
     dr: TDoubleRect;
-    i, start, count: Longint;
+    i, start, count, startExt, endExt, startCurrentExt, endCurrentExt: Longint;
 begin
   if LineSerie.Count > 0 then begin
     start:= 0;
-    dr:= LineSerie.ParentChart.CurrentExtent;
-    if dr.a.Y > 0 then start:= Trunc(dr.a.Y);
     count:= LineSerie.Count-1;
-    if dr.b.Y < count then count:= Trunc(dr.b.Y);
+    dr:= LineSerie.ParentChart.GetFullExtent;
+    startExt:= Trunc(dr.a.Y);
+    endExt:= Trunc(dr.b.Y);
+    dr:= LineSerie.ParentChart.CurrentExtent;
+    startCurrentExt:= Trunc(dr.a.Y);
+    endCurrentExt:= Trunc(dr.b.Y);
+    K:= (endExt - startExt) / count;
+    if startCurrentExt < startExt then startCurrentExt:= startExt;
+    if endCurrentExt > endExt then endCurrentExt:= endExt;
 
-    Min:= LineSerie.ListSource.Item[start]^.Y;
-    Max:= Min;
+    start:= Trunc((startCurrentExt - startExt) / K);
+    count:= Trunc((endCurrentExt - startExt) / K);
+
+    wMin:= LineSerie.ListSource.Item[start]^.Y;
+    wMax:= wMin;
 
     for i:=start to count do begin
-      if LineSerie.ListSource.Item[i]^.Y < Min then Min:= LineSerie.ListSource.Item[i]^.Y;
-      if LineSerie.ListSource.Item[i]^.Y > Max then Max:= LineSerie.ListSource.Item[i]^.Y;
+      if LineSerie.ListSource.Item[i]^.Y < wMin then wMin:= LineSerie.ListSource.Item[i]^.Y;
+      if LineSerie.ListSource.Item[i]^.Y > wMax then wMax:= LineSerie.ListSource.Item[i]^.Y;
     end;
   end;
-  GetExtentMinMax.Min:= Min;
-  GetExtentMinMax.Max:= Max;
+  GetExtentMinMax.Min:= wMin;
+  GetExtentMinMax.Max:= wMax;
 end;
 
 function GetFullMinMax(LineSerie: TLineSeries): TMinMax;
@@ -128,12 +138,24 @@ begin
   LineSerie.ParentChart.LogicalExtent:= dr;
 end;
 
+procedure CurveName(LineSerie: TLineSeries; Title: String);
+var YMax, YMin: String;
+    YMinMax: TminMax;
+begin
+  //if LineSerie.Count > 0 then
+     LineSerie.GetAxisY.Title.Caption:= Title + Line + YMin + '                                    ' + YMax
+  //else begin
+  //  LineSerie.GetAxisY.Title.Caption:= 'Click here to add curve' + Line + '                     ';
+  //  LineSerie.GetAxisY.Title.LabelFont.Color:= clGray;
+  //  LineSerie.GetAxisY.AxisPen.Color:= clGray;
+  //end;
+end;
+
 procedure CurveTitle(LineSerie: TLineSeries; Title: String);
 var YMax, YMin: String;
     YMinMax: TminMax;
 begin
   if LineSerie.Count > 0 then begin
-
     YMinMax:= GetExtentMinMax(LineSerie);
 
     if YMinMax.Max < 1000000 then YMax:= FloatToStrF(YMinMax.Max, ffFixed, 10, 1)
@@ -158,7 +180,7 @@ begin
   CurrentCurve.LinePen.Width:= Pane.Curves[CurveNum].PenWidth;
   CurrentCurve.SeriesColor:= Pane.Curves[CurveNum].SerieColor;
   DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter);
-  CurveTitle(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
+  CurveName(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
 end;
 
 procedure SetDateTimeVisible;
@@ -217,6 +239,22 @@ begin
    end;
 end;
 
+procedure PanesResetAxisesFont;
+var i, j: byte;
+begin
+ for i:=1 to 10 do
+   for j:=1 to 4 do begin
+     TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[j].Title.LabelFont.Bold:= True;
+   end;
+end;
+
+procedure CurveInvert(invert: boolean);
+var i, j: byte;
+begin
+ for i:=1 to 10 do
+     TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[0].Inverted:= invert;
+end;
+
 procedure InitTransformations;
 var i, j: byte;
     T: TChartAxisTransformations;
@@ -248,6 +286,7 @@ begin
   PaneSetInit;
   PanesVisible(false, n);
   PanesResetZoom;
+  PanesResetAxisesFont;
   PanesResetSeries;
   FitPanesToWindow;
 end;

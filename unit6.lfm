@@ -1,7 +1,7 @@
 object PaneEdit: TPaneEdit
-  Left = 478
+  Left = 2845
   Height = 413
-  Top = 157
+  Top = -663
   Width = 420
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
@@ -206,14 +206,6 @@ object PaneEdit: TPaneEdit
     Caption = 'Delete track'
     OnClick = DeletePaneClick
     TabOrder = 8
-  end
-  object PrevTrackStyle: TCheckBox
-    Left = 19
-    Height = 19
-    Top = 232
-    Width = 129
-    Caption = 'Style from prev track'
-    TabOrder = 9
   end
   object ColorDialog1: TColorDialog
     Color = clBlack
