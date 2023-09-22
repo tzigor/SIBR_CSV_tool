@@ -11,7 +11,7 @@ uses
   Unit2, Unit3, Unit4, Unit6, Unit7, Panel, Options, Types, TAChartUtils,
   TADataTools, TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp,
   LCLType, Spin, IniPropStorage, Buttons, Parameters, PQConnection, Math,
-  uComplex, TAChartAxisUtils, TAChartAxis;
+  uComplex, TAChartAxisUtils, TAChartAxis, TADrawUtils, TATypes;
 
 type
 
@@ -20,7 +20,9 @@ type
   TCSV = class(TForm)
     App: TPageControl;
     AutoFit: TCheckBox;
+    CurveChartPoints: TCheckBox;
     CloseForm: TBitBtn;
+    Image7: TImage;
     OpenCSV: TBitBtn;
     ChartToolset1DataPointClickTool3: TDataPointClickTool;
     ChartToolset2DataPointClickTool1: TDataPointClickTool;
@@ -96,7 +98,6 @@ type
     Pane7: TChart;
     Pane8: TChart;
     Pane9: TChart;
-
     CurvesTab: TTabSheet;
     Image6: TImage;
     LDivider: TLabel;
@@ -313,6 +314,8 @@ type
       APoint: TPoint);
     procedure ChartToolset1DataPointClickTool3PointClick(ATool: TChartTool;
       APoint: TPoint);
+    procedure ChartToolset1DataPointHintTool1AfterKeyDown(ATool: TChartTool;
+      APoint: TPoint);
     procedure ChartToolset2AxisClickTool1Click(ASender: TChartTool;
       Axis: TChartAxis; AHitInfo: TChartAxisHitTests);
     procedure ChartToolset2DataPointClickTool1AfterKeyDown(ATool: TChartTool;
@@ -324,6 +327,7 @@ type
     procedure ChartToolset2DataPointHintTool1Hint(ATool: TDataPointHintTool;
       const APoint: TPoint; var AHint: String);
     procedure CloseFormClick(Sender: TObject);
+    procedure CurveChartPointsChange(Sender: TObject);
     procedure FastModeChange(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -334,6 +338,7 @@ type
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
+    procedure Image7Click(Sender: TObject);
     procedure ImportClick(Sender: TObject);
     procedure InvertedChange(Sender: TObject);
     procedure Label41Click(Sender: TObject);
@@ -390,7 +395,6 @@ type
     procedure EstimateFastClick(Sender: TObject);
     procedure FullRangeClick(Sender: TObject);
     procedure GenerateClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure OpenCSVFastClick(Sender: TObject);
     procedure ReportClick(Sender: TObject);
     procedure TimeOnBottomChange(Sender: TObject);
@@ -450,11 +454,6 @@ procedure TCSV.GenerateClick(Sender: TObject);
         on E: EInOutError do
           ShowMessage('Error: ' + E.Message);
         end;
-end;
-
-procedure TCSV.Button2Click(Sender: TObject);
-begin
-
 end;
 
 procedure TCSV.OpenCSVFastClick(Sender: TObject);
@@ -644,6 +643,12 @@ begin
   for i:=1 to 8 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
 end;
 
+procedure TCSV.ChartToolset1DataPointHintTool1AfterKeyDown(ATool: TChartTool;
+  APoint: TPoint);
+begin
+
+end;
+
 procedure TCSV.GetRangeBtnClick(Sender: TObject);
 begin
   if StartZone = EndZone then ShowMessage('Time zone is not defined')
@@ -729,7 +734,7 @@ begin
       try
          while not eof(PanelsLibFile) do begin
             Read(PanelsLibFile, Data);
-            PanelsLib.PanelList.Items.Add(Data.Name);
+            if Data.Name <> '' then PanelsLib.PanelList.Items.Add(Data.Name);
          end;
          CloseFile(PanelsLibFile);
       except
@@ -761,7 +766,7 @@ begin
      try
        while not eof(PanelsLibFile) do begin
           Read(PanelsLibFile, CurvesPanel);
-          PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
+          if CurvesPanel.Name <> '' then PanelsLib.PanelList.Items.Add(CurvesPanel.Name);
        end;
        CloseFile(PanelsLibFile);
      except
@@ -778,13 +783,26 @@ begin
      PanelsLib.Show;
   end
   else ShowMessage('Panels.lib not found');
-  LibFileName:= 'Panels.lib';
 end;
 
 procedure TCSV.Image4Click(Sender: TObject);
 var i: Byte;
 begin
   for i:=1 to 8 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
+end;
+
+procedure TCSV.Image7Click(Sender: TObject);
+var i, j: byte;
+    LineSerie: TLineSeries;
+begin
+   ChartExtentLink3.Enabled:= False;
+   Sleep(300);
+   for i:=1 to 10 do
+     for j:=1 to 4 do begin
+        LineSerie:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j)));
+        if LineSerie.Count > 0 then ZoomCurveExtent(LineSerie);
+     end;
+    ChartExtentLink3.Enabled:= True;
 end;
 
 procedure TCSV.ImportClick(Sender: TObject);
@@ -878,8 +896,8 @@ begin
            else SubStr:= SubStr + CSVContent[0][i];
         end;
 
-        for i:= 0 to 15 do ComputedChannels.Items.Add(AmplitudeName(i));
-        for i:= 0 to 15 do ComputedChannels.Items.Add(PhaseShiftName(i));
+        for i:= 0 to 19 do ComputedChannels.Items.Add(AmplitudesChannels[i]);
+        for i:= 0 to 19 do ComputedChannels.Items.Add(PhaseChannels[i]);
         for i:= 0 to 15 do ComputedChannels.Items.Add(CondChannels[i]);
         for i:= 0 to 11 do ComputedChannels.Items.Add(CondCompChannels[i]);
 
@@ -1196,6 +1214,14 @@ begin
   else HideRightAxises;
 end;
 
+function GetAcumulatedStatusWord(SWLO, SWHi, ESWLO, ESWHi: Word; y: Double; SWParam: String): Word;
+begin
+   if SWParam = 'STATUS.SIBR.LO' then Result:= SWLO or Trunc(y)
+   else if SWParam = 'STATUS.SIBR.HI' then Result:= SWHi or Trunc(y)
+        else if SWParam = 'ESTATUS.SIBR.LO' then Result:= ESWLO or Trunc(y)
+             else Result:= ESWHi or Trunc(y)
+end;
+
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
 var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     TimePos, MiliSecPos, StepCoefficient: Integer;
@@ -1203,7 +1229,14 @@ var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     y, yRaw, xCtrlTemp: Double;
     x, Time, PrevTime: TDateTime;
     Sticker: String;
+    SWLO, SWHi, ESWLO, ESWHi: Word;
+    SWLOPos, SWHiPos, ESWLOPos, ESWHiPos: Longint;
 begin
+  SWLOPos:= GetParamPosition('STATUS.SIBR.LO');
+  SWHiPos:= GetParamPosition('STATUS.SIBR.HI');
+  ESWLOPos:= GetParamPosition('ESTATUS.SIBR.LO');
+  ESWHiPos:= GetParamPosition('ESTATUS.SIBR.HI');
+
   PowerReset:= false;
   TimePos:= GetParamPosition('RTCs');
   MiliSecPos:= GetParamPosition('RTCms');
@@ -1227,12 +1260,24 @@ begin
   ParamLine:= 1;
   while i < CSVContent.Count do begin
     if CSV.FastMode.Checked then begin
+      SWLO:= 0;
+      SWHi:= 0;
+      ESWLO:= 0;
+      ESWHi:= 0;
       for j:=1 to StepCoefficient do begin
-        i:= i + 1;
+         Inc(i);
+         if i >= CSVContent.Count then break;
+         Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
+         if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
+            if SelectedParamName = 'STATUS.SIBR.LO' then SWLO:= SWLO or StrToInt(GetParamValue(SWLOPos, CSVContent[i]))
+            else if SelectedParamName = 'STATUS.SIBR.HI' then SWHi:= SWHi or StrToInt(GetParamValue(SWHiPos, CSVContent[i]))
+                 else if SelectedParamName = 'ESTATUS.SIBR.LO' then ESWLO:= ESWLO or StrToInt(GetParamValue(ESWLOPos, CSVContent[i]))
+                      else ESWHi:= ESWHi or StrToInt(GetParamValue(ESWHiPos, CSVContent[i]));
+         end;
       end;
       CSV.CommonBar.Position:= CSV.CommonBar.Position + StepCoefficient;
     end
-    else i:= i + 1;
+    else Inc(i);
     if i >= CSVContent.Count then break;
     MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]));
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
@@ -1247,23 +1292,26 @@ begin
                y:= yRaw;
             end
             else
-                if FindPart('AR?T?F', SelectedParamName) > 0 then begin
+                if FindPart('AR???F', SelectedParamName) > 0 then begin
                    yRaw:= Amplitude(NameToInt(SelectedParamName), i);
                    y:= yRaw;
                 end
-                else if FindPart('PR?T?F', SelectedParamName) > 0 then begin
+                else if FindPart('PR???F', SelectedParamName) > 0 then begin
                         yRaw:= PhaseShift(NameToInt(SelectedParamName), i);
                         y:= yRaw;
                      end
                      else begin
                         TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), yRaw);
                         y:= yRaw;
-                        if not TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then y:= ParameterError;
-                        if yRaw = +infinity then y:= 100000;
-                        if yRaw = -infinity then y:= -100000;
-                        if CSV.RemoveExtremes.Checked then begin
-                           if (SelectedParamName = 'BHP') and ((y > 500) or (y < -50)) then y:= ParameterError;
-                           if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= ParameterError;
+                        if SelectedParamName in StatusWords then y:= GetAcumulatedStatusWord(SWLO, SWHi, ESWLO, ESWHi, y, SelectedParamName)
+                        else begin
+                            if not TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then y:= ParameterError;
+                            if yRaw = +infinity then y:= 100000;
+                            if yRaw = -infinity then y:= -100000;
+                            if CSV.RemoveExtremes.Checked then begin
+                               if (SelectedParamName = 'BHP') and ((y > 500) or (y < -50)) then y:= ParameterError;
+                               if ((SelectedParamName = 'BHT') or (SelectedParamName = 'TEMP_CTRL')) and ((y > 300) or (y < -50)) then y:= ParameterError;
+                            end;
                         end;
                      end;
        Sticker:= '';
@@ -1280,15 +1328,16 @@ begin
        end;
        PowerReset:= false;
        PrevTime:= Time;
+
+      if ParameterNumber > 0 then begin
+        CSV.ParamsGrid.Cells[0, ParamLine]:= FormatDateTime('DD-MMM-YY hh:mm:ss',IncHour(Time, hrsPlus));
+        CSV.ParamsGrid.Cells[ParameterNumber, ParamLine]:= FloatToStrF(yRaw, ffFixed, 10, 3);
+        ParamLine:= ParamLine + 1;
+      end;
+
     end
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
-    end;
-
-    if ParameterNumber > 0 then begin
-      CSV.ParamsGrid.Cells[0, ParamLine]:= FormatDateTime('DD-MMM-YY hh:mm',IncHour(Time, hrsPlus));
-      CSV.ParamsGrid.Cells[ParameterNumber, ParamLine]:= FloatToStrF(yRaw, ffFixed, 10, 3);
-      ParamLine:= ParamLine + 1;
     end;
 
     CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
@@ -1516,6 +1565,14 @@ begin
              else GetSticker:= FloatToStrF(y, ffFixed, 12, 3) + Line + FloatToStrF(x, ffFixed, 3, 2) + ' C deg';
 end;
 
+function GetCurveSticker(x, y: Double): String;
+var AfterDot: Byte;
+begin
+  if y > 10000 then AfterDot:= 0
+  else AfterDot:= 3;
+  Result:= FloatToStrF(y, ffFixed, 12, AfterDot) + Line + DateTimeToStr( IncHour( UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(x)]))), hrsPlus ) );
+end;
+
 // Ctrl
 procedure TCSV.ChartToolset1DataPointClickTool1PointClick(ATool: TChartTool; APoint: TPoint);
 var y: Double;
@@ -1577,18 +1634,13 @@ end;
 function SWHint(SW: Integer; SWDecr: array of String70; DT: TDateTime): String;
 var i: Byte;
     wStr: String;
-    zero: Boolean;
 begin
-   wStr:= DateTimeToStr(DT) + Line;
-   zero:= true;
-   for i:=0 to 15 do begin
-     if (SW and expon2(i)) > 0 then begin
-       wStr:= wStr + '1 - ' + SWDecr[i] + Line;
-       zero:= false;
-     end;
-   end;
-   if zero then SWHint:= wStr + '0'
-   else SWHint:= wStr;
+   if CSV.TimeScale.Checked then wStr:= DateTimeToStr(DT) + Line
+        else wStr:= DateTimeToStr(UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[Trunc(DT)])))) + Line;
+   wStr:= wStr + 'Value - ' + IntToStr(SW) + Line;
+   for i:=0 to 15 do
+     if (SW and expon2(i)) > 0 then wStr:= wStr + '1 - ' + SWDecr[i] + Line;
+   Result:= wStr;
 end;
 
 procedure TCSV.ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
@@ -1609,7 +1661,7 @@ procedure TCSV.ComputedChannelsDrawItem(Control: TWinControl; Index: Integer;
   ARect: TRect; State: TOwnerDrawState);
 begin
    with ComputedChannels do begin
-     if FindPart('AR?T?F', Items[Index]) > 0 then Canvas.Font.Color:= clBlue
+     if Items[Index] in AmplitudesChannels then Canvas.Font.Color:= clBlue
      else if Items[Index] in CondChannels then Canvas.Font.Color:= RGBToColor(0, 100, 0)
           else if Items[Index] in CondCompChannels then Canvas.Font.Color:= RGBToColor(255, 0, 0);
 
@@ -1669,7 +1721,7 @@ begin
 end;
 
 procedure TCSV.FormCreate(Sender: TObject);
-var i: Byte;
+var i, j: Byte;
 begin
   AmplsInmVolts:= mVolts.Checked;
   LibFileName:= 'Panels.lib';
@@ -1703,6 +1755,13 @@ begin
   TestDate.Date:= Date;
   ChartHeightControl.Max:= CSV.Height - 30;
   for i:=1 to 8 do TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')).Pointer.Visible:= ChartPoints.Checked;
+  for i:=1 to 10 do
+   for j:=1 to 4 do begin
+      TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.HorizSize:= 2;
+      TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.VertSize:= 2;
+      TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.Style:= psCircle;
+      TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.Visible:= CurveChartPoints.Checked;
+   end;
   CSV.Pane1.Width:= CSV.Width Div 2;
   InitTransformations;
 end;
@@ -1948,7 +2007,7 @@ begin
           i:= 1;
           repeat
             CurrentTime:= IncHour(UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i]))), hrsPlus);
-            i:= i + 1;
+            Inc(i);
           until (CompareDateTime(CurrentTime, StartTimeDT) = 1) or (i = CSVContent.Count-1);
           start:= i;
 
@@ -2111,11 +2170,18 @@ begin
     for i:=0 to Length(PhaseChannels)-1 do PaneEdit.ParameterList.Items.Add(PhaseChannels[i]);
     for i:=0 to Length(SystemChannels)-1 do PaneEdit.ParameterList.Items.Add(SystemChannels[i]);
     for i:=0 to Length(VoltChannels)-1 do PaneEdit.ParameterList.Items.Add(VoltChannels[i]);
-    PaneEdit.Parameter.Caption:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].Parameter;
-    PaneEdit.ParameterTitle.Text:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].ParameterTitle;
-    PaneEdit.ColorBox.Selected:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].SerieColor;
-    PaneEdit.ChartComboBox2.PenWidth:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].PenWidth;
-    PaneEdit.ChartComboBox1.PenStyle:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].PenStyle;
+    if Copy2Symb(Axis.Title.Caption, chr(13)) = 'Click here to add curve' then begin
+       PaneEdit.ColorBox.Selected:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].SerieColor;
+       PaneEdit.ChartComboBox2.PenWidth:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].PenWidth;
+       PaneEdit.ChartComboBox1.PenStyle:= CurvesPanel.PaneSet.Panes[TrackNumber - 2].Curves[Axis.Index - 1].PenStyle;
+    end
+    else begin
+       PaneEdit.Parameter.Caption:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].Parameter;
+       PaneEdit.ParameterTitle.Text:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].ParameterTitle;
+       PaneEdit.ColorBox.Selected:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].SerieColor;
+       PaneEdit.ChartComboBox2.PenWidth:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].PenWidth;
+       PaneEdit.ChartComboBox1.PenStyle:= CurvesPanel.PaneSet.Panes[TrackNumber - 1].Curves[Axis.Index - 1].PenStyle;
+    end;
     PaneEdit.Show;
   end;
 end;
@@ -2152,11 +2218,10 @@ procedure TCSV.ChartToolset2DataPointHintTool1Hint(ATool: TDataPointHintTool;
   const APoint: TPoint; var AHint: String);
 var y: Double;
     x: TDateTime;
-
 begin
    x:= TLineSeries(ATool.Series).GetXValue(ATool.PointIndex);
    y:= TLineSeries(ATool.Series).GetYValue(ATool.PointIndex);
-   AHint:= GetSticker(x, y);
+   AHint:= GetCurveSticker(x, y);
 end;
 
 procedure TCSV.CloseFormClick(Sender: TObject);
@@ -2165,8 +2230,16 @@ begin
   CSV.Close;
 end;
 
+procedure TCSV.CurveChartPointsChange(Sender: TObject);
+var i, j: byte;
+begin
+ for i:=1 to 10 do
+   for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.Visible:= CurveChartPoints.Checked;
+end;
+
 procedure TCSV.FastModeChange(Sender: TObject);
 begin
+  ResetCharts;
   if FastMode.Checked then begin
     RecordCount.Visible:= true;
     RecordsNumber.Enabled:= true;
@@ -2199,8 +2272,8 @@ procedure TCSV.Pane1ExtentChanged(ASender: TChart);
 var i: Integer;
     TitleUp: String;
 begin
- if ASender.SeriesCount > 0 then
-   for i := 0 to ASender.SeriesCount-1 do begin
+ if (ASender.SeriesCount > 0) And ASender.Visible then
+   for i:= 0 to ASender.SeriesCount-1 do begin
      TitleUp:= Copy2Symb(ASender.AxisList[i + 1].Title.Caption, chr(13));
      CurveTitle(TLineSeries(ASender.Series[i]), TitleUp);
    end;

@@ -131,9 +131,11 @@ begin
   MinMax:= GetExtentMinMax(LineSerie);
   dr:= LineSerie.ParentChart.CurrentExtent;
 
-  coeff:= (FullMinMax.Max - FullMinMax.Min) / 10;
-  dr.a.X:= (MinMax.Min - FullMinMax.Min) / coeff;
-  dr.b.X:= (MinMax.Max - FullMinMax.Min) / coeff;
+  coeff:= FullMinMax.Max - FullMinMax.Min;
+  if coeff <> 0 then begin
+    dr.a.X:= (MinMax.Min - FullMinMax.Min) / coeff;
+    dr.b.X:= (MinMax.Max - FullMinMax.Min) / coeff;
+  end;
 
   LineSerie.ParentChart.LogicalExtent:= dr;
 end;
@@ -210,8 +212,14 @@ end;
 
 procedure PanesResetZoom;
 var i: byte;
+    dr: TDoubleRect;
 begin
- for i:=1 to 10 do TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
+ for i:=1 to 10 do begin
+   //dr:= TChart(CSV.FindComponent('Pane' + IntToStr(i))).CurrentExtent;
+   //if dr.b.X > 0 then dr.b.X:= dr.b.X - 1;
+   //TChart(CSV.FindComponent('Pane' + IntToStr(i))).LogicalExtent:= dr;
+   TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
+ end;
 end;
 
 procedure PanesResetSeries;
@@ -263,9 +271,9 @@ begin
  for i:=1 to 10 do
    for j:=1 to 4 do begin
      T := TChartAxisTransformations.Create(TChart(CSV.FindComponent('Pane' + IntToStr(i))));
-     TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[j].Transformations := T;
+     TChart(CSV.FindComponent('Pane' + IntToStr(i))).AxisList[j].Transformations:= T;
      transf := TAutoscaleAxisTransform.Create(T);
-     transf.Transformations := T;
+     transf.Transformations:= T;
    end;
 end;
 

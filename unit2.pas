@@ -60,10 +60,11 @@ end;
 
 Const Line = #13#10;
       NumOsCharts: Byte = 8;
+      StatusWords: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI');
       SystemChannels: array of String = ('STATUS.SIBR.LO', 'STATUS.SIBR.HI', 'ESTATUS.SIBR.LO', 'ESTATUS.SIBR.HI', 'TEMP_CTRL', 'AX', 'AY', 'AZ', 'RES1', 'RES4', 'RES5', 'BHT', 'BHP', 'V1P', 'V2P', 'VTERM', 'ADC_VOFST', 'ADC_VREF');
       VoltChannels: array of String = ('I24', 'V_24V_CTRL', 'V_20VP_SONDE', 'V_20VP', 'V_5RV', 'V_5TV', 'V_3.3V', 'V_2.5V', 'V_1.8V', 'V_1.2V', 'I_24V_CTRL', 'I_20VP_SONDE', 'I_5RV', 'I_5TV', 'I_3.3V', 'I_1.8V', 'I_1.2V');
-      AmplitudesChannels: array of String = ('AR1T0F1','AR2T0F1','AR1T0F2','AR2T0F2','AR1T1F1','AR2T1F1','AR1T1F2','AR2T1F2','AR1T2F1','AR2T2F1','AR1T2F2','AR2T2F2','AR1T3F1','AR2T3F1','AR1T3F2','AR2T3F2');
-      PhaseChannels: array of String = ('PR1T0F1','PR2T0F1','PR1T0F2','PR2T0F2','PR1T1F1','PR2T1F1','PR1T1F2','PR2T1F2','PR1T2F1','PR2T2F1','PR1T2F2','PR2T2F2','PR1T3F1','PR2T3F1','PR1T3F2','PR2T3F2');
+      AmplitudesChannels: array of String = ('AR1C0F1','AR2C0F1','AR1C0F2','AR2C0F2','AR1T0F1','AR2T0F1','AR1T0F2','AR2T0F2','AR1T1F1','AR2T1F1','AR1T1F2','AR2T1F2','AR1T2F1','AR2T2F1','AR1T2F2','AR2T2F2','AR1T3F1','AR2T3F1','AR1T3F2','AR2T3F2');
+      PhaseChannels: array of String = ('PR1C0F1','PR2C0F1','PR1C0F2','PR2C0F2','PR1T0F1','PR2T0F1','PR1T0F2','PR2T0F2','PR1T1F1','PR2T1F1','PR1T1F2','PR2T1F2','PR1T2F1','PR2T2F1','PR1T2F2','PR2T2F2','PR1T3F1','PR2T3F1','PR1T3F2','PR2T3F2');
       CondChannels: array of String = ('A0L_UNC', 'A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P0L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A0H_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P0H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
       CondCompChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
       const  a: array[1..3, 1..3] of real = ((2/3, 1/2, -1/6), (1/3, 1/2, 1/6), (-1/3, 1/2, 5/6));
@@ -305,6 +306,7 @@ end;
 function NameToInt(name: String): Integer;
 begin
    NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1;
+   if name[4] = 'C' then NameToInt:= StrToInt(name[5])*4 + (StrToInt(name[7])-1)*2 + StrToInt(name[3])-1 + 1000;
 end;
 
 function ComplexAmplitude(nParam, n, shift: Integer): complex;
@@ -458,12 +460,17 @@ begin
 end;
 
 function Amplitude(nParam, n: Integer): Double;
-var StartParamPos, Step: Integer;
+var StartParamPos, Step, numParam: Integer;
     RawR, RawX: Double;
 begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
+  numParam:= nParam;
+  if nParam >= 1000 then begin
+     StartParamPos:= GetParamPosition('VR1C0F1r');
+    numParam:= nParam - 1000;
+  end
+  else StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (numParam mod 2) = 0 then Step:= (numParam div 2) * 8
+  else Step:= ((numParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
   if CSV.MVolts.Checked then Amplitude:= Sqrt(Sqr(RawR)+Sqr(RawX)) * 5000 / 4294967295
@@ -471,13 +478,18 @@ begin
 end;
 
 function PhaseShift(nParam, n: Integer): Double;
-var StartParamPos, Step: Integer;
+var StartParamPos, Step, numParam: Integer;
     RawR, RawX: Double;
     Phase: complex;
 begin
-  StartParamPos:= GetParamPosition('VR1T0F1r');
-  if (nParam mod 2) = 0 then Step:= (nParam div 2) * 8
-  else Step:= ((nParam div 2) * 8) + 2;
+  numParam:= nParam;
+  if nParam >= 1000 then begin
+    StartParamPos:= GetParamPosition('VR1C0F1r');
+    numParam:= nParam - 1000;
+  end
+  else StartParamPos:= GetParamPosition('VR1T0F1r');
+  if (numParam mod 2) = 0 then Step:= (numParam div 2) * 8
+  else Step:= ((numParam div 2) * 8) + 2;
   RawR:= StrToFloat(GetParamValue(StartParamPos + Step, CSVContent[n]));
   RawX:= StrToFloat(GetParamValue(StartParamPos + Step + 1, CSVContent[n]));
   Phase:= cInit(RawR, RawX);

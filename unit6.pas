@@ -130,6 +130,7 @@ begin
        CurvesPanel.PaneSet.Panes[PaneNum].Curves[CurveNum].PenStyle:= ChartComboBox1.PenStyle;
        CurrentCurve:= TLineSeries(CSV.FindComponent('Pane' + IntToStr(PaneNum + 1) + 'Curve' + IntToStr(CurveNum + 1)));
        DrawCurveFromPane(CurrentCurve, CurvesPanel.PaneSet.Panes[PaneNum], PaneNum, CurveNum);
+       CSV.Pane1ExtentChanged(CurrentCurve.ParentChart);
        PaneEdit.Close;
     end
     else ShowMessage('Track or Curve number is incorrect');

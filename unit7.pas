@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Unit2, Options, TAGraph, TASeries, LCLType, Buttons;
+  ComCtrls, Unit2, Options, TAGraph, TASeries, LCLType, Buttons, StrUtils;
 
 type
 
@@ -53,16 +53,18 @@ end;
 procedure TPanelsLib.DeleteRecordClick(Sender: TObject);
 var FilePos: Integer;
   RecordExist: Boolean;
+  wStr: String;
 begin
   if Application.MessageBox('Are you sure?','Warning', MB_ICONQUESTION + MB_YESNO) = IDYES then begin
      AssignFile(PanelsLibFile, 'Panels.lib');
      try
         CurvesPanel.Name:= '';
         Reset(PanelsLibFile);
+        FilePos:= PanelList.ItemIndex;
+        wStr:= PanelList.Items[PanelList.ItemIndex];
         FilePos:= GetLibIndex(PanelList.Items[PanelList.ItemIndex], RecordExist);
         Seek(PanelsLibFile, FilePos);
         Write(PanelsLibFile, CurvesPanel);
-        CSV.PanelTitle.Caption:= PanelName.Text;
         CloseFile(PanelsLibFile);
      except
        on E: EInOutError do ShowMessage('File write error: ' + E.ClassName + '/' + E.Message)
@@ -77,9 +79,9 @@ var FilePos: Integer;
 begin
    FilePos:= 0;
    RecordExist:= false;
+   Reset(PanelsLibFile);
    while not eof(PanelsLibFile) do begin
       Read(PanelsLibFile, Data);
-      if Data.Name = '' then break;
       if Name = Data.Name then begin
         RecordExist:= true;
         break;
@@ -89,14 +91,28 @@ begin
    GetLibIndex:= FilePos;
 end;
 
+function GetLibIndexForWrite(): Integer;
+var FilePos: Integer;
+    Data: TPanel;
+begin
+   FilePos:= 0;
+   Reset(PanelsLibFile);
+   while not eof(PanelsLibFile) do begin
+      Read(PanelsLibFile, Data);
+      if Data.Name = '' then break;
+      FilePos:= FilePos + 1;
+   end;
+   GetLibIndexForWrite:= FilePos;
+end;
+
 procedure TPanelsLib.LoadLibClick(Sender: TObject);
 var i, j, n: Byte;
-    LastPane: String;
+    LastPane, TitleUp: String;
     RecordExist: Boolean;
 begin
   if PanelList.Items.Count > 0 then
-    if FileExists('Panels.lib') then begin
-       AssignFile(PanelsLibFile, 'Panels.lib');
+    if FileExists(LibFileName) then begin
+       AssignFile(PanelsLibFile, LibFileName);
        Reset(PanelsLibFile);
        ResetPanes(1);
        try
@@ -107,7 +123,7 @@ begin
          n:=0 ;
          for i:= 1 to 10 do
            for j:= 1 to 4 do
-             if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then n:= n +1;
+             if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then n:= n + 1;
          LoadProgress.Max:= n;
          LoadProgress.Position:= 0;
          for i:= 1 to 10 do
@@ -127,10 +143,11 @@ begin
          on E: EInOutError do ShowMessage('File read error: ' + E.Message);
        end;
     end
-    else ShowMessage('Panels.lib');
+    else ShowMessage('Panels.lib not found');
     PanelsLib.Close;
     FitPanesToWindow;
     PanesResetZoom;
+    LibFileName:= 'Panels.lib';
 end;
 
 procedure TPanelsLib.PanelListSelectionChange(Sender: TObject; User: boolean);
@@ -143,14 +160,20 @@ var FilePos: Integer;
     WriteAccept, RecordExist: Boolean;
 begin
   if PanelName.Text <> '' then begin
+    ShowMessage(PanelName.Text);
     AssignFile(PanelsLibFile, 'Panels.lib');
     try
       WriteAccept:= true;
       Reset(PanelsLibFile);
       CurvesPanel.Name:= PanelName.Text;
+      CurvesPanel.ChartBGColor:= OptionsForm.ChartBGColor.Selected;
+      CurvesPanel.ChartColor:= OptionsForm.ChartColor.Selected;
+      CurvesPanel.GridColor:= OptionsForm.GridColor.Selected;
       FilePos:= GetLibIndex(PanelName.Text, RecordExist);
-      if RecordExist then
+      if RecordExist then begin
          if Application.MessageBox('Do you really want to overwrite record?','Warning', MB_ICONQUESTION + MB_YESNO) = IDNO then WriteAccept:= false;
+      end
+      else FilePos:= GetLibIndexForWrite();
       if WriteAccept then begin
          Seek(PanelsLibFile, FilePos);
          Write(PanelsLibFile, CurvesPanel);
