@@ -1,0 +1,113 @@
+object AddCurveForm: TAddCurveForm
+  Left = 2448
+  Height = 575
+  Top = -720
+  Width = 460
+  Caption = 'Add Curve'
+  ClientHeight = 575
+  ClientWidth = 460
+  Constraints.MaxHeight = 575
+  Constraints.MaxWidth = 460
+  Constraints.MinHeight = 575
+  Constraints.MinWidth = 460
+  LCLVersion = '2.2.4.0'
+  object Label22: TLabel
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 74
+    Caption = 'Raw Channels'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label23: TLabel
+    Left = 160
+    Height = 15
+    Top = 8
+    Width = 109
+    Caption = 'Computed Channels'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label24: TLabel
+    Left = 312
+    Height = 15
+    Top = 8
+    Width = 101
+    Caption = 'Selected Channels'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clNavy
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object RawChannelsExt: TListBox
+    Left = 8
+    Height = 536
+    Top = 32
+    Width = 140
+    Columns = 1
+    ExtendedSelect = False
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clSilver
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ItemHeight = 0
+    MultiSelect = True
+    OnDrawItem = RawChannelsExtDrawItem
+    OnSelectionChange = RawChannelsExtSelectionChange
+    ParentFont = False
+    Style = lbOwnerDrawVariable
+    TabOrder = 0
+  end
+  object ComputedChannelsExt: TListBox
+    Left = 160
+    Height = 535
+    Top = 33
+    Width = 140
+    ExtendedSelect = False
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clBlack
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ItemHeight = 0
+    MultiSelect = True
+    OnDrawItem = ComputedChannelsExtDrawItem
+    OnSelectionChange = ComputedChannelsExtSelectionChange
+    ParentFont = False
+    Style = lbOwnerDrawVariable
+    TabOrder = 1
+  end
+  object SelectedChannelsExt: TListBox
+    Left = 312
+    Height = 319
+    Top = 33
+    Width = 140
+    Font.CharSet = ANSI_CHARSET
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ItemHeight = 0
+    ParentFont = False
+    TabOrder = 2
+  end
+  object CloseAddForm: TButton
+    Left = 377
+    Height = 25
+    Top = 543
+    Width = 75
+    Caption = 'Close'
+    OnClick = CloseAddFormClick
+    TabOrder = 3
+  end
+end
