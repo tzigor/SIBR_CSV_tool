@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 1780
+  Left = 1849
   Height = 663
-  Top = -708
+  Top = -700
   Width = 899
   Anchors = []
-  Caption = 'SIBR Dump Tool v2.2.0 Portable'
+  Caption = 'SIBR Dump Tool v3.0 Portable'
   ClientHeight = 663
   ClientWidth = 899
   Constraints.MinHeight = 663
@@ -1897,21 +1897,21 @@ object CSV: TCSV
   OnCreate = FormCreate
   OnResize = FormResize
   Position = poDefaultPosOnly
-  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;mVolts.Checked;PowerResets.Checked;ShowDateTime.Checked;TimeOnBottom.Checked;ZoneFromChart.Checked'
+  SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;mVolts.Checked;PowerResets.Checked;ShowDateTime.Checked;ZoneFromChart.Checked'
   LCLVersion = '2.2.4.0'
   object App: TPageControl
     Left = 0
     Height = 663
     Top = 0
     Width = 899
-    ActivePage = Graphs
+    ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
     Font.Color = clSilver
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentFont = False
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
@@ -3204,10 +3204,10 @@ object CSV: TCSV
         TabOrder = 2
       end
       object Image3: TImage
-        Left = 200
+        Left = 168
         Height = 25
         Hint = 'Unzoom all'
-        Top = 8
+        Top = 7
         Width = 25
         OnClick = Image3Click
         ParentShowHint = False
@@ -3246,7 +3246,7 @@ object CSV: TCSV
         ShowHint = True
       end
       object FitToWin: TImage
-        Left = 168
+        Left = 232
         Height = 25
         Hint = 'Fit to window'
         Top = 8
@@ -3420,17 +3420,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart2LineSeries1: TLineSeries
-            LinePen.Color = clRed
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart3: TChart
           Left = 0
@@ -3506,17 +3495,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart3LineSeries1: TLineSeries
-            LinePen.Color = clGreen
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart4: TChart
           Left = 0
@@ -3592,17 +3570,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart4LineSeries1: TLineSeries
-            LinePen.Color = clFuchsia
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart5: TChart
           Left = 0
@@ -3678,17 +3645,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart5LineSeries1: TLineSeries
-            LinePen.Color = 13088280
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart8: TChart
           Left = 0
@@ -3764,17 +3720,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart8LineSeries1: TLineSeries
-            LinePen.Color = clTeal
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart7: TChart
           Left = 0
@@ -3850,17 +3795,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart7LineSeries1: TLineSeries
-            LinePen.Color = clNavy
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart6: TChart
           Left = 0
@@ -3936,17 +3870,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          object Chart6LineSeries1: TLineSeries
-            LinePen.Color = 33023
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
         object Chart1: TChart
           Left = 0
@@ -4025,18 +3948,6 @@ object CSV: TCSV
           Align = alTop
           Color = clDefault
           Visible = False
-          OnClick = Chart1Click
-          object Chart1LineSeries1: TLineSeries
-            LinePen.Color = clBlue
-            Marks.Format = '%2:s'
-            Marks.LinkPen.Color = clRed
-            Marks.Style = smsLabel
-            Pointer.Brush.Color = clBlue
-            Pointer.HorizSize = 2
-            Pointer.Pen.Color = clFuchsia
-            Pointer.Style = psCircle
-            Pointer.VertSize = 2
-          end
         end
       end
       object GroupBox9: TGroupBox
@@ -4142,7 +4053,7 @@ object CSV: TCSV
         end
       end
       object Image4: TImage
-        Left = 232
+        Left = 200
         Height = 25
         Hint = 'Current extent zoom'
         Top = 7
@@ -4187,7 +4098,7 @@ object CSV: TCSV
       object TimeOnBottom: TCheckBox
         Left = 312
         Height = 19
-        Top = 0
+        Top = 11
         Width = 106
         Caption = 'Time on bottom'
         Checked = True
@@ -4378,15 +4289,6 @@ object CSV: TCSV
         OnClick = ZoomModeClick
         ShowHint = True
         ParentShowHint = False
-      end
-      object Button9: TButton
-        Left = 312
-        Height = 17
-        Top = 24
-        Width = 75
-        Caption = 'Button9'
-        OnClick = Button9Click
-        TabOrder = 6
       end
     end
     object SondesChart: TTabSheet
@@ -6994,25 +6896,10 @@ object CSV: TCSV
         Top = 73
         Width = 75
         Caption = 'Button4'
+        OnClick = Button4Click
         TabOrder = 1
       end
     end
-  end
-  object Label41: TLabel
-    Left = 424
-    Height = 15
-    Top = 56
-    Width = 10
-    Caption = 'X:'
-    Font.CharSet = ANSI_CHARSET
-    Font.Color = clNavy
-    Font.Name = 'Segoe UI Semibold'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    OnClick = Label41Click
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
@@ -7039,7 +6926,6 @@ object CSV: TCSV
     end
     object ChartToolset1DataPointClickTool1: TDataPointClickTool
       Shift = [ssCtrl, ssLeft]
-      OnAfterKeyDown = ChartToolset1DataPointClickTool1AfterKeyDown
       OnPointClick = ChartToolset1DataPointClickTool1PointClick
     end
     object ChartToolset1DataPointHintTool1: TDataPointHintTool
@@ -7056,7 +6942,6 @@ object CSV: TCSV
     end
     object ChartToolset1DataPointClickTool2: TDataPointClickTool
       Shift = [ssAlt, ssLeft]
-      OnAfterKeyDown = ChartToolset1DataPointClickTool2AfterKeyDown
       OnAfterMouseUp = ChartToolset1DataPointClickTool2AfterMouseUp
       OnPointClick = ChartToolset1DataPointClickTool2PointClick
     end

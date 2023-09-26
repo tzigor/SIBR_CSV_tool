@@ -34,6 +34,8 @@ type
 
   end;
 
+procedure FillExtSelectedChannels;
+
 var
   AddCurveForm: TAddCurveForm;
 

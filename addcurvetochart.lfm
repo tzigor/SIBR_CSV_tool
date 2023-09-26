@@ -1,7 +1,7 @@
 object AddCurveForm: TAddCurveForm
-  Left = 2448
+  Left = 2203
   Height = 575
-  Top = -720
+  Top = -780
   Width = 460
   Caption = 'Add Curve'
   ClientHeight = 575
