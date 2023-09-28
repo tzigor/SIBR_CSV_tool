@@ -1,7 +1,7 @@
 object CSV: TCSV
-  Left = 1849
+  Left = 1793
   Height = 663
-  Top = -700
+  Top = -720
   Width = 899
   Anchors = []
   Caption = 'SIBR Dump Tool v3.0 Portable'

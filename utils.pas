@@ -32,6 +32,8 @@ procedure ResetZoom;
 procedure ResetSeries;
 procedure ResetCharts;
 function GetColorBySerieName(LineSerieName: String): TColor;
+function GetChartLineSerie(ChartNum: Byte; SerieTitle: String): TLineSeries;
+function GetFreeLineSerie(ChartNum: Byte): Byte;
 
 implementation
 
@@ -161,6 +163,26 @@ end;
 function GetLineSerie(ChartNumber, LineSerieNumber: Byte): TLineSeries;
 begin
    Result:= TLineSeries(TChart(CSV.FindComponent('Chart' + IntToStr(ChartNumber))).Series[LineSerieNumber - 1]);
+end;
+
+function GetChartLineSerie(ChartNum: Byte; SerieTitle: String): TLineSeries;
+var i: Byte;
+begin
+  for i:=2 to 8 do
+     if GetLineSerie(ChartNum, i).Title = SerieTitle then begin
+        Result:= GetLineSerie(ChartNum, i);
+        Exit;
+     end;
+end;
+
+function GetFreeLineSerie(ChartNum: Byte): Byte;
+var i: Byte;
+begin
+  for i:=2 to 8 do
+     if GetLineSerie(ChartNum, i).Count = 0 then begin
+        Result:= i;
+        Exit;
+     end;
 end;
 
 procedure DeleteLabels(Chart1LineSeries: TLineSeries);

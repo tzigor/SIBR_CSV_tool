@@ -11,52 +11,59 @@ uses
 type String70 = String[70];
 type ShortString = String[24];
 
-type TSibrParam = record
+  TSibrParam = record
     name: ShortString;
     min: Double;
     max: Double;
     stdDev: Double;
     k, m: Byte;
-end;
+  end;
 
-type TSibrReportParam = record
+  TSibrReportParam = record
     name: ShortString;
     min: Double;
     max: Double;
     mean: Double;
     stdDev: Single;
     k, m: Byte;
-end;
+  end;
 
-type TCurve = record
+  TCurve = record
     Parameter: ShortString;
     ParameterTitle: ShortString;
     SerieColor: TColor;
     PenWidth: Byte;
     PenStyle: TPenStyle;
-end;
+  end;
 
-type TPane = record
+  TPane = record
     Curves: array[0..3] of TCurve;
-end;
+  end;
 
-type TPaneSet = record
+  TPaneSet = record
     Panes: array[0..9] of TPane;
-end;
+  end;
 
-type TPanel = record
+  TPanel = record
     Name: ShortString;
     PaneSet: TPaneSet;
     ChartBGColor: TColor;
     ChartColor: TColor;
     GridColor: TColor;
     ShowTime: Boolean;
-end;
+  end;
 
-type TMinMax = record
+  TMinMax = record
     Min: Double;
     Max: Double;
-end;
+  end;
+
+Const
+  { Error codes }
+    NO_ERROR = 0;
+    FILE_NOT_FOUND = 1;
+    WRONG_FILE_FORMAT = 2;
+    UNEXPECTED_END_OF_FILE = 3;
 
 Const Line = #13#10;
       NumOsCharts: Byte = 8;
@@ -124,37 +131,37 @@ Const SWLo: array of String70 = (
 
 const ParameterError = -35535;
 var
-  CSVFileName, CSVCompareFileName, DrawParameter: String;
-  CSVContent, CSVCompare: TStringList;
-  DataSource: array of Single;
-  TimeSource: array of TDateTime;
-  ParamList: array of String;
-  SelectedParams: array[0..7] of ShortString;
-  ParameterCount: Integer;
-  ChartHeight: Integer;
-  ShowPR: Boolean;
-  Warning: Boolean;
-  SibrParams: array of TSibrParam;
-  AdditionalParams: array[0..31] of ShortString;
-  SelectedCount: Byte;
-  hrsPlus, prevHrsPlus: Integer;
-  ChartPointIndex: Longint;
-  LabelSticked: Boolean;
-  StartZone, EndZone: TDateTime;
-  CurrentSW: String;
-  ChartsCurrentExtent: TDoubleRect;
-  NewChart: Boolean;
-  Redraw, DrawClicked: Boolean;
-  AmplsInmVolts: Boolean;
-  ReportParams: array[0..62] of TSibrReportParam;
-  TimePosition: Longint;
-  SondeError: Boolean;
-  //Pane: TPane;
-  //PaneSet: TPaneSet;
-  CurvesPanel: TPanel;
-  PanelsLibFile: file of TPanel;
-  LibFileName: String;
-  NumberOfPoints: Longint;
+  ErrorCode                                      : Byte;
+  CSVFileName, CSVCompareFileName, DrawParameter : String;
+  CSVContent, CSVCompare                         : TStringList;
+  DataSource                                     : array of Single;
+  TimeSource                                     : array of TDateTime;
+  ParamList                                      : array of String;
+  SelectedParams                                 : array[0..7] of ShortString;
+  ParameterCount                                 : Integer;
+  ChartHeight                                    : Integer;
+  ShowPR                                         : Boolean;
+  Warning                                        : Boolean;
+  SibrParams                                     : array of TSibrParam;
+  AdditionalParams                               : array[0..31] of ShortString;
+  SelectedCount                                  : Byte;
+  hrsPlus, prevHrsPlus                           : Integer;
+  ChartPointIndex                                : Longint;
+  LabelSticked                                   : Boolean;
+  StartZone, EndZone                             : TDateTime;
+  CurrentSW                                      : String;
+  ChartsCurrentExtent                            : TDoubleRect;
+  NewChart                                       : Boolean;
+  Redraw, DrawClicked                            : Boolean;
+  AmplsInmVolts                                  : Boolean;
+  ReportParams                                   : array[0..62] of TSibrReportParam;
+  TimePosition                                   : Longint;
+  SondeError                                     : Boolean;
+  CurvesPanel                                    : TPanel;
+  PanelsLibFile                                  : file of TPanel;
+  LibFileName                                    : String;
+  NumberOfPoints                                 : Longint;
+  SelectedChartToAdd                             : Byte;
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;
@@ -185,36 +192,42 @@ begin
 end;
 
 function GetParamPosition(Param: String): Integer;
-var i: Integer;
+var i, Pos: Integer;
 begin
+  Pos:= 0;
   for i:= 0 to Length(ParamList)-1 do begin
      if ParamList[i] = Param then begin
-        GetParamPosition:= i+1;
-        break
-     end
-  end
+        Pos:= i + 1;
+        Break
+     end;
+  end;
+  if Pos = 0 then ErrorCode:= WRONG_FILE_FORMAT;
+  Result:= Pos;
 end;
 
 function GetParamValue(ParamNum: Integer; TextLine: String): String;
 var LineLength, i, Counter, ParamStart: Integer;
     SubStr: String;
 begin
-  LineLength:= Length(TextLine);
-  Counter:= 1;
-  SubStr:= '';
-  for i:= 1 to LineLength do begin
-     if ParamNum = Counter then begin
-        ParamStart:= i;
-        break;
-     end;
-     if TextLine[i] = ';' then Counter:= Counter + 1;
-  end;
-  i:= ParamStart;
-  repeat
-    SubStr:= SubStr + TextLine[i];
-    i:= i + 1;
-  until ( TextLine[i] = ';' ) OR ( i > LineLength );
-  GetParamValue:= Trim(SubStr);
+  if ParamNum > 0 then begin
+      LineLength:= Length(TextLine);
+      Counter:= 1;
+      SubStr:= '';
+      for i:= 1 to LineLength do begin
+         if ParamNum = Counter then begin
+            ParamStart:= i;
+            break;
+         end;
+         if TextLine[i] = ';' then Counter:= Counter + 1;
+      end;
+      i:= ParamStart;
+      repeat
+        SubStr:= SubStr + TextLine[i];
+        i:= i + 1;
+      until ( TextLine[i] = ';' ) OR ( i > LineLength );
+      Result:= Trim(SubStr);
+  end
+  else Result:= '';
 end;
 
 function FileSize(FileName:string):Integer;

@@ -408,9 +408,6 @@ var
 
 procedure ZoomCurrentExtent(Chart1LineSeries: TLineSeries);
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
-procedure ResetCharts;
-procedure SetDateTimeOnBottom;
-procedure ShowTimeAxises;
 
 implementation
 
@@ -496,7 +493,7 @@ procedure TCSV.GenerateClick(Sender: TObject);
           ReWrite(NewCSVFile);
           Readln(WorkingFile, TextLine);
           WriteLn(NewCSVFile,TextLine);
-          ParamPos:= GetParamPosition('RTCs');
+          ParamPos:= TimePosition;
           PrevTime:= 0;
           while not eof(WorkingFile) do begin
             Readln(WorkingFile, TextLine);
@@ -557,7 +554,7 @@ begin
           RunStartT.Caption:= StartTime.Text;
           RunEndT.Caption:= EndTime.Text;
           DurationT.Caption:= IntToStr(Round(DurationInMinutes/60)) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
-          ParamPos:= GetParamPosition('RTCs');
+          ParamPos:= TimePosition;
           PrevTime:= 0;
           FSize:= 0;
           NumOfLines:= 0;
@@ -679,7 +676,7 @@ begin
 end;
 
 procedure TCSV.ChartToolset1DataPointClickTool3PointClick(ATool: TChartTool; APoint: TPoint);
-var i: Byte;
+var i, j: Byte;
     LineSerie: TLineSeries;
 begin
   with ATool as TDatapointClickTool do begin
@@ -687,12 +684,12 @@ begin
       with TLineSeries(Series) do ChartPointIndex:= PointIndex;
   end;
   for i:=1 to 8 do begin
-    LineSerie:= TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1'));
-    if LineSerie.Count >= ChartPointIndex then begin
-       LineSerie.Delete(ChartPointIndex);
+    for j:=1 to 8 do begin
+       LineSerie:= GetLineSerie(i, j);
+       if LineSerie.Count >= ChartPointIndex then LineSerie.Delete(ChartPointIndex);
     end;
   end;
-  for i:=1 to 8 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
+  ResetZoom;
 end;
 
 procedure TCSV.ChartToolset1DataPointHintTool1AfterKeyDown(ATool: TChartTool;
@@ -723,8 +720,8 @@ begin
   ResetCharts;
   ParamsGrid.Clear;
   SelectedChannels.Clear;
-  for i:=0 to CSV.RawChannels.Items.Count - 1 do CSV.RawChannels.Selected[i]:= false;
-  for i:=0 to CSV.ComputedChannels.Items.Count - 1 do CSV.ComputedChannels.Selected[i]:= false;
+  CSV.RawChannels.ClearSelection;
+  CSV.ComputedChannels.ClearSelection;
 end;
 
 procedure TCSV.Button7Click(Sender: TObject);
@@ -904,6 +901,9 @@ begin
       RawChannels.Clear;
       ComputedChannels.Clear;
       SelectedChannels.Clear;
+      AddCurveForm.RawChannelsExt.Clear;
+      AddCurveForm.ComputedChannelsExt.Clear;
+      AddCurveForm.SelectedChannelsExt.Clear;
       ReportText.Text:= '';
       CurvesTab.Enabled:= false;
       ReportTab.Enabled:= false;
@@ -935,7 +935,6 @@ begin
         CSVContent:= TStringList.Create;
         CSVContent.LoadFromFile(CSVFileName);
         LineLength:= Length(CSVContent[0]);
-
         Counter:= 0;
         for i:= 0 to LineLength-1 do begin
            if CSVContent[0][i] = ';' then Counter:= Counter + 1;
@@ -955,65 +954,67 @@ begin
            end
            else SubStr:= SubStr + CSVContent[0][i];
         end;
+       if GetParamPosition('STATUS.SIBR.LO') > 0 then begin
+            for i:= 0 to 19 do begin
+              ComputedChannels.Items.Add(AmplitudesChannels[i]);
+              AddCurveForm.ComputedChannelsExt.Items.Add(AmplitudesChannels[i]);
+            end;
+            for i:= 0 to 19 do begin
+              ComputedChannels.Items.Add(PhaseChannels[i]);
+              AddCurveForm.ComputedChannelsExt.Items.Add(PhaseChannels[i]);
+            end;
+            for i:= 0 to 15 do begin
+              ComputedChannels.Items.Add(CondChannels[i]);
+              AddCurveForm.ComputedChannelsExt.Items.Add(CondChannels[i]);
+            end;
+            for i:= 0 to 11 do begin
+              ComputedChannels.Items.Add(CondCompChannels[i]);
+              AddCurveForm.ComputedChannelsExt.Items.Add(CondCompChannels[i]);
+            end;
 
-        for i:= 0 to 19 do begin
-          ComputedChannels.Items.Add(AmplitudesChannels[i]);
-          AddCurveForm.ComputedChannelsExt.Items.Add(AmplitudesChannels[i]);
-        end;
-        for i:= 0 to 19 do begin
-          ComputedChannels.Items.Add(PhaseChannels[i]);
-          AddCurveForm.ComputedChannelsExt.Items.Add(PhaseChannels[i]);
-        end;
-        for i:= 0 to 15 do begin
-          ComputedChannels.Items.Add(CondChannels[i]);
-          AddCurveForm.ComputedChannelsExt.Items.Add(CondChannels[i]);
-        end;
-        for i:= 0 to 11 do begin
-          ComputedChannels.Items.Add(CondCompChannels[i]);
-          AddCurveForm.ComputedChannelsExt.Items.Add(CondCompChannels[i]);
-        end;
+            ParamPos:= GetParamPosition('RTCs');
+            if ParamPOs = 0 then ParamPos:= GetParamPosition('TIME');
+            TimePosition:= ParamPos;
+            hrsPlus:= LocalTime.Value;
 
-        ParamPos:= GetParamPosition('RTCs');
-        TimePosition:= ParamPos;
-        hrsPlus:= LocalTime.Value;
+            if CSVContent.Count < 50000 then FastMode.Checked:= False;
 
-        if CSVContent.Count < 50000 then FastMode.Checked:= False;
+            for i:=1 to CSVContent.Count-1 do begin
+                FSize:= FSize + Length(CSVContent[i]);
+                if not StartRun then begin
+                   StartRunDT:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i]))), hrsPlus);
+                   RunStart.Caption:= DateTimeToStr(StartRunDT);
+                   StartTime.Text:= RunStart.Caption;
+                   StartRun:= true;
+                end
+                else EndRun:= GetParamValue(ParamPos, CSVContent[i]);
+            end;
 
-        for i:=1 to CSVContent.Count-1 do begin
-            FSize:= FSize + Length(CSVContent[i]);
-            if not StartRun then begin
-               StartRunDT:= IncHour(UnixToDateTime(StrToInt(GetParamValue(ParamPos, CSVContent[i]))), hrsPlus);
-               RunStart.Caption:= DateTimeToStr(StartRunDT);
-               StartTime.Text:= RunStart.Caption;
-               StartRun:= true;
-            end
-            else EndRun:= GetParamValue(ParamPos, CSVContent[i]);
-        end;
+            EndRunDT:= IncHour(UnixToDateTime(StrToInt(EndRun)), hrsPlus);
+            RunEnd.Caption:= DateTimeToStr(EndRunDT);
+            EndTime.Text:= DateTimeToStr(EndRunDT);
 
-        EndRunDT:= IncHour(UnixToDateTime(StrToInt(EndRun)), hrsPlus);
-        RunEnd.Caption:= DateTimeToStr(EndRunDT);
-        EndTime.Text:= DateTimeToStr(EndRunDT);
+            Records.Caption:= IntToStr(CSVContent.Count);
+            ProgressBar.Max:= CSVContent.Count;
+            CSVFileSize.Caption:= IntToStr(Round(FSize/1000))+' KB';
+            DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
+            Duration.Caption:= IntToStr(DurationInMinutes div 60) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
+            if TimeScale.Checked And RTCBugs.Checked then begin
+               ReportTab.Enabled:= True;
+               GetRangeBtn .Enabled:= True;
+            end;
+            EstimateFast.Enabled:= True;
+            ShowSondes.Enabled:= True;
+            ShowCSondes.Enabled:= True;
+            CurvesTab.Enabled:= True;
+            DrawBtn.Visible:= True;
+            DrawBtnReleased.Visible:= True;
 
-        Records.Caption:= IntToStr(CSVContent.Count);
-        ProgressBar.Max:= CSVContent.Count;
-        CSVFileSize.Caption:= IntToStr(Round(FSize/1000))+' KB';
-        DurationInMinutes:= MinutesBetween(StartRunDT, EndRunDT);
-        Duration.Caption:= IntToStr(DurationInMinutes div 60) + ' h ' + IntToStr(DurationInMinutes mod 60) + ' m';
-        if TimeScale.Checked And RTCBugs.Checked then begin
-           ReportTab.Enabled:= True;
-           GetRangeBtn .Enabled:= True;
-        end;
-        EstimateFast.Enabled:= True;
-        ShowSondes.Enabled:= True;
-        ShowCSondes.Enabled:= True;
-        CurvesTab.Enabled:= True;
-        DrawBtn.Visible:= True;
-        DrawBtnReleased.Visible:= True;
-
-        ReportStartTime.Text:= StartTime.Text;
-        ReportEndTime.Text:= EndTime.Text;
-        ZoneDuration.Caption:= IntToStr(DurationInMinutes) + ' min';
-
+            ReportStartTime.Text:= StartTime.Text;
+            ReportEndTime.Text:= EndTime.Text;
+            ZoneDuration.Caption:= IntToStr(DurationInMinutes) + ' min';
+        end
+        else ShowMessage('Wrong file format');
       except
       on E: EInOutError do
         ShowMessage('Error: ' + E.Message);
@@ -1221,7 +1222,7 @@ var x, Time: TDateTime;
 begin
   if CSV.ZoneFromChart.Checked and (StartZone = EndZone) then ShowMessage('Time zone is not defined')
   else begin
-      TimePos:= GetParamPosition('RTCs');
+      TimePos:= TimePosition;
       MiliSecPos:= GetParamPosition('RTCms');
       if zType = 0 then begin
         ResetSondes;
@@ -1239,7 +1240,6 @@ begin
       StepCoefficient:= Trunc(CSVContent.Count / CSV.RecordsNumber.Position);
       if StepCoefficient = 0 then StepCoefficient:= 1;
       if Not CSV.FastMode.Checked then StepCoefficient:= 1;
-      //for i:=1 to CSVContent.Count-1 do begin
       while i < CSVContent.Count do begin
         if CSV.FastMode.Checked then begin
           for j:=1 to StepCoefficient do begin
@@ -1248,7 +1248,8 @@ begin
           if i >= CSVContent.Count then i:= CSVContent.Count-1;
           CSV.CommonBar.Position:= CSV.CommonBar.Position + StepCoefficient;
         end;
-        MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]));
+        if MiliSecPos >0 then MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]))
+        else MiliSec:= 0;
         Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
         Time:= IncMilliSecond(Time, MiliSec);
         if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
@@ -1289,127 +1290,6 @@ begin
   else HideRightAxises;
 end;
 
-function GetAcumulatedStatusWord(SWLO, SWHi, ESWLO, ESWHi: Word; y: Double; SWParam: String): Word;
-begin
-   if SWParam = 'STATUS.SIBR.LO' then Result:= SWLO or Trunc(y)
-   else if SWParam = 'STATUS.SIBR.HI' then Result:= SWHi or Trunc(y)
-        else if SWParam = 'ESTATUS.SIBR.LO' then Result:= ESWLO or Trunc(y)
-             else Result:= ESWHi or Trunc(y)
-end;
-
-procedure HideTimeAxises;
-var i: byte;
-begin
- for i:=1 to 8 do begin
-    TChart(CSV.FindComponent('Chart' + IntToStr(i))).AxisList[1].Marks.Visible:= false;
-    TChart(CSV.FindComponent('Chart' + IntToStr(i))).Foot.Visible:= false;
- end;
-end;
-
-procedure ShowTimeAxises;
-var i: byte;
-begin
- for i:=1 to 8 do begin
-    TChart(CSV.FindComponent('Chart' + IntToStr(i))).AxisList[1].Marks.Visible:= true;
-    TChart(CSV.FindComponent('Chart' + IntToStr(i))).Foot.Visible:= true;
- end;
-end;
-
-function GetLastChart: Byte;
-var i: Byte;
-    MaxTop: Integer;
-begin
-  MaxTop:= 0;
-  for i:=1 to 8 do begin
-     if TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible AND (TChart(CSV.FindComponent('Chart' + IntToStr(i))).Top >= MaxTop) then begin
-        MaxTop:= TChart(CSV.FindComponent('Chart' + IntToStr(i))).Top;
-        GetLastChart:= i;
-     end;
-  end;
-end;
-
-function GetFreeChart: Byte;
-var i: Byte;
-begin
-  for i:=1 to 8 do begin
-     if TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible = false then begin
-        GetFreeChart:= i;
-        Break;
-     end;
-  end;
-end;
-
-procedure SetDateTimeOnBottom;
-var LastChart: Byte;
-begin
-  HideTimeAxises;
-  LastChart:= GetLastChart;
-  if LastChart > 0 then begin
-     TChart(CSV.FindComponent('Chart' + IntToStr(LastChart))).AxisList[1].Marks.Visible:= true;
-     TChart(CSV.FindComponent('Chart' + IntToStr(LastChart))).Foot.Visible:= true;
-  end;
-end;
-
-procedure ChartsVisible(visible: Boolean);
-var i: byte;
-begin
- for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible:= visible;
-end;
-
-procedure ResetZoom;
-var i: byte;
-begin
- for i:=1 to 8 do TChart(CSV.FindComponent('Chart' + IntToStr(i))).ZoomFull();
-end;
-
-procedure ResetSeries;
-var i, j: byte;
-begin
- for i:= 1 to 8 do
-    for j:= 1 to 8 do GetLineSerie(i, j).Clear;
-end;
-
-procedure ResetCharts;
-begin
-  NewChart:= true;
-  ResetSeries;
-  ResetZoom;
-  ChartsVisible(false);
-end;
-
-procedure SetHorizontalExtent(Chart: TChart);
-var Ext: TDoubleRect;
-begin
-   Ext := Chart.GetFullExtent;
-   Ext.coords[1]:= ChartsCurrentExtent.coords[1];
-   Ext.coords[3]:= ChartsCurrentExtent.coords[3];
-   Chart.LogicalExtent:= Ext;
-end;
-
-function ChartInList(Chart: TChart): Boolean;
-var i: Byte;
-    InList: Boolean;
-begin
-  InList:= false;
-  for i:=1 to CSV.SelectedChannels.Items.Count do begin
-     if (Chart.Visible) And (Chart.Title.Text[0] = CSV.SelectedChannels.Items[i-1]) then begin
-        InList:= true;
-     end;
-  end;
-  ChartInList:= InList;
-end;
-
-function ListItemDrawed(Item: String): Boolean;
-var i: Byte;
-    Drawed: Boolean;
-begin
-  Drawed:= false;
-  for i:=1 to 8 do begin
-     if TChart(CSV.FindComponent('Chart' + IntToStr(i))).Visible and (TChart(CSV.FindComponent('Chart' + IntToStr(i))).Title.Text[0] = Item) then Drawed:= true;
-  end;
-  ListItemDrawed:= Drawed;
-end;
-
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
 var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     TimePos, MiliSecPos, StepCoefficient: Integer;
@@ -1420,6 +1300,7 @@ var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     SWLO, SWHi, ESWLO, ESWHi: Word;
     SWLOPos, SWHiPos, ESWLOPos, ESWHiPos: Longint;
     LineColor: TColor;
+    BarCounter: Longint;
 begin
   SWLOPos:= GetParamPosition('STATUS.SIBR.LO');
   SWHiPos:= GetParamPosition('STATUS.SIBR.HI');
@@ -1427,28 +1308,28 @@ begin
   ESWHiPos:= GetParamPosition('ESTATUS.SIBR.HI');
 
   PowerReset:= false;
-  TimePos:= GetParamPosition('RTCs');
+  TimePos:= TimePosition;
   MiliSecPos:= GetParamPosition('RTCms');
   CtrlTempPos:= GetParamPosition('TEMP_CTRL');
   ParamPos:= GetParamPosition(SelectedParamName);
   LineSerie.Clear;
-  LineSerie.Title:=SelectedParamName;
-
+  LineSerie.Title:= SelectedParamName;
+  LineSerie.ParentChart.Title.Text[0]:= SelectedParamName;
   LineSerie.ParentChart.Height:= ChartHeight;
-
   SetLineSerieColor(LineSerie, GetColorBySerieName(LineSerie.Name));
-
   LineSerie.Legend.Visible:= True;
-
   PrevTime:= UnixToDateTime(0);
   CSV.CommonBar.Max:= CSVContent.Count - 1;
+  AddCurveForm.CommonBarExt.Max:= CSVContent.Count - 1;
   CSV.CommonBar.Position:= 0;
+  AddCurveForm.CommonBarExt.Position:= 0;
   StepCoefficient:= Trunc(CSVContent.Count / CSV.RecordsNumber.Position);
   if StepCoefficient = 0 then StepCoefficient:= 1;
   if Not CSV.FastMode.Checked then StepCoefficient:= 1;
   i:= 0;
   n:= 1;
   ParamLine:= 1;
+  BarCounter:= 0;
   while i < CSVContent.Count do begin
     if CSV.FastMode.Checked then begin
       SWLO:= 0;
@@ -1470,7 +1351,8 @@ begin
     end
     else Inc(i);
     if i >= CSVContent.Count then break;
-    MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]));
+    if MiliSecPos > 0 then MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]))
+    else MiliSec:= 0;
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
     Time:= IncMilliSecond(Time, MiliSec);
     if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
@@ -1531,27 +1413,30 @@ begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
     end;
 
-    CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
+    if BarCounter = 99 then begin
+       if CSV.Active then CSV.CommonBar.Position:= CSV.CommonBar.Position + 100
+       else AddCurveForm.CommonBarExt.Position:= AddCurveForm.CommonBarExt.Position + 100;
+       BarCounter:= 0;
+    end;
+    Inc(BarCounter);
+
     n:= n + 1;
   end;
   NumberOfPoints:= n;
   CSV.CommonBar.Position:= 0;
-  LineSerie.ParentChart.Top:= 10000;
+  if CSV.Active then LineSerie.ParentChart.Top:= 10000;
   LineSerie.ParentChart.Visible:= True;
 end;
 
 // ***************** DRAW ******************************************************
 procedure TCSV.DrawClick(Sender: TObject);
-  var i, n: Integer;
+var i, n: Integer;
 begin
     LabelSticked:= false;
     DrawClicked:= true;
     ReDraw:= true;
     ShowPR:= PowerResets.Checked;
     ChartHeight:= ChartHeightControl.Position;
-    //ResetPanes(2);
-    //ResetCharts;
-    //ParamsGrid.Clear;
     ParamsGrid.ColCount:= 9;
     ParamsGrid.RowCount:= CSVContent.Count;
     ParamsGrid.ColWidths[0]:= 110;
@@ -1570,7 +1455,7 @@ begin
           ParamsGrid.Cells[i, 0]:= SelectedChannels.Items[i-1];
           if Not ListItemDrawed(SelectedChannels.Items[i-1]) then begin
              n:= GetFreeChart;
-             DrawChart(GetLineSerie(i, 1), SelectedChannels.Items[i-1], n);
+             DrawChart(GetLineSerie(n, 1), SelectedChannels.Items[i-1], n);
           end;
        end;
 
@@ -2351,26 +2236,32 @@ begin
   ResetCharts;
 end;
 
-procedure TCSV.ChartToolset1UserDefinedTool1AfterMouseDown(ATool: TChartTool;
-  APoint: TPoint);
-var i: Byte;
+procedure TCSV.ChartToolset1UserDefinedTool1AfterMouseDown(ATool: TChartTool; APoint: TPoint);
+var i, n: Byte;
     LineTitle: String;
 begin
-  //LineTitle:= TLineSeries(ATool.Chart.Series[0]).Title;
-  //for i:= 0 to AddCurveForm.RawChannelsExt.Items.Count - 1 do begin
-  //  if AddCurveForm.RawChannelsExt.Items[i] = LineTitle then begin
-  //     AddCurveForm.RawChannelsExt.Selected[i]:= True;
-  //     Break;
-  //  end;
-  //end;
-  //for i:= 0 to AddCurveForm.ComputedChannelsExt.Items.Count - 1 do begin
-  //  if AddCurveForm.ComputedChannelsExt.Items[i] = LineTitle then begin
-  //     AddCurveForm.ComputedChannelsExt.Selected[i]:= True;
-  //     Break;
-  //  end;
-  //end;
-  //FillExtSelectedChannels;
-
+  AddCurveForm.Caption:= 'Add curve to ' + ATool.Chart.Title.Text[0];
+  AddCurveForm.CommonBarExt.Position:= 0;
+  AddCurveForm.SelectedChannelsExt.Clear;
+  AddCurveForm.RawChannelsExt.ClearSelection;
+  AddCurveForm.ComputedChannelsExt.ClearSelection;
+  SelectedChartToAdd:= StrToInt(MidStr(ATool.Chart.Name, 6, 1));
+  for n:= 1 to ATool.Chart.SeriesCount - 1 do begin
+      LineTitle:= TLineSeries(ATool.Chart.Series[n]).Title;
+      for i:= 0 to AddCurveForm.RawChannelsExt.Items.Count - 1 do begin
+        if AddCurveForm.RawChannelsExt.Items[i] = LineTitle then begin
+           AddCurveForm.RawChannelsExt.Selected[i]:= True;
+           Break;
+        end;
+      end;
+      for i:= 0 to AddCurveForm.ComputedChannelsExt.Items.Count - 1 do begin
+        if AddCurveForm.ComputedChannelsExt.Items[i] = LineTitle then begin
+           AddCurveForm.ComputedChannelsExt.Selected[i]:= True;
+           Break;
+        end;
+      end;
+  end;
+  FillExtSelectedChannels;
   AddCurveForm.Show;
 end;
 
