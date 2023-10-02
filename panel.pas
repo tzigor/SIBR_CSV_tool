@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   ComCtrls, MaskEdit, DateUtils, Clipbrd, LConvEncoding,
-  TAGraph, TACustomSource, TASeries, TATools,
+  TAGraph, TACustomSource, TASeries, TATools, TATypes,
   Unit2, Options, TAChartUtils, TADataTools, TATransformations,
   SpinEx, SynHighlighterCpp, LCLType, Spin, PQConnection, TAChartAxis;
 
@@ -181,6 +181,11 @@ begin
   CurrentCurve.LinePen.Style:= Pane.Curves[CurveNum].PenStyle;
   CurrentCurve.LinePen.Width:= Pane.Curves[CurveNum].PenWidth;
   CurrentCurve.SeriesColor:= Pane.Curves[CurveNum].SerieColor;
+  CurrentCurve.Pointer.Brush.Color:= Pane.Curves[CurveNum].SerieColor;
+  CurrentCurve.Pointer.Pen.Color:= Pane.Curves[CurveNum].SerieColor;
+  CurrentCurve.Pointer.Style := psCircle;
+  CurrentCurve.Pointer.VertSize:= 2;
+  CurrentCurve.Pointer.HorizSize:= 2;
   DrawCurve(CurrentCurve, Pane.Curves[CurveNum].Parameter);
   CurveName(CurrentCurve, Pane.Curves[CurveNum].ParameterTitle);
 end;
@@ -215,9 +220,6 @@ var i: byte;
     dr: TDoubleRect;
 begin
  for i:=1 to 10 do begin
-   //dr:= TChart(CSV.FindComponent('Pane' + IntToStr(i))).CurrentExtent;
-   //if dr.b.X > 0 then dr.b.X:= dr.b.X - 1;
-   //TChart(CSV.FindComponent('Pane' + IntToStr(i))).LogicalExtent:= dr;
    TChart(CSV.FindComponent('Pane' + IntToStr(i))).ZoomFull();
  end;
 end;

@@ -24,6 +24,7 @@ type
     ChartToolset1UserDefinedTool1: TUserDefinedTool;
     CurveChartPoints: TCheckBox;
     CloseForm: TBitBtn;
+    ShowLabel: TImage;
     Image7: TImage;
     OpenCSV: TBitBtn;
     ChartToolset1DataPointClickTool3: TDataPointClickTool;
@@ -219,7 +220,7 @@ type
     GroupBox9: TGroupBox;
     Image3: TImage;
     FitToWin: TImage;
-    Image5: TImage;
+    HideLabel: TImage;
     Label28: TLabel;
     Label29: TLabel;
     Label30: TLabel;
@@ -349,6 +350,7 @@ type
     procedure RTCBugsChange(Sender: TObject);
     procedure ShowCSondesClick(Sender: TObject);
     procedure ShowDateTimeChange(Sender: TObject);
+    procedure ShowLabelClick(Sender: TObject);
     procedure ShowSondesClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure ShowToolClick(Sender: TObject);
@@ -378,7 +380,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure Image3Click(Sender: TObject);
     procedure FitToWinClick(Sender: TObject);
-    procedure Image5Click(Sender: TObject);
+    procedure HideLabelClick(Sender: TObject);
     procedure LocalTimeChange(Sender: TObject);
     procedure mVoltsChange(Sender: TObject);
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
@@ -892,11 +894,16 @@ var ParamPos, LineLength, Counter: Integer;
     StartRun: Boolean;
     EndRun, SubStr: String;
     StartRunDT, EndRunDT: TDateTime;
+    j: Byte;
 begin
   if OpenDialog1.Execute then
    begin
       DecimalSeparator:= '.';
       ResetCharts;
+      ShowLabel.Visible:= False;
+      HideLabel.Visible:= True;
+      for i:= 1 to 8 do
+        for j:= 1 to 8 do GetLineSerie(i, j).Marks.Style:= smsLabel;
       NewChart:= true;
       RawChannels.Clear;
       ComputedChannels.Clear;
@@ -1290,6 +1297,7 @@ begin
   else HideRightAxises;
 end;
 
+
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
 var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     TimePos, MiliSecPos, StepCoefficient: Integer;
@@ -1316,8 +1324,12 @@ begin
   LineSerie.Title:= SelectedParamName;
   LineSerie.ParentChart.Title.Text[0]:= SelectedParamName;
   LineSerie.ParentChart.Height:= ChartHeight;
-  SetLineSerieColor(LineSerie, GetColorBySerieName(LineSerie.Name));
-  LineSerie.Legend.Visible:= True;
+
+  if LeftStr(LineSerie.ParentChart.Name, 4) <> 'Pane' then begin
+     SetLineSerieColor(LineSerie, GetColorBySerieName(LineSerie.Name));
+     LineSerie.Legend.Visible:= True;
+  end;
+
   PrevTime:= UnixToDateTime(0);
   CSV.CommonBar.Max:= CSVContent.Count - 1;
   AddCurveForm.CommonBarExt.Max:= CSVContent.Count - 1;
@@ -1355,6 +1367,8 @@ begin
     else MiliSec:= 0;
     Time:= UnixToDateTime(StrToInt(GetParamValue(TimePos, CSVContent[i])));
     Time:= IncMilliSecond(Time, MiliSec);
+    if Time < PrevTime then Sticker:= 'Back shift in time';
+    PrevTime:= Time;
     if (YearOf(Time) > 2020) or (Not CSV.TimeScale.Checked) or (Not CSV.RTCBugs.Checked) then begin
        if  SelectedParamName in CondChannels then begin
           yRaw:= GetSonde(SelectedParamName, i);
@@ -1387,10 +1401,8 @@ begin
                             end;
                         end;
                      end;
-       Sticker:= '';
        if CSV.TimeScale.Checked then x:= IncHour(Time, hrsPlus);
        if CSV.ByTemperature.Checked then xCtrlTemp:= StrToFloat(GetParamValue(CtrlTempPos, CSVContent[i]));
-       if Time < PrevTime then Sticker:= 'Back shift in time';
        if ShowPR and PowerReset then Sticker:= 'P';
        if y <> ParameterError then begin
           if CSV.TimeScale.Checked then begin
@@ -1400,14 +1412,12 @@ begin
                else LineSerie.AddXY(xCtrlTemp, y, Sticker);
        end;
        PowerReset:= false;
-       PrevTime:= Time;
-
-      if ParameterNumber > 0 then begin
-        CSV.ParamsGrid.Cells[0, ParamLine]:= FormatDateTime('DD-MMM-YY hh:mm:ss',IncHour(Time, hrsPlus));
-        CSV.ParamsGrid.Cells[ParameterNumber, ParamLine]:= FloatToStrF(yRaw, ffFixed, 10, 3);
-        ParamLine:= ParamLine + 1;
-      end;
-
+       if ParameterNumber > 0 then begin
+          CSV.ParamsGrid.Cells[0, ParamLine]:= FormatDateTime('DD-MMM-YY hh:mm:ss',IncHour(Time, hrsPlus));
+          CSV.ParamsGrid.Cells[ParameterNumber, ParamLine]:= FloatToStrF(yRaw, ffFixed, 10, 3);
+          ParamLine:= ParamLine + 1;
+       end;
+       Sticker:= '';
     end
     else begin
       if (StrToInt(GetParamValue(GetParamPosition('STATUS.SIBR.LO'), CSVContent[i])) and 1024) > 0 then PowerReset:= true;
@@ -1715,10 +1725,22 @@ begin
   for i:=1 to 8 do TChart(CSV.FindComponent('Chart'+ IntToStr(i))).Height:= ChartHeightControl.Position;
 end;
 
-procedure TCSV.Image5Click(Sender: TObject);
-var i: Byte;
+procedure TCSV.ShowLabelClick(Sender: TObject);
+var i, j: Byte;
 begin
-  for i:=1 to 8 do DeleteLabels(TLineSeries(CSV.FindComponent('Chart'+ IntToStr(i) +'LineSeries1')));
+   ShowLabel.Visible:= False;
+   HideLabel.Visible:= True;
+   for i:= 1 to 8 do
+     for j:= 1 to 8 do GetLineSerie(i, j).Marks.Style:= smsLabel
+end;
+
+procedure TCSV.HideLabelClick(Sender: TObject);
+var i, j: Byte;
+begin
+   HideLabel.Visible:= False;
+   ShowLabel.Visible:= True;
+   for i:= 1 to 8 do
+     for j:= 1 to 8 do GetLineSerie(i, j).Marks.Style:= smsNone
 end;
 
 procedure TCSV.LocalTimeChange(Sender: TObject);

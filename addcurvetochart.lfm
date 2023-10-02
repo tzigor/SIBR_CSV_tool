@@ -1,7 +1,7 @@
 object AddCurveForm: TAddCurveForm
-  Left = 2443
+  Left = 1878
   Height = 600
-  Top = -747
+  Top = -691
   Width = 460
   Caption = 'Add Curve'
   ClientHeight = 600
@@ -54,7 +54,7 @@ object AddCurveForm: TAddCurveForm
   object RawChannelsExt: TListBox
     Left = 8
     Height = 536
-    Top = 32
+    Top = 33
     Width = 140
     Columns = 1
     ExtendedSelect = False
@@ -107,7 +107,7 @@ object AddCurveForm: TAddCurveForm
     Top = 360
     Width = 140
     BidiMode = bdRightToLeft
-    Caption = 'Drow'
+    Caption = 'Draw'
     Font.CharSet = ANSI_CHARSET
     Font.Height = -16
     Font.Pitch = fpVariable

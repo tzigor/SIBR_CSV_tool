@@ -205,6 +205,8 @@ begin
     ShowLines := true;
     LinePen.Style := psSolid;
     Legend.Visible:= False;
+    Marks.Style:= smsLabel;
+    Marks.LinkPen.Color:= clGray;
   end;
   AChart.AddSeries(Result);
 end;

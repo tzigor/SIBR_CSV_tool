@@ -162,6 +162,7 @@ var
   LibFileName                                    : String;
   NumberOfPoints                                 : Longint;
   SelectedChartToAdd                             : Byte;
+  ShowLabelsFlag                                 : Boolean;
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;

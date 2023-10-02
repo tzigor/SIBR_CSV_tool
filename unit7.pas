@@ -23,7 +23,9 @@ type
     PanelList: TListBox;
     procedure CloseLibClick(Sender: TObject);
     procedure DeleteRecordClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure LoadLibClick(Sender: TObject);
+    procedure PanelListDblClick(Sender: TObject);
     procedure PanelListSelectionChange(Sender: TObject; User: boolean);
     procedure SaveLibClick(Sender: TObject);
   private
@@ -71,6 +73,11 @@ begin
      end;
      Close;
   end;
+end;
+
+procedure TPanelsLib.FormActivate(Sender: TObject);
+begin
+  PanelsLib.Left:= PanelsLib.Left + 150;
 end;
 
 function GetLibIndex(Name: String; var RecordExist: Boolean): Integer;
@@ -128,7 +135,6 @@ begin
          LoadProgress.Position:= 0;
          for i:= 1 to 10 do
            for j:= 1 to 4 do begin
-             //CSV.Memo1.Text:= CSV.Memo1.Text + CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter + Line;
              if CurvesPanel.PaneSet.Panes[i-1].Curves[j-1].Parameter <> '' then begin
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Left:= 10000;
                 TChart(CSV.FindComponent('Pane' + IntToStr(i))).Visible:= true;
@@ -148,6 +154,15 @@ begin
     FitPanesToWindow;
     PanesResetZoom;
     LibFileName:= 'Panels.lib';
+end;
+
+procedure TPanelsLib.PanelListDblClick(Sender: TObject);
+var
+  lb: TListBox;
+begin
+  lb := (Sender as TListBox);
+  if ((lb = nil) or (lb.ItemIndex < 0)) then Exit;
+  LoadLibClick(Sender);
 end;
 
 procedure TPanelsLib.PanelListSelectionChange(Sender: TObject; User: boolean);

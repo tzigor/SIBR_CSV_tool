@@ -1,11 +1,11 @@
 object PanelsLib: TPanelsLib
-  Left = 2543
+  Left = 2233
   Height = 422
-  Top = -674
+  Top = -633
   Width = 243
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
-  BorderStyle = bsDialog
+  BorderStyle = bsSingle
   Caption = 'Library'
   ClientHeight = 422
   ClientWidth = 243
@@ -75,6 +75,7 @@ object PanelsLib: TPanelsLib
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnActivate = FormActivate
   Position = poMainFormCenter
   LCLVersion = '2.2.4.0'
   object PanelList: TListBox
@@ -83,6 +84,7 @@ object PanelsLib: TPanelsLib
     Top = 0
     Width = 227
     ItemHeight = 0
+    OnDblClick = PanelListDblClick
     OnSelectionChange = PanelListSelectionChange
     TabOrder = 0
   end
