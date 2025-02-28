@@ -1,35 +1,36 @@
 object PaneEdit: TPaneEdit
-  Left = 2797
-  Height = 413
-  Top = -711
-  Width = 420
+  Left = 5126
+  Height = 620
+  Top = -726
+  Width = 624
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderStyle = bsDialog
   Caption = 'Track Edit'
-  ClientHeight = 413
-  ClientWidth = 420
+  ClientHeight = 620
+  ClientWidth = 624
   Color = clWhite
+  DesignTimePPI = 144
   Position = poOwnerFormCenter
-  LCLVersion = '2.2.4.0'
+  LCLVersion = '3.8.0.0'
   object PaneNumber: TLabel
-    Left = 16
-    Height = 25
+    Left = 24
+    Height = 40
     Top = 0
-    Width = 43
+    Width = 64
     Caption = 'Track'
     Font.CharSet = ANSI_CHARSET
-    Font.Height = -19
+    Font.Height = -29
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentColor = False
     ParentFont = False
   end
   object Label1: TLabel
-    Left = 16
-    Height = 15
-    Top = 40
-    Width = 57
+    Left = 24
+    Height = 25
+    Top = 60
+    Width = 83
     Caption = 'Parameter:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clNavy
@@ -39,13 +40,13 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object Parameter: TLabel
-    Left = 112
-    Height = 17
-    Top = 40
-    Width = 63
+    Left = 168
+    Height = 28
+    Top = 60
+    Width = 92
     Caption = 'Parameter'
     Font.CharSet = ANSI_CHARSET
-    Font.Height = -13
+    Font.Height = -20
     Font.Name = 'Segoe UI Semibold'
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
@@ -54,10 +55,10 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 16
-    Height = 15
-    Top = 80
-    Width = 80
+    Left = 24
+    Height = 25
+    Top = 120
+    Width = 117
     Caption = 'Parameter title:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clNavy
@@ -67,28 +68,28 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object ParameterTitle: TEdit
-    Left = 112
-    Height = 23
-    Top = 72
-    Width = 152
+    Left = 168
+    Height = 33
+    Top = 108
+    Width = 228
     TabOrder = 0
   end
   object ColorBox: TColorBox
-    Left = 112
-    Height = 22
-    Top = 112
-    Width = 152
+    Left = 168
+    Height = 30
+    Top = 168
+    Width = 228
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbCustomColor]
     ColorDialog = ColorDialog1
     DropDownCount = 10
-    ItemHeight = 16
+    ItemHeight = 24
     TabOrder = 1
   end
   object Label3: TLabel
-    Left = 16
-    Height = 15
-    Top = 120
-    Width = 64
+    Left = 24
+    Height = 25
+    Top = 180
+    Width = 94
     Caption = 'Curve color:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clNavy
@@ -98,10 +99,10 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object Label4: TLabel
-    Left = 16
-    Height = 15
-    Top = 160
-    Width = 61
+    Left = 24
+    Height = 25
+    Top = 240
+    Width = 90
     Caption = 'Curve style:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clNavy
@@ -111,21 +112,21 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object ChartComboBox1: TChartComboBox
-    Left = 112
-    Height = 22
-    Top = 152
-    Width = 152
+    Left = 168
+    Height = 30
+    Top = 228
+    Width = 228
     PenPattern = '1|1'
     PointerStyle = psNone
-    ItemHeight = 16
+    ItemHeight = 24
     ItemIndex = 0
     TabOrder = 2
   end
   object Label5: TLabel
-    Left = 19
-    Height = 15
-    Top = 200
-    Width = 67
+    Left = 28
+    Height = 25
+    Top = 300
+    Width = 98
     Caption = 'Curve width:'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clNavy
@@ -135,77 +136,77 @@ object PaneEdit: TPaneEdit
     ParentFont = False
   end
   object ChartComboBox2: TChartComboBox
-    Left = 112
-    Height = 22
-    Top = 192
-    Width = 152
+    Left = 168
+    Height = 30
+    Top = 288
+    Width = 228
     Mode = ccmPenWidth
     PenPattern = '1|1'
     PointerStyle = psNone
-    ItemHeight = 16
+    ItemHeight = 24
     ItemIndex = 0
     TabOrder = 3
   end
   object ParameterList: TListBox
-    Left = 280
-    Height = 393
-    Top = 8
-    Width = 128
+    Left = 420
+    Height = 590
+    Top = 12
+    Width = 192
     ItemHeight = 0
-    OnDrawItem = ParameterListDrawItem
-    OnSelectionChange = ParameterListSelectionChange
     ParentFont = False
     Style = lbOwnerDrawVariable
     TabOrder = 4
+    OnDrawItem = ParameterListDrawItem
+    OnSelectionChange = ParameterListSelectionChange
   end
   object Save: TButton
-    Left = 168
-    Height = 25
-    Top = 232
-    Width = 96
+    Left = 252
+    Height = 38
+    Top = 348
+    Width = 144
     Caption = 'Save to track'
-    OnClick = SaveClick
     TabOrder = 5
+    OnClick = SaveClick
   end
   object CloseEdit: TButton
-    Left = 16
-    Height = 25
-    Top = 376
-    Width = 91
+    Left = 24
+    Height = 38
+    Top = 564
+    Width = 136
     Caption = 'Close'
-    OnClick = CloseEditClick
     TabOrder = 6
+    OnClick = CloseEditClick
   end
   object AxisNumber: TLabel
-    Left = 176
-    Height = 21
-    Top = 4
-    Width = 57
+    Left = 264
+    Height = 32
+    Top = 6
+    Width = 87
     Caption = 'Curve: 1'
     Font.CharSet = ANSI_CHARSET
-    Font.Height = -16
+    Font.Height = -24
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     ParentColor = False
     ParentFont = False
   end
   object DeleteCurve: TButton
-    Left = 168
-    Height = 25
-    Top = 264
-    Width = 96
+    Left = 252
+    Height = 38
+    Top = 396
+    Width = 144
     Caption = 'Delete Curve'
-    OnClick = DeleteCurveClick
     TabOrder = 7
+    OnClick = DeleteCurveClick
   end
   object DeletePane: TButton
-    Left = 16
-    Height = 25
-    Top = 304
-    Width = 91
+    Left = 24
+    Height = 38
+    Top = 456
+    Width = 136
     Caption = 'Delete track'
-    OnClick = DeletePaneClick
     TabOrder = 8
+    OnClick = DeletePaneClick
   end
   object ColorDialog1: TColorDialog
     Color = clBlack
@@ -231,7 +232,7 @@ object PaneEdit: TPaneEdit
       'ColorS=F0FBFF'
       'ColorT=A4A0A0'
     )
-    Left = 200
-    Top = 360
+    Left = 300
+    Top = 540
   end
 end

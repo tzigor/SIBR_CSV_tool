@@ -1,15 +1,16 @@
 object PanelsLib: TPanelsLib
-  Left = 2233
-  Height = 422
-  Top = -633
-  Width = 243
+  Left = 5182
+  Height = 634
+  Top = -212
+  Width = 363
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderStyle = bsSingle
   Caption = 'Library'
-  ClientHeight = 422
-  ClientWidth = 243
+  ClientHeight = 634
+  ClientWidth = 363
   Color = clWhite
+  DesignTimePPI = 144
   Icon.Data = {
     BE0700000000010001001714000001002000A807000016000000280000001700
     0000280000000100200000000000300700006400000064000000000000000000
@@ -77,75 +78,75 @@ object PanelsLib: TPanelsLib
   }
   OnActivate = FormActivate
   Position = poMainFormCenter
-  LCLVersion = '2.2.4.0'
+  LCLVersion = '3.8.0.0'
   object PanelList: TListBox
-    Left = 8
-    Height = 320
+    Left = 12
+    Height = 480
     Top = 0
-    Width = 227
+    Width = 340
     ItemHeight = 0
+    TabOrder = 0
     OnDblClick = PanelListDblClick
     OnSelectionChange = PanelListSelectionChange
-    TabOrder = 0
   end
   object CloseLib: TButton
-    Left = 149
-    Height = 25
-    Top = 392
-    Width = 86
+    Left = 224
+    Height = 38
+    Top = 588
+    Width = 129
     Caption = 'Close'
-    OnClick = CloseLibClick
     TabOrder = 1
+    OnClick = CloseLibClick
   end
   object SaveLib: TButton
-    Left = 8
-    Height = 25
-    Top = 392
-    Width = 86
+    Left = 12
+    Height = 38
+    Top = 588
+    Width = 129
     Caption = 'Save'
-    OnClick = SaveLibClick
     TabOrder = 2
+    OnClick = SaveLibClick
   end
   object PanelName: TEdit
-    Left = 48
-    Height = 23
-    Top = 328
-    Width = 187
+    Left = 72
+    Height = 33
+    Top = 492
+    Width = 280
     MaxLength = 24
     TabOrder = 3
   end
   object Label1: TLabel
-    Left = 8
-    Height = 15
-    Top = 332
-    Width = 35
+    Left = 12
+    Height = 25
+    Top = 488
+    Width = 51
     Caption = 'Name:'
     ParentColor = False
   end
   object LoadLib: TButton
-    Left = 8
-    Height = 25
-    Top = 392
-    Width = 86
+    Left = 12
+    Height = 38
+    Top = 588
+    Width = 129
     Caption = 'Load'
-    OnClick = LoadLibClick
     TabOrder = 4
+    OnClick = LoadLibClick
   end
   object LoadProgress: TProgressBar
-    Left = 8
-    Height = 12
-    Top = 344
-    Width = 227
+    Left = 12
+    Height = 18
+    Top = 516
+    Width = 340
     Max = 40
     Step = 1
     TabOrder = 5
     Visible = False
   end
   object DeleteRecord: TBitBtn
-    Left = 149
-    Height = 25
-    Top = 360
-    Width = 86
+    Left = 224
+    Height = 38
+    Top = 540
+    Width = 129
     Caption = 'Delete'
     Font.CharSet = ANSI_CHARSET
     Font.Color = clRed

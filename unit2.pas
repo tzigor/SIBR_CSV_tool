@@ -133,6 +133,7 @@ const ParameterError = -35535;
 var
   ErrorCode                                      : Byte;
   CSVFileName, CSVCompareFileName, DrawParameter : String;
+  NamePostfix                                     : String = '_generated';
   CSVContent, CSVCompare                         : TStringList;
   DataSource                                     : array of Single;
   TimeSource                                     : array of TDateTime;

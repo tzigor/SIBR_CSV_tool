@@ -1,14 +1,15 @@
 object CSV: TCSV
-  Left = 2047
-  Height = 663
-  Top = -748
-  Width = 899
+  Left = 4299
+  Height = 1228
+  Top = -931
+  Width = 1348
   Anchors = []
-  Caption = 'SIBR Dump Tool v3.0.1 Portable'
-  ClientHeight = 663
-  ClientWidth = 899
-  Constraints.MinHeight = 663
-  Constraints.MinWidth = 899
+  Caption = 'SIBR Analazer v3.1 Portable'
+  ClientHeight = 1228
+  ClientWidth = 1348
+  Constraints.MinHeight = 1228
+  Constraints.MinWidth = 1348
+  DesignTimePPI = 144
   Icon.Data = {
     46EB00000000010001008A8A00000100180030EB000016000000280000008A00
     000014010000010018000000000040E000006400000064000000000000000000
@@ -1898,12 +1899,12 @@ object CSV: TCSV
   OnResize = FormResize
   Position = poDefaultPosOnly
   SessionProperties = 'AutoFit.Checked;ChartHeightControl.Position;ChartPoints.Checked;ChartsLink.Checked;Divider.Value;mVolts.Checked;PowerResets.Checked;ShowDateTime.Checked;ZoneFromChart.Checked'
-  LCLVersion = '2.2.4.0'
+  LCLVersion = '3.8.0.0'
   object App: TPageControl
     Left = 0
-    Height = 663
+    Height = 1228
     Top = 0
-    Width = 899
+    Width = 1348
     ActivePage = MainTab
     Align = alClient
     Font.CharSet = ANSI_CHARSET
@@ -1915,40 +1916,41 @@ object CSV: TCSV
     TabOrder = 0
     object MainTab: TTabSheet
       Caption = 'Main'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
+      OnContextPopup = MainTabContextPopup
       object CSVFileBox: TGroupBox
         Left = 0
-        Height = 168
-        Top = 8
-        Width = 232
+        Height = 252
+        Top = 12
+        Width = 348
         Caption = 'CSV file'
-        ClientHeight = 148
-        ClientWidth = 228
+        ClientHeight = 222
+        ClientWidth = 344
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
-        Font.Height = -12
+        Font.Height = -18
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentFont = False
         TabOrder = 0
         object Label2: TLabel
-          Left = 8
-          Height = 15
-          Top = 25
-          Width = 47
+          Left = 12
+          Height = 25
+          Top = 38
+          Width = 71
           Caption = 'Run start'
           ParentColor = False
         end
         object RunStart: TLabel
-          Left = 88
+          Left = 132
           Height = 1
-          Top = 25
+          Top = 38
           Width = 1
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -1957,21 +1959,21 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label1: TLabel
-          Left = 8
-          Height = 15
-          Top = 49
-          Width = 44
+          Left = 12
+          Height = 25
+          Top = 74
+          Width = 66
           Caption = 'Run end'
           ParentColor = False
         end
         object RunEnd: TLabel
-          Left = 88
+          Left = 132
           Height = 1
-          Top = 49
+          Top = 74
           Width = 1
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -1980,21 +1982,21 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label3: TLabel
-          Left = 8
-          Height = 15
-          Top = 73
-          Width = 69
+          Left = 12
+          Height = 25
+          Top = 110
+          Width = 103
           Caption = 'Run duration'
           ParentColor = False
         end
         object Duration: TLabel
-          Left = 88
+          Left = 132
           Height = 1
-          Top = 73
+          Top = 110
           Width = 1
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -2003,21 +2005,21 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label5: TLabel
-          Left = 8
-          Height = 15
-          Top = 121
-          Width = 40
+          Left = 12
+          Height = 25
+          Top = 182
+          Width = 60
           Caption = 'File size'
           ParentColor = False
         end
         object CSVFileSize: TLabel
-          Left = 88
+          Left = 132
           Height = 1
-          Top = 121
+          Top = 182
           Width = 1
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -2026,21 +2028,21 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label6: TLabel
-          Left = 8
-          Height = 15
-          Top = 97
-          Width = 42
+          Left = 12
+          Height = 25
+          Top = 146
+          Width = 63
           Caption = 'Records'
           ParentColor = False
         end
         object Records: TLabel
-          Left = 88
+          Left = 132
           Height = 1
-          Top = 97
+          Top = 146
           Width = 1
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -2049,14 +2051,14 @@ object CSV: TCSV
           ParentFont = False
         end
         object ToolTime: TLabel
-          Left = 8
-          Height = 15
+          Left = 12
+          Height = 25
           Top = 0
-          Width = 60
+          Width = 90
           Caption = 'Tool time +'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clMaroon
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -2066,20 +2068,20 @@ object CSV: TCSV
       end
       object GroupBox4: TGroupBox
         Left = 0
-        Height = 368
-        Top = 224
-        Width = 232
+        Height = 552
+        Top = 336
+        Width = 348
         Caption = 'CSV Sizing'
-        ClientHeight = 348
-        ClientWidth = 228
+        ClientHeight = 522
+        ClientWidth = 344
         ParentBackground = False
         ParentColor = False
         TabOrder = 1
         object Label11: TLabel
-          Left = 8
-          Height = 15
-          Top = 4
-          Width = 60
+          Left = 12
+          Height = 25
+          Top = 6
+          Width = 90
           Caption = 'Record rate'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2089,10 +2091,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object RecordRate: TEdit
-          Left = 76
-          Height = 23
+          Left = 114
+          Height = 33
           Top = 0
-          Width = 36
+          Width = 54
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -2102,10 +2104,10 @@ object CSV: TCSV
           Text = '0'
         end
         object Label12: TLabel
-          Left = 120
-          Height = 15
-          Top = 4
-          Width = 17
+          Left = 180
+          Height = 25
+          Top = 6
+          Width = 25
           Caption = 'sec'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -2115,10 +2117,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label13: TLabel
-          Left = 8
-          Height = 15
-          Top = 44
-          Width = 53
+          Left = 12
+          Height = 25
+          Top = 66
+          Width = 79
           Caption = 'Start Time'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2128,10 +2130,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object StartTime: TEdit
-          Left = 76
-          Height = 23
-          Top = 40
-          Width = 108
+          Left = 114
+          Height = 33
+          Top = 60
+          Width = 162
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -2140,10 +2142,10 @@ object CSV: TCSV
           TabOrder = 1
         end
         object Label14: TLabel
-          Left = 8
-          Height = 15
-          Top = 76
-          Width = 49
+          Left = 12
+          Height = 25
+          Top = 114
+          Width = 73
           Caption = 'End Time'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2153,10 +2155,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object EndTime: TEdit
-          Left = 76
-          Height = 23
-          Top = 72
-          Width = 108
+          Left = 114
+          Height = 33
+          Top = 108
+          Width = 162
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -2165,78 +2167,78 @@ object CSV: TCSV
           TabOrder = 2
         end
         object FullRange: TButton
-          Left = 8
-          Height = 25
-          Top = 104
-          Width = 78
+          Left = 12
+          Height = 38
+          Top = 156
+          Width = 117
           Caption = 'Full range'
-          OnClick = FullRangeClick
           TabOrder = 3
+          OnClick = FullRangeClick
         end
         object GroupBox2: TGroupBox
-          Left = 8
-          Height = 145
-          Top = 136
-          Width = 213
+          Left = 12
+          Height = 218
+          Top = 204
+          Width = 320
           Caption = 'Target file'
-          ClientHeight = 125
-          ClientWidth = 209
+          ClientHeight = 188
+          ClientWidth = 316
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentFont = False
           TabOrder = 4
           object Label4: TLabel
-            Left = 8
-            Height = 15
-            Top = 8
-            Width = 47
+            Left = 12
+            Height = 25
+            Top = 12
+            Width = 71
             Caption = 'Run start'
             ParentColor = False
           end
           object Label7: TLabel
-            Left = 8
-            Height = 15
-            Top = 32
-            Width = 44
+            Left = 12
+            Height = 25
+            Top = 48
+            Width = 66
             Caption = 'Run end'
             ParentColor = False
           end
           object Label8: TLabel
-            Left = 8
-            Height = 15
-            Top = 56
-            Width = 69
+            Left = 12
+            Height = 25
+            Top = 84
+            Width = 103
             Caption = 'Run duration'
             ParentColor = False
           end
           object Label9: TLabel
-            Left = 8
-            Height = 15
-            Top = 80
-            Width = 42
+            Left = 12
+            Height = 25
+            Top = 120
+            Width = 63
             Caption = 'Records'
             ParentColor = False
           end
           object Label10: TLabel
-            Left = 8
-            Height = 15
-            Top = 104
-            Width = 40
+            Left = 12
+            Height = 25
+            Top = 156
+            Width = 60
             Caption = 'File size'
             ParentColor = False
           end
           object RunStartT: TLabel
-            Left = 88
+            Left = 132
             Height = 1
-            Top = 8
+            Top = 12
             Width = 1
             Font.CharSet = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -12
+            Font.Height = -18
             Font.Name = 'Segoe UI'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -2245,13 +2247,13 @@ object CSV: TCSV
             ParentFont = False
           end
           object RunEndT: TLabel
-            Left = 88
+            Left = 132
             Height = 1
-            Top = 32
+            Top = 48
             Width = 1
             Font.CharSet = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -12
+            Font.Height = -18
             Font.Name = 'Segoe UI'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -2260,13 +2262,13 @@ object CSV: TCSV
             ParentFont = False
           end
           object DurationT: TLabel
-            Left = 88
+            Left = 132
             Height = 1
-            Top = 56
+            Top = 84
             Width = 1
             Font.CharSet = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -12
+            Font.Height = -18
             Font.Name = 'Segoe UI'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -2275,13 +2277,13 @@ object CSV: TCSV
             ParentFont = False
           end
           object RecordsT: TLabel
-            Left = 88
+            Left = 132
             Height = 1
-            Top = 80
+            Top = 120
             Width = 1
             Font.CharSet = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -12
+            Font.Height = -18
             Font.Name = 'Segoe UI'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -2290,13 +2292,13 @@ object CSV: TCSV
             ParentFont = False
           end
           object FileSizeT: TLabel
-            Left = 88
+            Left = 132
             Height = 1
-            Top = 104
+            Top = 156
             Width = 1
             Font.CharSet = ANSI_CHARSET
             Font.Color = clNavy
-            Font.Height = -12
+            Font.Height = -18
             Font.Name = 'Segoe UI'
             Font.Pitch = fpVariable
             Font.Quality = fqDraft
@@ -2306,48 +2308,48 @@ object CSV: TCSV
           end
         end
         object EstimateFast: TButton
-          Left = 8
-          Height = 32
-          Top = 288
-          Width = 94
+          Left = 12
+          Height = 48
+          Top = 432
+          Width = 141
           Caption = 'Estimate'
           Enabled = False
-          OnClick = EstimateFastClick
           TabOrder = 5
+          OnClick = EstimateFastClick
         end
         object Generate: TButton
-          Left = 128
-          Height = 32
-          Top = 288
-          Width = 91
+          Left = 192
+          Height = 48
+          Top = 432
+          Width = 136
           Caption = 'Generate'
           Enabled = False
-          OnClick = GenerateClick
           TabOrder = 6
+          OnClick = GenerateClick
         end
         object ProgressBar: TProgressBar
           Left = 0
-          Height = 15
-          Top = 329
-          Width = 228
+          Height = 22
+          Top = 494
+          Width = 342
           Step = 1
           TabOrder = 7
         end
         object GetRangeBtn: TButton
-          Left = 96
-          Height = 25
-          Top = 104
-          Width = 125
+          Left = 144
+          Height = 38
+          Top = 156
+          Width = 188
           Caption = 'Get range from chart'
-          OnClick = GetRangeBtnClick
           TabOrder = 8
+          OnClick = GetRangeBtnClick
         end
       end
       object OpenedFile: TEdit
-        Left = 72
-        Height = 23
-        Top = 602
-        Width = 696
+        Left = 116
+        Height = 33
+        Top = 1150
+        Width = 1044
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -2357,31 +2359,31 @@ object CSV: TCSV
         Text = 'File:'
       end
       object Button7: TButton
-        Left = 0
-        Height = 25
-        Top = 600
-        Width = 64
+        Left = 8
+        Height = 38
+        Top = 1145
+        Width = 96
         Caption = 'Copy'
-        OnClick = Button7Click
         TabOrder = 3
+        OnClick = Button7Click
       end
       object GroupBox7: TGroupBox
-        Left = 240
-        Height = 584
-        Top = 8
-        Width = 648
+        Left = 360
+        Height = 1124
+        Top = 12
+        Width = 972
         Caption = 'Graph'
-        ClientHeight = 564
-        ClientWidth = 644
-        Color = clWhite
+        ClientHeight = 1094
+        ClientWidth = 968
         ParentBackground = False
         ParentColor = False
         TabOrder = 4
+        OnClick = GroupBox7Click
         object DrawBtnReleased: TImage
-          Left = 320
-          Height = 38
-          Top = 352
-          Width = 140
+          Left = 480
+          Height = 57
+          Top = 528
+          Width = 210
           Picture.Data = {
             1754506F727461626C654E6574776F726B47726170686963CD0F000089504E47
             0D0A1A0A0000000D494844520000008C000000260806000000164773B6000000
@@ -2512,14 +2514,16 @@ object CSV: TCSV
             66747761726500417274776561766572204672656520372E30B0E96D7E000000
             0049454E44AE426082
           }
+          Stretch = True
           Visible = False
         end
         object DrawBtn: TImage
-          Left = 320
-          Height = 38
-          Top = 352
-          Width = 140
+          Left = 480
+          Height = 57
+          Top = 528
+          Width = 210
           AntialiasingMode = amOff
+          OnClick = DrawBtnClick
           OnMouseDown = DrawBtnMouseDown
           OnMouseUp = DrawBtnMouseUp
           Picture.Data = {
@@ -2654,12 +2658,13 @@ object CSV: TCSV
             6F66747761726500417274776561766572204672656520372E30B0E96D7E0000
             000049454E44AE426082
           }
+          Stretch = True
         end
         object RawChannels: TListBox
-          Left = 16
-          Height = 536
-          Top = 24
-          Width = 140
+          Left = 24
+          Height = 1044
+          Top = 36
+          Width = 210
           Columns = 1
           ExtendedSelect = False
           Font.CharSet = ANSI_CHARSET
@@ -2668,17 +2673,17 @@ object CSV: TCSV
           Font.Quality = fqDraft
           ItemHeight = 0
           MultiSelect = True
-          OnDrawItem = RawChannelsDrawItem
-          OnSelectionChange = RawChannelsSelectionChange
           ParentFont = False
           Style = lbOwnerDrawVariable
           TabOrder = 0
+          OnDrawItem = RawChannelsDrawItem
+          OnSelectionChange = RawChannelsSelectionChange
         end
         object Label22: TLabel
-          Left = 16
-          Height = 15
+          Left = 24
+          Height = 25
           Top = 0
-          Width = 74
+          Width = 109
           Caption = 'Raw Channels'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2688,10 +2693,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label23: TLabel
-          Left = 168
-          Height = 15
+          Left = 252
+          Height = 25
           Top = 0
-          Width = 109
+          Width = 161
           Caption = 'Computed Channels'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2701,10 +2706,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object ComputedChannels: TListBox
-          Left = 168
-          Height = 535
-          Top = 25
-          Width = 140
+          Left = 252
+          Height = 1042
+          Top = 38
+          Width = 210
           ExtendedSelect = False
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -2712,17 +2717,17 @@ object CSV: TCSV
           Font.Quality = fqDraft
           ItemHeight = 0
           MultiSelect = True
-          OnDrawItem = ComputedChannelsDrawItem
-          OnSelectionChange = ComputedChannelsSelectionChange
           ParentFont = False
           Style = lbOwnerDrawVariable
           TabOrder = 1
+          OnDrawItem = ComputedChannelsDrawItem
+          OnSelectionChange = ComputedChannelsSelectionChange
         end
         object Label24: TLabel
-          Left = 320
-          Height = 15
+          Left = 480
+          Height = 25
           Top = 0
-          Width = 101
+          Width = 154
           Caption = 'Selected Channels'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -2733,10 +2738,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object SelectedChannels: TListBox
-          Left = 320
-          Height = 319
-          Top = 25
-          Width = 140
+          Left = 480
+          Height = 478
+          Top = 38
+          Width = 210
           Font.CharSet = ANSI_CHARSET
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -2746,27 +2751,27 @@ object CSV: TCSV
           TabOrder = 2
         end
         object PowerResets: TCheckBox
-          Left = 483
-          Height = 19
-          Top = 152
-          Width = 121
+          Left = 724
+          Height = 29
+          Top = 228
+          Width = 179
           Caption = 'Show Power Resets'
           TabOrder = 3
         end
         object Button6: TButton
-          Left = 320
-          Height = 25
-          Top = 512
-          Width = 87
+          Left = 477
+          Height = 38
+          Top = 1000
+          Width = 130
           Caption = 'Uncheck All'
-          OnClick = Button6Click
           TabOrder = 4
+          OnClick = Button6Click
         end
         object Label27: TLabel
-          Left = 481
-          Height = 15
-          Top = 43
-          Width = 32
+          Left = 722
+          Height = 25
+          Top = 64
+          Width = 48
           Caption = 'UTC +'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -2776,10 +2781,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object LocalTime: TSpinEdit
-          Left = 516
-          Height = 23
-          Top = 40
-          Width = 50
+          Left = 774
+          Height = 33
+          Top = 60
+          Width = 75
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -2789,108 +2794,108 @@ object CSV: TCSV
           TabOrder = 5
         end
         object ShowSondes: TButton
-          Left = 464
-          Height = 32
-          Top = 465
-          Width = 176
+          Left = 696
+          Height = 48
+          Top = 662
+          Width = 264
           Caption = 'Show Synthesized Sondes'
           Enabled = False
-          OnClick = ShowSondesClick
           TabOrder = 6
+          OnClick = ShowSondesClick
         end
         object ShowCSondes: TButton
-          Left = 464
-          Height = 32
-          Top = 505
-          Width = 176
+          Left = 696
+          Height = 48
+          Top = 722
+          Width = 264
           Caption = 'Show Compensated Sondes'
           Enabled = False
-          OnClick = ShowCSondesClick
           TabOrder = 7
+          OnClick = ShowCSondesClick
         end
         object CommonBar: TProgressBar
-          Left = 320
-          Height = 15
-          Top = 545
-          Width = 320
+          Left = 477
+          Height = 22
+          Top = 1056
+          Width = 480
           Color = clYellow
           ParentColor = False
           TabOrder = 8
         end
         object ZoneFromChart: TCheckBox
-          Left = 464
-          Height = 19
-          Top = 440
-          Width = 130
+          Left = 696
+          Height = 29
+          Top = 624
+          Width = 191
           Caption = 'Get zone from charts'
           TabOrder = 9
         end
         object AutoFit: TCheckBox
-          Left = 483
-          Height = 19
-          Top = 181
-          Width = 60
+          Left = 724
+          Height = 29
+          Top = 272
+          Width = 85
           Caption = 'Auto fit'
           Checked = True
           State = cbChecked
           TabOrder = 10
         end
         object TimeScale: TRadioButton
-          Left = 482
-          Height = 19
-          Top = 240
-          Width = 92
+          Left = 723
+          Height = 29
+          Top = 360
+          Width = 132
           Caption = 'Chart by time'
           Checked = True
-          OnChange = TimeScaleChange
           TabOrder = 13
           TabStop = True
+          OnChange = TimeScaleChange
         end
         object ByDots: TRadioButton
-          Left = 483
-          Height = 19
-          Top = 267
-          Width = 91
+          Left = 724
+          Height = 29
+          Top = 400
+          Width = 133
           Caption = 'Chart by dots'
-          OnChange = ByDotsChange
           TabOrder = 11
+          OnChange = ByDotsChange
         end
         object mVolts: TCheckBox
-          Left = 483
-          Height = 19
-          Top = 361
-          Width = 123
+          Left = 724
+          Height = 29
+          Top = 542
+          Width = 178
           Caption = 'Amplitudes in units'
           Checked = True
-          OnChange = mVoltsChange
           State = cbChecked
           TabOrder = 12
+          OnChange = mVoltsChange
         end
         object RTCBugs: TCheckBox
-          Left = 483
-          Height = 19
-          Top = 329
-          Width = 145
+          Left = 724
+          Height = 29
+          Top = 494
+          Width = 211
           Caption = 'Only synchronized time'
           Checked = True
-          OnChange = RTCBugsChange
           State = cbChecked
           TabOrder = 14
+          OnChange = RTCBugsChange
         end
         object ByTemperature: TRadioButton
-          Left = 483
-          Height = 19
-          Top = 296
-          Width = 133
+          Left = 724
+          Height = 29
+          Top = 444
+          Width = 194
           Caption = 'Chart by temperature'
-          OnChange = ByTemperatureChange
           TabOrder = 15
+          OnChange = ByTemperatureChange
         end
         object Image6: TImage
-          Left = 552
-          Height = 24
+          Left = 820
+          Height = 38
           Top = 0
-          Width = 88
+          Width = 137
           Picture.Data = {
             0A544A706567496D616765A7090000FFD8FFE000104A46494600010101006000
             600000FFE100224578696600004D4D002A000000080001011200030000000100
@@ -2971,12 +2976,13 @@ object CSV: TCSV
             C3BACF8675097C4F35C476DA95B35BCAF11B680070ADDB21867D41A28A2BE5B3
             AA8F118EAB5A7BB6DE87D4E490543034E943648FFFD9
           }
+          Stretch = True
         end
         object Divider: TSpinEdit
-          Left = 530
-          Height = 23
-          Top = 385
-          Width = 88
+          Left = 795
+          Height = 33
+          Top = 578
+          Width = 132
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
           Font.Pitch = fpVariable
@@ -2988,10 +2994,10 @@ object CSV: TCSV
           Value = 1
         end
         object LDivider: TLabel
-          Left = 483
-          Height = 15
-          Top = 388
-          Width = 37
+          Left = 724
+          Height = 25
+          Top = 582
+          Width = 56
           Caption = 'Divider'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -3001,21 +3007,21 @@ object CSV: TCSV
           ParentFont = False
         end
         object FastMode: TCheckBox
-          Left = 481
-          Height = 19
-          Top = 76
-          Width = 75
+          Left = 722
+          Height = 29
+          Top = 114
+          Width = 109
           Caption = 'Fast mode'
           Checked = True
-          OnChange = FastModeChange
           State = cbChecked
           TabOrder = 17
+          OnChange = FastModeChange
         end
         object RecordsNumber: TTrackBar
-          Left = 473
-          Height = 25
-          Top = 97
-          Width = 172
+          Left = 710
+          Height = 38
+          Top = 146
+          Width = 258
           Frequency = 100
           Max = 50000
           Min = 10000
@@ -3026,42 +3032,42 @@ object CSV: TCSV
           TabOrder = 18
         end
         object Fast: TLabel
-          Left = 473
-          Height = 13
-          Top = 125
-          Width = 21
+          Left = 710
+          Height = 23
+          Top = 188
+          Width = 29
           Caption = 'Fast'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clSilver
-          Font.Height = -11
+          Font.Height = -17
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
           ParentFont = False
         end
         object Slow: TLabel
-          Left = 615
-          Height = 13
-          Top = 125
-          Width = 25
+          Left = 922
+          Height = 23
+          Top = 188
+          Width = 35
           Caption = 'Slow'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clSilver
-          Font.Height = -11
+          Font.Height = -17
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
           ParentFont = False
         end
         object RecordCount: TLabel
-          Left = 565
-          Height = 13
-          Top = 80
-          Width = 71
+          Left = 848
+          Height = 23
+          Top = 120
+          Width = 106
           Caption = '10000 records'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clMaroon
-          Font.Height = -11
+          Font.Height = -17
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
@@ -3069,24 +3075,24 @@ object CSV: TCSV
           Visible = False
         end
         object RemoveExtremes: TCheckBox
-          Left = 483
-          Height = 19
-          Top = 208
-          Width = 114
+          Left = 724
+          Height = 29
+          Top = 312
+          Width = 166
           Caption = 'Remove extremes'
-          OnChange = RemoveExtremesChange
           TabOrder = 19
+          OnChange = RemoveExtremesChange
         end
       end
       object OpenCSV: TBitBtn
-        Left = 88
-        Height = 32
-        Top = 184
-        Width = 144
+        Left = 132
+        Height = 48
+        Top = 276
+        Width = 216
         Caption = 'Open CSV'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
-        Font.Height = -16
+        Font.Height = -24
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -3134,14 +3140,14 @@ object CSV: TCSV
         TabOrder = 5
       end
       object CloseForm: TBitBtn
-        Left = 776
-        Height = 30
-        Top = 600
-        Width = 107
+        Left = 1168
+        Height = 45
+        Top = 1138
+        Width = 160
         Caption = 'Close'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clMaroon
-        Font.Height = -16
+        Font.Height = -24
         Font.Name = 'Segoe UI Semibold'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -3150,17 +3156,153 @@ object CSV: TCSV
         ParentFont = False
         TabOrder = 6
       end
+      object GroupBox1: TGroupBox
+        Left = 16
+        Height = 240
+        Top = 896
+        Width = 328
+        Caption = 'Thermal cycle'
+        ClientHeight = 210
+        ClientWidth = 324
+        TabOrder = 7
+        object ThermoBtn: TButton
+          Left = 178
+          Height = 46
+          Top = 152
+          Width = 134
+          Caption = 'Generate'
+          Enabled = False
+          TabOrder = 0
+          OnClick = ThermoBtnClick
+        end
+        object Label35: TLabel
+          Left = 8
+          Height = 25
+          Top = 12
+          Width = 153
+          Caption = 'Hot cycle low temp'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object HotLow: TFloatSpinEdit
+          Left = 184
+          Height = 33
+          Top = 8
+          Width = 88
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
+          TabOrder = 1
+        end
+        object Label36: TLabel
+          Left = 8
+          Height = 25
+          Top = 60
+          Width = 137
+          Caption = 'Warm cycle temp'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object WarmTemp: TFloatSpinEdit
+          Left = 184
+          Height = 33
+          Top = 56
+          Width = 88
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
+          TabOrder = 2
+          Value = 45
+        end
+        object Label37: TLabel
+          Left = 280
+          Height = 25
+          Top = 12
+          Width = 11
+          Caption = 'C'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object Label38: TLabel
+          Left = 280
+          Height = 25
+          Top = 60
+          Width = 11
+          Caption = 'C'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object Label39: TLabel
+          Left = 8
+          Height = 25
+          Top = 108
+          Width = 136
+          Caption = 'Cut from the end'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object Label40: TLabel
+          Left = 280
+          Height = 25
+          Top = 108
+          Width = 30
+          Caption = 'Min'
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clNavy
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentColor = False
+          ParentFont = False
+        end
+        object CutEnd: TSpinEdit
+          Left = 184
+          Height = 33
+          Top = 104
+          Width = 88
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Pitch = fpVariable
+          Font.Quality = fqDraft
+          ParentFont = False
+          TabOrder = 3
+          Value = 30
+        end
+      end
     end
     object Graphs: TTabSheet
       Caption = 'Graphs'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object ShowLabel: TImage
-        Left = 264
-        Height = 25
+        Left = 396
+        Height = 38
         Hint = 'Show labels'
-        Top = 8
-        Width = 25
+        Top = 12
+        Width = 38
         OnClick = ShowLabelClick
         ParentShowHint = False
         Picture.Data = {
@@ -3202,21 +3344,21 @@ object CSV: TCSV
         ShowHint = True
       end
       object ChartsLink: TCheckBox
-        Left = 8
-        Height = 19
-        Top = 7
-        Width = 76
+        Left = 12
+        Height = 29
+        Top = 10
+        Width = 107
         Caption = 'Charts link'
         Checked = True
-        OnChange = ChartsLinkChange
         State = cbChecked
         TabOrder = 0
+        OnChange = ChartsLinkChange
       end
       object ChartHeightControl: TTrackBar
-        Left = 464
-        Height = 25
-        Top = 7
-        Width = 136
+        Left = 696
+        Height = 38
+        Top = 10
+        Width = 204
         Frequency = 10
         Max = 500
         Min = 100
@@ -3226,10 +3368,10 @@ object CSV: TCSV
         TabOrder = 1
       end
       object Label19: TLabel
-        Left = 432
-        Height = 15
-        Top = 11
-        Width = 36
+        Left = 648
+        Height = 25
+        Top = 16
+        Width = 53
         Caption = 'Height'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
@@ -3239,22 +3381,22 @@ object CSV: TCSV
         ParentFont = False
       end
       object ChartPoints: TCheckBox
-        Left = 8
-        Height = 19
-        Top = 24
-        Width = 85
+        Left = 12
+        Height = 29
+        Top = 36
+        Width = 121
         Caption = 'Chart Points'
         Checked = True
-        OnChange = ChartPointsChange
         State = cbChecked
         TabOrder = 2
+        OnChange = ChartPointsChange
       end
       object Image3: TImage
-        Left = 168
-        Height = 25
+        Left = 252
+        Height = 38
         Hint = 'Unzoom all'
-        Top = 7
-        Width = 25
+        Top = 10
+        Width = 38
         OnClick = Image3Click
         ParentShowHint = False
         Picture.Data = {
@@ -3290,13 +3432,14 @@ object CSV: TCSV
           20372E30B0E96D7E0000000049454E44AE426082
         }
         ShowHint = True
+        Stretch = True
       end
       object FitToWin: TImage
-        Left = 232
-        Height = 25
+        Left = 348
+        Height = 38
         Hint = 'Fit to window'
-        Top = 8
-        Width = 25
+        Top = 12
+        Width = 38
         OnClick = FitToWinClick
         ParentShowHint = False
         Picture.Data = {
@@ -3325,13 +3468,14 @@ object CSV: TCSV
           0000000049454E44AE426082
         }
         ShowHint = True
+        Stretch = True
       end
       object HideLabel: TImage
-        Left = 264
-        Height = 25
+        Left = 396
+        Height = 38
         Hint = 'Remove labels'
-        Top = 8
-        Width = 25
+        Top = 12
+        Width = 38
         OnClick = HideLabelClick
         ParentShowHint = False
         Picture.Data = {
@@ -3382,26 +3526,27 @@ object CSV: TCSV
           6520372E30B0E96D7E0000000049454E44AE426082
         }
         ShowHint = True
+        Stretch = True
       end
       object ScrollBox1: TScrollBox
         Left = 0
-        Height = 584
-        Top = 48
-        Width = 889
+        Height = 1114
+        Top = 72
+        Width = 1337
         HorzScrollBar.Page = 1
         HorzScrollBar.Visible = False
-        VertScrollBar.Page = 584
+        VertScrollBar.Page = 896
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 584
-        ClientWidth = 872
+        ClientHeight = 1114
+        ClientWidth = 1337
         TabOrder = 4
         object Chart2: TChart
           Left = 0
-          Height = 75
-          Top = 75
-          Width = 872
+          Height = 112
+          Top = 112
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3477,9 +3622,9 @@ object CSV: TCSV
         end
         object Chart3: TChart
           Left = 0
-          Height = 75
-          Top = 150
-          Width = 872
+          Height = 112
+          Top = 224
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3552,9 +3697,9 @@ object CSV: TCSV
         end
         object Chart4: TChart
           Left = 0
-          Height = 75
-          Top = 225
-          Width = 872
+          Height = 112
+          Top = 336
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3627,9 +3772,9 @@ object CSV: TCSV
         end
         object Chart5: TChart
           Left = 0
-          Height = 75
-          Top = 300
-          Width = 872
+          Height = 112
+          Top = 448
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3702,9 +3847,9 @@ object CSV: TCSV
         end
         object Chart8: TChart
           Left = 0
-          Height = 75
-          Top = 525
-          Width = 872
+          Height = 112
+          Top = 784
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3777,9 +3922,9 @@ object CSV: TCSV
         end
         object Chart7: TChart
           Left = 0
-          Height = 75
-          Top = 450
-          Width = 872
+          Height = 112
+          Top = 672
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3852,9 +3997,9 @@ object CSV: TCSV
         end
         object Chart6: TChart
           Left = 0
-          Height = 75
-          Top = 375
-          Width = 872
+          Height = 112
+          Top = 560
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -3927,9 +4072,9 @@ object CSV: TCSV
         end
         object Chart1: TChart
           Left = 0
-          Height = 75
+          Height = 112
           Top = 0
-          Width = 872
+          Width = 1337
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -4005,18 +4150,18 @@ object CSV: TCSV
         end
       end
       object GroupBox9: TGroupBox
-        Left = 608
-        Height = 48
-        Top = -7
-        Width = 280
-        ClientHeight = 28
-        ClientWidth = 276
+        Left = 912
+        Height = 72
+        Top = -10
+        Width = 420
+        ClientHeight = 42
+        ClientWidth = 416
         TabOrder = 3
         object Label29: TLabel
-          Left = 4
-          Height = 15
-          Top = -8
-          Width = 58
+          Left = 6
+          Height = 25
+          Top = -12
+          Width = 88
           Caption = 'Start zone :'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -4026,10 +4171,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label30: TLabel
-          Left = 4
-          Height = 15
-          Top = 8
-          Width = 54
+          Left = 6
+          Height = 22
+          Top = 12
+          Width = 81
           AutoSize = False
           Caption = 'End zone :'
           Font.CharSet = ANSI_CHARSET
@@ -4040,10 +4185,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object LeftExtent: TStaticText
-          Left = 64
-          Height = 17
-          Top = -8
-          Width = 96
+          Left = 96
+          Height = 26
+          Top = -12
+          Width = 144
           Caption = '19-01-70 00:00:00'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -4053,10 +4198,10 @@ object CSV: TCSV
           TabOrder = 0
         end
         object RightExtent: TStaticText
-          Left = 64
-          Height = 17
-          Top = 8
-          Width = 96
+          Left = 96
+          Height = 26
+          Top = 12
+          Width = 144
           Caption = '19-01-70 00:00:00'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -4066,10 +4211,10 @@ object CSV: TCSV
           TabOrder = 1
         end
         object Label31: TLabel
-          Left = 168
-          Height = 15
-          Top = -8
-          Width = 52
+          Left = 252
+          Height = 25
+          Top = -12
+          Width = 78
           Caption = 'Duration :'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -4079,10 +4224,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object ExtentDuration: TStaticText
-          Left = 224
-          Height = 17
-          Top = -8
-          Width = 48
+          Left = 336
+          Height = 26
+          Top = -12
+          Width = 72
           Caption = '0'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -4092,14 +4237,14 @@ object CSV: TCSV
           TabOrder = 2
         end
         object Label32: TLabel
-          Left = 168
-          Height = 13
-          Top = 10
-          Width = 102
+          Left = 252
+          Height = 23
+          Top = 15
+          Width = 151
           Caption = 'Top chart view zone'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clMaroon
-          Font.Height = -11
+          Font.Height = -17
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
           ParentColor = False
@@ -4107,11 +4252,11 @@ object CSV: TCSV
         end
       end
       object Image4: TImage
-        Left = 200
-        Height = 25
+        Left = 300
+        Height = 38
         Hint = 'Current extent zoom'
-        Top = 7
-        Width = 25
+        Top = 10
+        Width = 38
         OnClick = Image4Click
         ParentShowHint = False
         Picture.Data = {
@@ -4148,24 +4293,25 @@ object CSV: TCSV
           6520372E30B0E96D7E0000000049454E44AE426082
         }
         ShowHint = True
+        Stretch = True
       end
       object TimeOnBottom: TCheckBox
-        Left = 312
-        Height = 19
-        Top = 11
-        Width = 106
+        Left = 468
+        Height = 29
+        Top = 16
+        Width = 155
         Caption = 'Time on bottom'
         Checked = True
-        OnChange = TimeOnBottomChange
         State = cbChecked
         TabOrder = 5
+        OnChange = TimeOnBottomChange
       end
       object CursorMode: TSpeedButton
-        Left = 96
-        Height = 26
+        Left = 144
+        Height = 39
         Hint = 'Mouse drag'
-        Top = 8
-        Width = 26
+        Top = 11
+        Width = 39
         Flat = True
         Glyph.Data = {
           FA090000424DFA09000000000000360000002800000019000000190000000100
@@ -4253,11 +4399,11 @@ object CSV: TCSV
         ParentShowHint = False
       end
       object ZoomMode: TSpeedButton
-        Left = 128
-        Height = 26
+        Left = 192
+        Height = 39
         Hint = 'Mouse zoom'
-        Top = 8
-        Width = 26
+        Top = 12
+        Width = 39
         Glyph.Data = {
           FA090000424DFA09000000000000360000002800000019000000190000000100
           200000000000C409000064000000640000000000000000000000000000000000
@@ -4347,13 +4493,13 @@ object CSV: TCSV
     end
     object SondesChart: TTabSheet
       Caption = 'Sondes'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object Sondes: TChart
         Left = 0
-        Height = 312
+        Height = 468
         Top = 0
-        Width = 891
+        Width = 1340
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -4458,9 +4604,9 @@ object CSV: TCSV
       end
       object Sondes1: TChart
         Left = 0
-        Height = 312
-        Top = 312
-        Width = 891
+        Height = 468
+        Top = 468
+        Width = 1340
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -4566,13 +4712,13 @@ object CSV: TCSV
     end
     object CSondes: TTabSheet
       Caption = 'C Sondes'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object Sondes2: TChart
         Left = 0
-        Height = 312
+        Height = 468
         Top = 0
-        Width = 891
+        Width = 1340
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -4677,9 +4823,9 @@ object CSV: TCSV
       end
       object Sondes3: TChart
         Left = 0
-        Height = 312
-        Top = 312
-        Width = 891
+        Height = 468
+        Top = 468
+        Width = 1340
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -4785,34 +4931,34 @@ object CSV: TCSV
     end
     object ReportTab: TTabSheet
       Caption = 'Reports'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       Enabled = False
       object GroupBox3: TGroupBox
-        Left = 201
-        Height = 80
+        Left = 302
+        Height = 120
         Top = 0
-        Width = 415
+        Width = 622
         Caption = 'Time Zone'
-        ClientHeight = 60
-        ClientWidth = 411
+        ClientHeight = 90
+        ClientWidth = 618
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -12
+        Font.Height = -18
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentFont = False
         TabOrder = 3
         object Label16: TLabel
-          Left = 8
-          Height = 15
-          Top = 32
-          Width = 49
+          Left = 12
+          Height = 25
+          Top = 48
+          Width = 73
           Caption = 'End Time'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -4820,14 +4966,14 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label15: TLabel
-          Left = 8
-          Height = 15
-          Top = 8
-          Width = 53
+          Left = 12
+          Height = 25
+          Top = 12
+          Width = 79
           Caption = 'Start Time'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -4835,28 +4981,28 @@ object CSV: TCSV
           ParentFont = False
         end
         object ReportStartTime: TEdit
-          Left = 72
-          Height = 23
-          Top = 4
-          Width = 112
+          Left = 108
+          Height = 33
+          Top = 6
+          Width = 168
           TabOrder = 0
         end
         object ReportEndTime: TEdit
-          Left = 72
-          Height = 23
-          Top = 32
-          Width = 112
+          Left = 108
+          Height = 33
+          Top = 48
+          Width = 168
           TabOrder = 1
         end
         object Label28: TLabel
-          Left = 192
-          Height = 15
-          Top = 8
-          Width = 46
+          Left = 288
+          Height = 25
+          Top = 12
+          Width = 69
           Caption = 'Duration'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
-          Font.Height = -12
+          Font.Height = -18
           Font.Name = 'Segoe UI'
           Font.Pitch = fpVariable
           Font.Quality = fqDraft
@@ -4864,41 +5010,41 @@ object CSV: TCSV
           ParentFont = False
         end
         object ZoneDuration: TLabel
-          Left = 248
-          Height = 15
-          Top = 8
-          Width = 6
+          Left = 372
+          Height = 25
+          Top = 12
+          Width = 10
           Caption = '0'
           ParentColor = False
         end
         object Button1: TButton
-          Left = 192
-          Height = 25
-          Top = 30
-          Width = 75
+          Left = 288
+          Height = 38
+          Top = 45
+          Width = 112
           Caption = 'Full range'
-          OnClick = Button1Click
           TabOrder = 2
+          OnClick = Button1Click
         end
         object Button3: TButton
-          Left = 272
-          Height = 25
-          Top = 30
-          Width = 128
+          Left = 408
+          Height = 38
+          Top = 45
+          Width = 192
           Caption = 'Get ragne from chart'
-          OnClick = Button3Click
           TabOrder = 3
+          OnClick = Button3Click
         end
       end
       object ReportText: TMemo
-        Left = 1
-        Height = 504
-        Top = 128
-        Width = 888
+        Left = 2
+        Height = 994
+        Top = 192
+        Width = 1332
         Anchors = [akTop, akLeft, akBottom]
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
-        Font.Height = -12
+        Font.Height = -18
         Font.Name = 'Courier New'
         Font.Pitch = fpFixed
         Font.Quality = fqDraft
@@ -4907,32 +5053,32 @@ object CSV: TCSV
         TabOrder = 0
       end
       object Report: TButton
-        Left = 688
-        Height = 32
-        Top = 71
-        Width = 96
+        Left = 1032
+        Height = 48
+        Top = 106
+        Width = 144
         Caption = 'Report'
-        OnClick = ReportClick
         TabOrder = 1
+        OnClick = ReportClick
       end
       object SaveReport: TButton
-        Left = 794
-        Height = 33
-        Top = 72
-        Width = 95
+        Left = 1191
+        Height = 50
+        Top = 108
+        Width = 142
         Caption = 'Save'
-        OnClick = SaveReportClick
         TabOrder = 2
+        OnClick = SaveReportClick
       end
       object Label17: TLabel
-        Left = 1
-        Height = 15
-        Top = 16
-        Width = 75
+        Left = 2
+        Height = 25
+        Top = 24
+        Width = 112
         Caption = 'Serial Number'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
-        Font.Height = -12
+        Font.Height = -18
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -4940,10 +5086,10 @@ object CSV: TCSV
         ParentFont = False
       end
       object SerialNumber: TEdit
-        Left = 81
-        Height = 23
-        Top = 12
-        Width = 108
+        Left = 122
+        Height = 33
+        Top = 18
+        Width = 162
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -4952,14 +5098,14 @@ object CSV: TCSV
         TabOrder = 4
       end
       object Label18: TLabel
-        Left = 1
-        Height = 15
-        Top = 46
-        Width = 47
+        Left = 2
+        Height = 25
+        Top = 69
+        Width = 72
         Caption = 'Test Date'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
-        Font.Height = -12
+        Font.Height = -18
         Font.Name = 'Segoe UI'
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
@@ -4967,10 +5113,10 @@ object CSV: TCSV
         ParentFont = False
       end
       object TestDate: TDateTimePicker
-        Left = 81
-        Height = 23
-        Top = 44
-        Width = 83
+        Left = 122
+        Height = 33
+        Top = 66
+        Width = 128
         CenturyFrom = 1941
         MaxDate = 2958465
         MinDate = -53780
@@ -4986,6 +5132,7 @@ object CSV: TCSV
         LeadingZeros = True
         Kind = dtkDate
         TimeSeparator = ':'
+        DecimalSeparator = '.'
         TimeFormat = tf24
         TimeDisplay = tdHMS
         DateMode = dmComboBox
@@ -4996,40 +5143,40 @@ object CSV: TCSV
         MonthNames = 'Long'
       end
       object ReportProgress: TProgressBar
-        Left = -6
-        Height = 12
-        Top = 112
-        Width = 891
+        Left = -9
+        Height = 18
+        Top = 168
+        Width = 1336
         Step = 1
         TabOrder = 6
       end
       object RPTOnly: TCheckBox
-        Left = 816
-        Height = 19
-        Top = 8
-        Width = 69
+        Left = 1224
+        Height = 29
+        Top = 12
+        Width = 98
         Caption = '.RPT only'
         TabOrder = 7
       end
       object TestType: TComboBox
-        Left = 624
-        Height = 23
-        Top = 8
-        Width = 148
+        Left = 936
+        Height = 33
+        Top = 12
+        Width = 222
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
-        ItemHeight = 15
+        ItemHeight = 25
         ParentFont = False
         TabOrder = 8
         Text = 'TestType'
       end
       object Label34: TLabel
-        Left = 5
-        Height = 15
-        Top = 88
-        Width = 54
+        Left = 8
+        Height = 25
+        Top = 132
+        Width = 79
         Caption = 'Comment'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
@@ -5039,10 +5186,10 @@ object CSV: TCSV
         ParentFont = False
       end
       object Comment: TEdit
-        Left = 84
-        Height = 23
-        Top = 85
-        Width = 532
+        Left = 126
+        Height = 33
+        Top = 128
+        Width = 798
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -5051,68 +5198,68 @@ object CSV: TCSV
         TabOrder = 9
       end
       object ShowTool: TButton
-        Left = 793
-        Height = 25
-        Top = 40
-        Width = 95
+        Left = 1190
+        Height = 38
+        Top = 60
+        Width = 142
         Caption = 'Amplitudes'
         Enabled = False
-        OnClick = ShowToolClick
         TabOrder = 10
+        OnClick = ShowToolClick
       end
     end
     object TabSheet1: TTabSheet
       Caption = 'SW Decoder'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
       ParentFont = False
       object StatusLo: TRadioButton
-        Left = 32
-        Height = 19
-        Top = 17
-        Width = 104
+        Left = 48
+        Height = 29
+        Top = 26
+        Width = 153
         Caption = 'STATUS.SIBR.LO'
         Checked = True
-        OnChange = StatusLoChange
         TabOrder = 3
         TabStop = True
+        OnChange = StatusLoChange
       end
       object StatusHi: TRadioButton
-        Left = 32
-        Height = 19
-        Top = 40
-        Width = 101
+        Left = 48
+        Height = 29
+        Top = 60
+        Width = 149
         Caption = 'STATUS.SIBR.HI'
-        OnChange = StatusHiChange
         TabOrder = 0
+        OnChange = StatusHiChange
       end
       object EStatusLo: TRadioButton
-        Left = 32
-        Height = 19
-        Top = 64
-        Width = 110
+        Left = 48
+        Height = 29
+        Top = 96
+        Width = 162
         Caption = 'ESTATUS.SIBR.LO'
-        OnChange = EStatusLoChange
         TabOrder = 1
+        OnChange = EStatusLoChange
       end
       object GroupBox5: TGroupBox
-        Left = 16
-        Height = 392
-        Top = 128
-        Width = 563
+        Left = 24
+        Height = 588
+        Top = 192
+        Width = 844
         Caption = 'Status Word Bits Description'
-        ClientHeight = 372
-        ClientWidth = 559
+        ClientHeight = 558
+        ClientWidth = 840
         TabOrder = 2
         object SWList: TStringGrid
-          Left = 16
-          Height = 360
-          Top = 8
-          Width = 536
+          Left = 24
+          Height = 540
+          Top = 12
+          Width = 804
           BorderStyle = bsNone
           ColCount = 2
           Columns = <          
@@ -5120,14 +5267,14 @@ object CSV: TCSV
               Alignment = taCenter
               ReadOnly = True
               Title.Caption = 'Value'
-              Width = 30
+              Width = 45
             end          
             item
-              MaxSize = 500
+              MaxSize = 750
               Title.Caption = 'Description'
-              Width = 500
+              Width = 750
             end>
-          DefaultColWidth = 50
+          DefaultColWidth = 75
           FixedCols = 0
           FixedRows = 0
           Font.CharSet = ANSI_CHARSET
@@ -5144,73 +5291,73 @@ object CSV: TCSV
         end
       end
       object GroupBox6: TGroupBox
-        Left = 264
-        Height = 105
-        Top = 8
-        Width = 280
+        Left = 396
+        Height = 158
+        Top = 12
+        Width = 420
         Caption = 'Status Word'
-        ClientHeight = 85
-        ClientWidth = 276
+        ClientHeight = 128
+        ClientWidth = 416
         TabOrder = 4
         object Label20: TLabel
-          Left = 24
-          Height = 15
-          Top = 11
-          Width = 22
+          Left = 36
+          Height = 25
+          Top = 16
+          Width = 33
           Caption = 'DEC'
           ParentColor = False
         end
         object SWDec: TEdit
-          Left = 56
-          Height = 23
-          Top = 8
-          Width = 65
+          Left = 84
+          Height = 33
+          Top = 12
+          Width = 98
           TabOrder = 0
         end
         object Label21: TLabel
-          Left = 152
-          Height = 15
-          Top = 11
-          Width = 22
+          Left = 228
+          Height = 25
+          Top = 16
+          Width = 33
           Caption = 'HEX'
           ParentColor = False
         end
         object SWHex: TEdit
-          Left = 184
-          Height = 23
-          Top = 8
-          Width = 64
+          Left = 276
+          Height = 33
+          Top = 12
+          Width = 96
           TabOrder = 1
         end
         object Button5: TButton
-          Left = 152
-          Height = 33
-          Top = 40
-          Width = 107
+          Left = 228
+          Height = 50
+          Top = 60
+          Width = 160
           Caption = 'Decode'
-          OnClick = Button5Click
           TabOrder = 2
+          OnClick = Button5Click
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Help'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object GroupBox8: TGroupBox
-        Left = 8
-        Height = 144
-        Top = 8
-        Width = 873
+        Left = 12
+        Height = 216
+        Top = 12
+        Width = 1310
         Caption = 'Chart Navigation'
-        ClientHeight = 124
-        ClientWidth = 869
+        ClientHeight = 186
+        ClientWidth = 1306
         TabOrder = 0
         object Label25: TLabel
-          Left = 8
-          Height = 120
-          Top = 8
-          Width = 188
+          Left = 12
+          Height = 200
+          Top = 12
+          Width = 282
           Caption = 'Vertical and horizontal zoom'#13#10'Vertical only'#13#10'Horizontal  only'#13#10'Shift viewport'#13#10'Rectangle zoom'#13#10'Stick label on datapoint'#13#10'Stick label on datapoint to all charts'#13#10'Delete point'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clNavy
@@ -5220,10 +5367,10 @@ object CSV: TCSV
           ParentFont = False
         end
         object Label26: TLabel
-          Left = 240
-          Height = 120
-          Top = 8
-          Width = 298
+          Left = 360
+          Height = 200
+          Top = 12
+          Width = 447
           Caption = '- SHIFT + mousewheel'#13#10'- CTRL + mousewheel'#13#10'- ALT + mousewheel'#13#10'- by left button'#13#10'- by right button'#13#10'- Move cursor on datapoint and click CTRL +  left button'#13#10'- Move cursor on datapoint and click ALT +  left button'#13#10'- SHIFT + left button'
           Font.CharSet = ANSI_CHARSET
           Font.Color = clBlack
@@ -5236,13 +5383,13 @@ object CSV: TCSV
     end
     object TabSheet3: TTabSheet
       Caption = 'Release Notes'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object Label33: TLabel
-        Left = 8
-        Height = 135
-        Top = 8
-        Width = 448
+        Left = 12
+        Height = 225
+        Top = 12
+        Width = 671
         Caption = 'Version 1.2.1'#13#10'- Report bug fixed'#13#10'- Amplitudes in millivolts performance added'#13#10#13#10'Version 1.2.2'#13#10'- Amplitudes on antennas visualisation added (buttton [Show tool] in Report section)'#13#10#13#10'Version 1.3.0'#13#10'- Synthesized Sondes and Compensated Sondes added'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
@@ -5254,14 +5401,14 @@ object CSV: TCSV
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       TabVisible = False
       object Chart9: TChart
-        Left = 8
-        Height = 408
-        Top = 8
-        Width = 720
+        Left = 12
+        Height = 612
+        Top = 12
+        Width = 1084
         AxisList = <        
           item
             Grid.Color = clSilver
@@ -5298,19 +5445,19 @@ object CSV: TCSV
         end
       end
       object Button8: TButton
-        Left = 368
-        Height = 33
-        Top = 448
-        Width = 128
+        Left = 552
+        Height = 50
+        Top = 672
+        Width = 192
         Caption = 'Draw'
-        OnClick = Button8Click
         TabOrder = 1
+        OnClick = Button8Click
       end
       object Results: TMemo
-        Left = 736
-        Height = 376
-        Top = 16
-        Width = 144
+        Left = 1104
+        Height = 564
+        Top = 24
+        Width = 216
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -5324,16 +5471,16 @@ object CSV: TCSV
     end
     object ParametersList: TTabSheet
       Caption = 'Parameters List'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       object ParamsGrid: TStringGrid
         Left = 0
-        Height = 635
+        Height = 1190
         Top = 0
-        Width = 891
+        Width = 1340
         Align = alClient
         ColCount = 2
-        DefaultColWidth = 80
+        DefaultColWidth = 120
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -5346,27 +5493,27 @@ object CSV: TCSV
     end
     object CurvesTab: TTabSheet
       Caption = 'Curves'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       Enabled = False
       object ScrollBox2: TScrollBox
         Left = 0
-        Height = 600
-        Top = 32
-        Width = 888
-        HorzScrollBar.Page = 888
-        VertScrollBar.Page = 50
+        Height = 1138
+        Top = 48
+        Width = 1336
+        HorzScrollBar.Page = 1336
+        VertScrollBar.Page = 75
         Anchors = [akTop, akLeft, akRight, akBottom]
         AutoSize = True
         BorderStyle = bsNone
-        ClientHeight = 583
-        ClientWidth = 888
+        ClientHeight = 1112
+        ClientWidth = 1336
         TabOrder = 0
         object Pane1: TChart
           Left = 0
-          Height = 583
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -5498,10 +5645,10 @@ object CSV: TCSV
           end
         end
         object Pane2: TChart
-          Left = 88
-          Height = 583
+          Left = 132
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -5626,10 +5773,10 @@ object CSV: TCSV
           end
         end
         object Pane3: TChart
-          Left = 176
-          Height = 583
+          Left = 264
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -5754,10 +5901,10 @@ object CSV: TCSV
           end
         end
         object Pane4: TChart
-          Left = 264
-          Height = 583
+          Left = 396
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -5882,10 +6029,10 @@ object CSV: TCSV
           end
         end
         object Pane5: TChart
-          Left = 352
-          Height = 583
+          Left = 528
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6010,10 +6157,10 @@ object CSV: TCSV
           end
         end
         object Pane6: TChart
-          Left = 440
-          Height = 583
+          Left = 660
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6138,10 +6285,10 @@ object CSV: TCSV
           end
         end
         object Pane7: TChart
-          Left = 528
-          Height = 583
+          Left = 792
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6266,10 +6413,10 @@ object CSV: TCSV
           end
         end
         object Pane8: TChart
-          Left = 616
-          Height = 583
+          Left = 924
+          Height = 1112
           Top = 0
-          Width = 88
+          Width = 132
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6394,10 +6541,10 @@ object CSV: TCSV
           end
         end
         object Pane9: TChart
-          Left = 704
-          Height = 583
+          Left = 1056
+          Height = 1112
           Top = 0
-          Width = 100
+          Width = 150
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6522,10 +6669,10 @@ object CSV: TCSV
           end
         end
         object Pane10: TChart
-          Left = 804
-          Height = 583
+          Left = 1206
+          Height = 1112
           Top = 0
-          Width = 92
+          Width = 138
           AxisList = <          
             item
               Grid.Color = clSilver
@@ -6651,20 +6798,20 @@ object CSV: TCSV
         end
       end
       object AddPane: TButton
-        Left = 88
-        Height = 25
-        Top = 2
-        Width = 75
+        Left = 132
+        Height = 38
+        Top = 3
+        Width = 112
         Caption = 'Add track'
-        OnClick = AddPaneClick
         TabOrder = 1
+        OnClick = AddPaneClick
       end
       object OptionsBtn: TImage
-        Left = 868
-        Height = 635
+        Left = 1306
+        Height = 1190
         Hint = 'Options'
         Top = 0
-        Width = 23
+        Width = 34
         Align = alRight
         OnClick = OptionsBtnClick
         ParentShowHint = False
@@ -6726,19 +6873,19 @@ object CSV: TCSV
       end
       object NewPanel: TToggleBox
         Left = 0
-        Height = 25
-        Top = 2
-        Width = 75
+        Height = 38
+        Top = 3
+        Width = 112
         Caption = 'New Panel'
-        OnChange = NewPanelChange
         TabOrder = 2
+        OnChange = NewPanelChange
       end
       object Image1: TImage
-        Left = 200
-        Height = 20
+        Left = 300
+        Height = 30
         Hint = 'Save'
-        Top = 4
-        Width = 20
+        Top = 6
+        Width = 30
         OnClick = Image1Click
         ParentShowHint = False
         Picture.Data = {
@@ -6776,11 +6923,11 @@ object CSV: TCSV
         Visible = False
       end
       object Image2: TImage
-        Left = 232
-        Height = 20
+        Left = 348
+        Height = 30
         Hint = 'Open'
-        Top = 2
-        Width = 23
+        Top = 3
+        Width = 34
         OnClick = Image2Click
         ParentShowHint = False
         Picture.Data = {
@@ -6820,44 +6967,44 @@ object CSV: TCSV
         Visible = False
       end
       object ShowDateTime: TCheckBox
-        Left = 736
-        Height = 19
-        Top = 5
-        Width = 107
+        Left = 1104
+        Height = 29
+        Top = 8
+        Width = 156
         Caption = 'Show Date/Time'
-        OnChange = ShowDateTimeChange
         TabOrder = 3
+        OnChange = ShowDateTimeChange
       end
       object PanelTitle: TLabel
-        Left = 336
-        Height = 21
-        Top = 2
-        Width = 67
+        Left = 504
+        Height = 32
+        Top = 3
+        Width = 105
         Caption = 'Panel title'
         Font.CharSet = ANSI_CHARSET
         Font.Color = clNavy
-        Font.Height = -16
+        Font.Height = -24
         Font.Pitch = fpVariable
         Font.Quality = fqDraft
         ParentColor = False
         ParentFont = False
       end
       object Inverted: TCheckBox
-        Left = 664
-        Height = 19
-        Top = 5
-        Width = 63
+        Left = 996
+        Height = 29
+        Top = 8
+        Width = 90
         Caption = 'Inverted'
         Checked = True
-        OnChange = InvertedChange
         State = cbChecked
         TabOrder = 4
+        OnChange = InvertedChange
       end
       object Import: TBitBtn
-        Left = 264
-        Height = 22
-        Top = 3
-        Width = 50
+        Left = 396
+        Height = 33
+        Top = 4
+        Width = 75
         Caption = 'Import'
         Color = clWhite
         Font.CharSet = ANSI_CHARSET
@@ -6871,19 +7018,19 @@ object CSV: TCSV
         TabOrder = 5
       end
       object CurveChartPoints: TCheckBox
-        Left = 568
-        Height = 19
-        Top = 5
-        Width = 85
+        Left = 852
+        Height = 29
+        Top = 8
+        Width = 121
         Caption = 'Chart Points'
-        OnChange = CurveChartPointsChange
         TabOrder = 6
+        OnChange = CurveChartPointsChange
       end
       object Image7: TImage
-        Left = 520
-        Height = 25
-        Top = 4
-        Width = 25
+        Left = 780
+        Height = 38
+        Top = 6
+        Width = 38
         OnClick = Image7Click
         Picture.Data = {
           1754506F727461626C654E6574776F726B477261706869636904000089504E47
@@ -6928,14 +7075,14 @@ object CSV: TCSV
     end
     object TabSheet5: TTabSheet
       Caption = 'TabSheet5'
-      ClientHeight = 635
-      ClientWidth = 891
+      ClientHeight = 1190
+      ClientWidth = 1340
       TabVisible = False
       object Memo1: TMemo
-        Left = 23
-        Height = 576
-        Top = 16
-        Width = 553
+        Left = 34
+        Height = 864
+        Top = 24
+        Width = 830
         Font.CharSet = ANSI_CHARSET
         Font.Color = clBlack
         Font.Pitch = fpVariable
@@ -6945,25 +7092,25 @@ object CSV: TCSV
         TabOrder = 0
       end
       object Button4: TButton
-        Left = 624
-        Height = 25
-        Top = 73
-        Width = 75
+        Left = 936
+        Height = 38
+        Top = 110
+        Width = 112
         Caption = 'Button4'
-        OnClick = Button4Click
         TabOrder = 1
+        OnClick = Button4Click
       end
     end
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
     Filter = '*.csv|*.csv'
-    Left = 480
-    Top = 632
+    Left = 984
+    Top = 952
   end
   object ChartToolset1: TChartToolset
-    Left = 304
-    Top = 632
+    Left = 1272
+    Top = 948
     object ChartToolset1ZoomMouseWheelTool1: TZoomMouseWheelTool
       Shift = [ssAlt]
       ZoomFactor = 1.1
@@ -7036,21 +7183,21 @@ object CSV: TCSV
         Chart = Chart8
       end>
     Mode = elmOnlyX
-    Left = 368
-    Top = 632
+    Left = 872
+    Top = 952
   end
   object SaveDialog1: TSaveDialog
     Filter = '.prn|.prn'
-    Left = 544
-    Top = 632
+    Left = 1032
+    Top = 952
   end
   object IniPropStorage1: TIniPropStorage
     StoredValues = <    
       item
       end>
     IniFileName = 'SIBR Dump Tool.ini'
-    Left = 592
-    Top = 632
+    Left = 1080
+    Top = 952
   end
   object ChartExtentLink2: TChartExtentLink
     LinkedCharts = <    
@@ -7067,12 +7214,12 @@ object CSV: TCSV
         Chart = Sondes3
       end>
     Mode = elmOnlyX
-    Left = 408
-    Top = 632
+    Left = 928
+    Top = 952
   end
   object ChartToolset2: TChartToolset
-    Left = 680
-    Top = 632
+    Left = 1128
+    Top = 952
     object ChartToolset2ZoomMouseWheelTool1: TZoomMouseWheelTool
       Shift = [ssShift]
       ZoomFactor = 1.1
@@ -7141,13 +7288,13 @@ object CSV: TCSV
       item
         Chart = Pane10
       end>
-    Left = 744
-    Top = 632
+    Left = 1176
+    Top = 952
   end
   object OpenDialog2: TOpenDialog
     DefaultExt = '.lib'
     Filter = '*.lib|*.lib'
-    Left = 224
-    Top = 632
+    Left = 1224
+    Top = 952
   end
 end

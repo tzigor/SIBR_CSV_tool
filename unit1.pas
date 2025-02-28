@@ -21,9 +21,19 @@ type
   TCSV = class(TForm)
     App: TPageControl;
     AutoFit: TCheckBox;
+    HotLow: TFloatSpinEdit;
+    GroupBox1: TGroupBox;
     ChartToolset1UserDefinedTool1: TUserDefinedTool;
     CurveChartPoints: TCheckBox;
     CloseForm: TBitBtn;
+    Label37: TLabel;
+    Label38: TLabel;
+    Label39: TLabel;
+    Label40: TLabel;
+    CutEnd: TSpinEdit;
+    WarmTemp: TFloatSpinEdit;
+    Label35: TLabel;
+    Label36: TLabel;
     ShowLabel: TImage;
     Image7: TImage;
     OpenCSV: TBitBtn;
@@ -47,6 +57,7 @@ type
     OpenDialog2: TOpenDialog;
     RemoveExtremes: TCheckBox;
     CursorMode: TSpeedButton;
+    ThermoBtn: TButton;
     ZoomMode: TSpeedButton;
     TimeOnBottom: TCheckBox;
     FastMode: TCheckBox;
@@ -326,6 +337,7 @@ type
     procedure CloseFormClick(Sender: TObject);
     procedure CursorModeClick(Sender: TObject);
     procedure CurveChartPointsChange(Sender: TObject);
+    procedure DrawBtnClick(Sender: TObject);
     procedure FastModeChange(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -333,6 +345,7 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Chart1AxisList1GetMarkText(Sender: TObject; var AText: String;
       AMark: Double);
+    procedure GroupBox7Click(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure Image2Click(Sender: TObject);
     procedure Image4Click(Sender: TObject);
@@ -340,6 +353,8 @@ type
     procedure ImportClick(Sender: TObject);
     procedure InvertedChange(Sender: TObject);
     procedure Label41Click(Sender: TObject);
+    procedure MainTabContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure NewPanelChange(Sender: TObject);
     procedure OpenCSVClick(Sender: TObject);
     procedure Pane1AxisList0GetMarkText(Sender: TObject; var AText: String;
@@ -398,6 +413,7 @@ type
     procedure ReportClick(Sender: TObject);
     procedure SWListSelectCell(Sender: TObject; aCol, aRow: Integer;
       var CanSelect: Boolean);
+    procedure ThermoBtnClick(Sender: TObject);
     procedure TimeOnBottomChange(Sender: TObject);
     procedure TimeScaleChange(Sender: TObject);
     procedure ZoomModeClick(Sender: TObject);
@@ -461,6 +477,7 @@ begin
      TChart(CSV.FindComponent('Chart' + IntToStr(i))).Legend.Visible:= True;
      TChart(CSV.FindComponent('Chart' + IntToStr(i))).Legend.Frame.Color:= clSilver;
      TChart(CSV.FindComponent('Chart' + IntToStr(i))).Legend.UseSidebar:= False;
+     TChart(CSV.FindComponent('Chart' + IntToStr(i))).AxisList[0].LabelSize:= 80;
   end;
 
   for i:= 1 to 8 do
@@ -483,7 +500,7 @@ procedure TCSV.GenerateClick(Sender: TObject);
       ParamPos, Rate: Integer;
       PrevTime, CurrentTime, StartTimeDT, EndTimeDT: TDateTime;
   begin
-        FileName:= ReplaceText(CSVFileName,'.csv','') + '_generated.csv';
+        FileName:= ReplaceText(CSVFileName,'.csv','') + NamePostfix + '.csv';
         ProgressBar.Position:= 0;
         Rate:= StrToInt(RecordRate.Text);
         AssignFile(WorkingFile, CSVFileName);
@@ -509,7 +526,7 @@ procedure TCSV.GenerateClick(Sender: TObject);
           end;
           CloseFile(WorkingFile);
           CloseFile(NewCSVFile);
-          ShowMessage('Completed');
+          if (NamePostfix = '_Ambient') Or (NamePostfix = '_generated') then ShowMessage('Completed');
           ProgressBar.Position:= 0;
         except
         on E: EInOutError do
@@ -773,6 +790,11 @@ begin
         else AText:= FloatToStrF(AMark, ffFixed, 3, 1);
 end;
 
+procedure TCSV.GroupBox7Click(Sender: TObject);
+begin
+
+end;
+
 procedure TCSV.Image1Click(Sender: TObject);
 var i, j: integer;
     PanelEmpty: boolean;
@@ -883,6 +905,12 @@ begin
   for i:=1 to 4 do ZoomCurrentExtent(TLineSeries(CSV.FindComponent('Curve'+ IntToStr(i))));
 end;
 
+procedure TCSV.MainTabContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+
+end;
+
 procedure TCSV.NewPanelChange(Sender: TObject);
 begin
   ResetPanes(2);
@@ -912,6 +940,8 @@ begin
       AddCurveForm.ComputedChannelsExt.Clear;
       AddCurveForm.SelectedChannelsExt.Clear;
       ReportText.Text:= '';
+      EstimateFast.Enabled:= false;
+      ThermoBtn.Enabled:= false;
       CurvesTab.Enabled:= false;
       ReportTab.Enabled:= false;
       ShowTool.Enabled:= false;
@@ -1011,6 +1041,7 @@ begin
                GetRangeBtn .Enabled:= True;
             end;
             EstimateFast.Enabled:= True;
+            ThermoBtn.Enabled:= True;
             ShowSondes.Enabled:= True;
             ShowCSondes.Enabled:= True;
             CurvesTab.Enabled:= True;
@@ -2089,6 +2120,73 @@ begin
   end;
 end;
 
+procedure TCSV.ThermoBtnClick(Sender: TObject);
+var
+    StartCycle, EndCycle : TDateTime;
+    Time                 : TDateTime;
+    i, ParamPos, MiliSec : QWord;
+    StartHotZone         : QWord;
+    y                    : Double;
+    Temperature          : Single = 0;
+    MiliSecPos           : Integer;
+begin
+  MiliSecPos:= GetParamPosition('RTCms');
+  StartCycle:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[1])));
+  ParamPos:= GetParamPosition('BHT');
+  for i:=1 to CSVContent.Count-1 do begin
+    if TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then begin
+      if MiliSecPos > 0 then MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]))
+      else MiliSec:= 0;
+      Time:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[i])));
+      Time:= IncMilliSecond(Time, MiliSec);
+      Time:= IncHour(Time, hrsPlus);
+      if y > Temperature then begin
+        Temperature:= y;
+        StartCycle:= Time;
+        StartHotZone:= i;
+      end;
+    end;
+  end;
+  EndCycle:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[CSVContent.Count-1])));
+  EndCycle:= IncMinute(EndCycle, 0 - CutEnd.Value);
+  EndCycle:= IncHour(EndCycle, hrsPlus);
+  StartCycle:= IncMinute(StartCycle, 5);
+  StartTime.Text:= DateTimeToStr(StartCycle);
+  EndTime.Text:= DateTimeToStr(EndCycle);
+  NamePostfix:= '_Hot';
+  GenerateClick(Sender);
+
+  for i:=StartHotZone to CSVContent.Count-1 do begin
+    if TryStrToFloat(GetParamValue(ParamPos, CSVContent[i]), y) then begin
+      if MiliSecPos > 0 then MiliSec:= StrToInt(GetParamValue(MiliSecPos, CSVContent[i]))
+      else MiliSec:= 0;
+      Time:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[i])));
+      Time:= IncMilliSecond(Time, MiliSec);
+      Time:= IncHour(Time, hrsPlus);
+      if (y <= WarmTemp.Value) And (y > WarmTemp.Value - 10) then begin
+        StartCycle:= Time;
+        Break;
+      end;
+    end;
+  end;
+  EndCycle:= IncMinute(StartCycle, 30);
+  StartTime.Text:= DateTimeToStr(StartCycle);
+  EndTime.Text:= DateTimeToStr(EndCycle);
+  NamePostfix:= '_Warm';
+  GenerateClick(Sender);
+
+  EndCycle:= UnixToDateTime(StrToInt(GetParamValue(TimePosition, CSVContent[CSVContent.Count-1])));
+  EndCycle:= IncMinute(EndCycle, 0 - CutEnd.Value);
+  EndCycle:= IncHour(EndCycle, hrsPlus);
+  StartCycle:= IncMinute(EndCycle, -30);
+  StartTime.Text:= DateTimeToStr(StartCycle);
+  EndTime.Text:= DateTimeToStr(EndCycle);
+  NamePostfix:= '_Ambient';
+  GenerateClick(Sender);
+
+  NamePostfix:= '_generated';
+end;
+
 procedure TCSV.TimeOnBottomChange(Sender: TObject);
 begin
   if CSV.TimeOnBottom.Checked then SetDateTimeOnBottom
@@ -2204,6 +2302,11 @@ var i, j: byte;
 begin
  for i:=1 to 10 do
    for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.Visible:= CurveChartPoints.Checked;
+end;
+
+procedure TCSV.DrawBtnClick(Sender: TObject);
+begin
+
 end;
 
 procedure TCSV.FastModeChange(Sender: TObject);
