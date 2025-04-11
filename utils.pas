@@ -6,15 +6,14 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  ComCtrls, Grids, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding,
-  TAGraph, TACustomSource, LazSysUtils, TASeries, TATools, DateTimePicker,
-  Unit2, Unit3, Unit4, Unit6, Unit7, Panel, Options, Types, TAChartUtils,
-  TADataTools, TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp,
-  LCLType, Spin, IniPropStorage, Buttons, Parameters, PQConnection, Math,
-  uComplex, TAChartAxisUtils, TAChartAxis, TATypes, TALegend,
-  AddCurveToChart;
+  ComCtrls, MaskEdit, DateUtils, Clipbrd, StrUtils, LConvEncoding, TAGraph,
+  TACustomSource, TASeries, TATools, Unit2, Unit3, TAChartUtils, TADataTools,
+  TATransformations, SpinEx, SynHighlighterCpp, LCLType, Buttons, PQConnection,
+  TAChartAxisUtils, TAChartAxis, TATypes, TALegend;
 
+function GetChart(ChartNubmber: Byte): TChart;
 function GetLineSerie(ChartNumber, LineSerieNumber: Byte): TLineSeries;
+function GetSondeLineSerie(Chart: Byte; LineSerieNumber: Byte): TLineSeries;
 procedure DeleteLabels(Chart1LineSeries: TLineSeries);
 function AddLineSeries(AChart: TChart; AName: String): TLineSeries;
 procedure SetLineSerieColor(LineSerie: TLineSeries; AColor: TColor);
@@ -34,10 +33,16 @@ procedure ResetCharts;
 function GetColorBySerieName(LineSerieName: String): TColor;
 function GetChartLineSerie(ChartNum: Byte; SerieTitle: String): TLineSeries;
 function GetFreeLineSerie(ChartNum: Byte): Byte;
+procedure FillLimits(Size: Byte);
 
 implementation
 
 uses Unit1;
+
+function GetChart(ChartNubmber: Byte): TChart;
+begin
+  Result:= TChart(CSV.FindComponent('Chart' + IntToStr(ChartNubmber)))
+end;
 
 function GetAcumulatedStatusWord(SWLO, SWHi, ESWLO, ESWHi: Word; y: Double; SWParam: String): Word;
 begin
@@ -165,6 +170,26 @@ begin
    Result:= TLineSeries(TChart(CSV.FindComponent('Chart' + IntToStr(ChartNumber))).Series[LineSerieNumber - 1]);
 end;
 
+function GetSondeLineSerie(Chart: Byte; LineSerieNumber: Byte): TLineSeries;
+begin
+  if Chart = 0 then begin
+    Result:= TLineSeries(CSV.Sondes.Series[LineSerieNumber]);
+    Exit;
+  end;
+  if Chart = 1 then begin
+    Result:= TLineSeries(CSV.Sondes1.Series[LineSerieNumber]);
+    Exit;
+  end;
+  if Chart = 2 then begin
+    Result:= TLineSeries(CSV.Sondes2.Series[LineSerieNumber]);
+    Exit;
+  end;
+  if Chart = 3 then begin
+    Result:= TLineSeries(CSV.Sondes3.Series[LineSerieNumber]);
+    Exit;
+  end;
+end;
+
 function GetChartLineSerie(ChartNum: Byte; SerieTitle: String): TLineSeries;
 var i: Byte;
 begin
@@ -229,6 +254,28 @@ begin
   Chart:= StrToInt(MidStr(LineSerieName, 6, 1)) - 1;
   Serie:= StrToInt(MidStr(LineSerieName, 17, 1)) - 1;
   Result:= ChartColors[GetColorIndex(Serie + Chart)];
+end;
+
+procedure FillLimits(Size: Byte);
+var i: Byte;
+begin
+  if Size = 4 then
+    for i:=0 to 11 do begin
+      CSV.AirCheckGrid.Cells[5, i + 1]:= '[' + FloatToStrF(mean_min_SIBR4_limits[i], ffFixed, 12, 3) + ', ' + FloatToStrF(mean_max_SIBR4_limits[i], ffFixed, 12, 3) + ']';
+      CSV.AirCheckGrid.Cells[7, i + 1]:= FloatToStrF(SD_max_SIBR4_limits[i], ffFixed, 12, 3)
+    end;
+
+  if Size = 6 then
+    for i:=0 to 11 do begin
+      CSV.AirCheckGrid.Cells[5, i + 1]:= '[' + FloatToStrF(mean_min_SIBR6_limits[i], ffFixed, 12, 3) + ', ' + FloatToStrF(mean_max_SIBR6_limits[i], ffFixed, 12, 3) + ']';
+      CSV.AirCheckGrid.Cells[7, i + 1]:= FloatToStrF(SD_max_SIBR6_limits[i], ffFixed, 12, 3)
+    end;
+
+  if Size = 8 then
+    for i:=0 to 11 do begin
+      CSV.AirCheckGrid.Cells[5, i + 1]:= '[' + FloatToStrF(mean_min_SIBR8_limits[i], ffFixed, 12, 3) + ', ' + FloatToStrF(mean_max_SIBR8_limits[i], ffFixed, 12, 3) + ']';
+      CSV.AirCheckGrid.Cells[7, i + 1]:= FloatToStrF(SD_max_SIBR8_limits[i], ffFixed, 12, 3)
+    end;
 end;
 
 end.

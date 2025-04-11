@@ -1,10 +1,10 @@
 object CSV: TCSV
-  Left = 4299
+  Left = 4109
   Height = 1228
-  Top = -931
+  Top = -880
   Width = 1348
   Anchors = []
-  Caption = 'SIBR Analazer v3.1 Portable'
+  Caption = 'SIBR Analazer v3.2 Portable'
   ClientHeight = 1228
   ClientWidth = 1348
   Constraints.MinHeight = 1228
@@ -2523,7 +2523,6 @@ object CSV: TCSV
           Top = 528
           Width = 210
           AntialiasingMode = amOff
-          OnClick = DrawBtnClick
           OnMouseDown = DrawBtnMouseDown
           OnMouseUp = DrawBtnMouseUp
           Picture.Data = {
@@ -3159,18 +3158,24 @@ object CSV: TCSV
       object GroupBox1: TGroupBox
         Left = 16
         Height = 240
-        Top = 896
+        Top = 888
         Width = 328
         Caption = 'Thermal cycle'
         ClientHeight = 210
         ClientWidth = 324
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clSilver
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 7
         object ThermoBtn: TButton
-          Left = 178
+          Left = 144
           Height = 46
           Top = 152
-          Width = 134
-          Caption = 'Generate'
+          Width = 168
+          Caption = 'Generate file set'
           Enabled = False
           TabOrder = 0
           OnClick = ThermoBtnClick
@@ -4784,6 +4789,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
+        OnAfterDraw = Sondes2AfterDraw
         OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
@@ -4891,6 +4897,7 @@ object CSV: TCSV
         )
         Title.Visible = True
         Toolset = ChartToolset1
+        OnAfterDraw = Sondes3AfterDraw
         OnExtentChanged = Chart2ExtentChanged
         Align = alTop
         Color = clDefault
@@ -5575,8 +5582,6 @@ object CSV: TCSV
               Title.Distance = 1
               Title.LabelFont.CharSet = ANSI_CHARSET
               Title.LabelFont.Color = clGray
-              Title.LabelFont.Height = -12
-              Title.LabelFont.Name = 'Segoe UI'
               Title.LabelFont.Pitch = fpVariable
               Title.LabelFont.Quality = fqDraft
               Title.Visible = True
@@ -7101,6 +7106,225 @@ object CSV: TCSV
         OnClick = Button4Click
       end
     end
+    object AirCheckTab: TTabSheet
+      Caption = 'Air Check'
+      ClientHeight = 1190
+      ClientWidth = 1340
+      object AirCheckGrid: TStringGrid
+        Left = 16
+        Height = 424
+        Top = 128
+        Width = 1304
+        BorderStyle = bsNone
+        ColCount = 9
+        Font.CharSet = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+        ParentFont = False
+        RowCount = 13
+        TabOrder = 0
+        OnDrawCell = AirCheckGridDrawCell
+        ColWidths = (
+          241
+          117
+          121
+          161
+          128
+          165
+          123
+          122
+          119
+        )
+        Cells = (
+          44
+          0
+          1
+          'Attenuation T1 at 2 MHz'
+          0
+          2
+          'Attenuation T2 at 2 MHz'
+          0
+          3
+          'Attenuation T3 at 2 MHz'
+          0
+          4
+          'Attenuation T1 at 400 KHz'
+          0
+          5
+          'Attenuation T2 at 400 KHz'
+          0
+          6
+          'Attenuation T3 at 400 KHz'
+          0
+          7
+          'Phase Shift T1 at 2 MHz'
+          0
+          8
+          'Phase Shift T2 at 2 MHz'
+          0
+          9
+          'Phase Shift T3 at 2 MHz'
+          0
+          10
+          'Phase Shift T1 at 400 KHz'
+          0
+          11
+          'Phase Shift T2 at 400 KHz'
+          0
+          12
+          'Phase Shift T3 at 400 KHz'
+          1
+          0
+          'Probe'
+          1
+          1
+          'A16H'
+          1
+          2
+          'A22H'
+          1
+          3
+          'A34H'
+          1
+          4
+          'A16L'
+          1
+          5
+          'A22L'
+          1
+          6
+          'A34L'
+          1
+          7
+          'P16H'
+          1
+          8
+          'P22H'
+          1
+          9
+          'P32H'
+          1
+          10
+          'P16L'
+          1
+          11
+          'P22L'
+          1
+          12
+          'P32L'
+          2
+          0
+          'Unit'
+          2
+          1
+          'db'
+          2
+          2
+          'db'
+          2
+          3
+          'db'
+          2
+          4
+          'db'
+          2
+          5
+          'db'
+          2
+          6
+          'db'
+          2
+          7
+          'dega'
+          2
+          8
+          'dega'
+          2
+          9
+          'dega'
+          2
+          10
+          'dega'
+          2
+          11
+          'dega'
+          2
+          12
+          'dega'
+          3
+          0
+          '[Min, Max]'
+          4
+          0
+          'Mean'
+          5
+          0
+          'Mean limits'
+          6
+          0
+          'STD'
+          7
+          0
+          'STD limits'
+          8
+          0
+          'Result'
+        )
+      end
+      object AnalizeBtn: TButton
+        Left = 1144
+        Height = 46
+        Top = 560
+        Width = 168
+        Caption = 'Analize'
+        Enabled = False
+        TabOrder = 1
+        OnClick = AnalizeBtnClick
+      end
+      object FullRangeCh: TCheckBox
+        Left = 200
+        Height = 29
+        Top = 16
+        Width = 107
+        Caption = 'Full Range'
+        Checked = True
+        State = cbChecked
+        TabOrder = 2
+      end
+      object Inches_4: TRadioButton
+        Left = 16
+        Height = 29
+        Top = 12
+        Width = 92
+        Caption = 'Inches_4'
+        Checked = True
+        Enabled = False
+        TabOrder = 5
+        TabStop = True
+        OnChange = Inches_4Change
+      end
+      object Inches_6: TRadioButton
+        Left = 16
+        Height = 29
+        Top = 48
+        Width = 92
+        Caption = 'Inches_6'
+        Enabled = False
+        TabOrder = 3
+        OnChange = Inches_6Change
+      end
+      object Inches_8: TRadioButton
+        Left = 16
+        Height = 29
+        Top = 88
+        Width = 92
+        Caption = 'Inches_8'
+        Enabled = False
+        TabOrder = 4
+        OnChange = Inches_8Change
+      end
+    end
   end
   object OpenDialog1: TOpenDialog
     DefaultExt = '.csv'
@@ -7130,7 +7354,6 @@ object CSV: TCSV
       OnPointClick = ChartToolset1DataPointClickTool1PointClick
     end
     object ChartToolset1DataPointHintTool1: TDataPointHintTool
-      OnAfterKeyDown = ChartToolset1DataPointHintTool1AfterKeyDown
       ActiveCursor = crCross
       OnHint = ChartToolset1DataPointHintTool1Hint
     end
@@ -7148,7 +7371,6 @@ object CSV: TCSV
     end
     object ChartToolset1DataPointClickTool3: TDataPointClickTool
       Shift = [ssShift, ssLeft]
-      OnAfterKeyDown = ChartToolset1DataPointClickTool3AfterKeyDown
       OnPointClick = ChartToolset1DataPointClickTool3PointClick
     end
     object ChartToolset1UserDefinedTool1: TUserDefinedTool

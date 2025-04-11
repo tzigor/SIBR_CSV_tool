@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, tachartlazaruspkg, datetimectrls, lazcontrols, laz_synapse, Unit1,
+  Forms, tachartlazaruspkg, datetimectrls, lazcontrols, Unit1,
   Unit2, Unit3, Unit4, Parameters, Unit5, Unit6, Unit7, Panel, Options,
   AddCurveToChart, Utils
   { you can add units after this };

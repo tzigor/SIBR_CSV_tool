@@ -58,6 +58,13 @@ type ShortString = String[24];
     Max: Double;
   end;
 
+  TRegressionResult = record
+    m,     // коэффициент наклона (a)
+    c, // свободный член (b) y = a*x + b
+    R2,        // коэффициент детерминации (R²)
+    Y_pred: Real;
+  end;
+
 Const
   { Error codes }
     NO_ERROR = 0;
@@ -75,7 +82,19 @@ Const Line = #13#10;
       PhaseChannels: array of String = ('PR1C0F1','PR2C0F1','PR1C0F2','PR2C0F2','PR1T0F1','PR2T0F1','PR1T0F2','PR2T0F2','PR1T1F1','PR2T1F1','PR1T1F2','PR2T1F2','PR1T2F1','PR2T2F1','PR1T2F2','PR2T2F2','PR1T3F1','PR2T3F1','PR1T3F2','PR2T3F2');
       CondChannels: array of String = ('A0L_UNC', 'A16L_UNC', 'A22L_UNC', 'A34L_UNC', 'P0L_UNC', 'P16L_UNC', 'P22L_UNC', 'P34L_UNC', 'A0H_UNC', 'A16H_UNC', 'A22H_UNC', 'A34H_UNC', 'P0H_UNC', 'P16H_UNC', 'P22H_UNC', 'P34H_UNC');
       CondCompChannels: array of String = ('A16L', 'A22L', 'A34L', 'P16L', 'P22L', 'P34L', 'A16H', 'A22H', 'A34H', 'P16H', 'P22H', 'P34H');
-      const  a: array[1..3, 1..3] of real = ((2/3, 1/2, -1/6), (1/3, 1/2, 1/6), (-1/3, 1/2, 5/6));
+      a: array[1..3, 1..3] of real = ((2/3, 1/2, -1/6), (1/3, 1/2, 1/6), (-1/3, 1/2, 5/6));
+
+      mean_min_SIBR4_limits: array[0..11] of Real = (8.094, 6.616, 3.66, 8.136, 6.655, 3.694, -2, -2, -2, -2, -2, -2);
+      mean_max_SIBR4_limits: array[0..11] of Real = (8.894, 7.416, 4.46, 8.936, 7.455, 4.494, 2, 2, 2, 2, 2, 2);
+      SD_max_SIBR4_limits: array[0..11] of Real = (0.018, 0.012, 0.023, 0.014, 0.01, 0.033, 0.11, 0.07, 0.14, 0.08, 0.07, 0.2);
+
+      mean_min_SIBR6_limits: array[0..11] of Real = (7.793, 6.381, 3.557, 7.766, 6.363, 3.556, -2, -2, -2, -2, -2, -2);
+      mean_max_SIBR6_limits: array[0..11] of Real = (8.593, 7.181, 4.357, 8.566, 7.163, 4.356, 2, 2, 2, 2, 2, 2);
+      SD_max_SIBR6_limits: array[0..11] of Real = (0.011, 0.007, 0.016, 0.009, 0.007, 0.024, 0.07, 0.04, 0.1, 0.06, 0.05, 0.14);
+
+      mean_min_SIBR8_limits: array[0..11] of Real = (7.793, 6.381, 3.557, 7.766, 6.363, 3.556, -2, -2, -2, -2, -2, -2);
+      mean_max_SIBR8_limits: array[0..11] of Real = (8.593, 7.181, 4.357, 8.566, 7.163, 4.356, 2, 2, 2, 2, 2, 2);
+      SD_max_SIBR8_limits: array[0..11] of Real = (0.011, 0.007, 0.016, 0.009, 0.007, 0.024, 0.07, 0.04, 0.1, 0.06, 0.05, 0.14);
 
 Const SWLo: array of String70 = (
       '+24V_CTRL out of range ±30%',
@@ -130,6 +149,7 @@ Const SWLo: array of String70 = (
       'Active logging identifier bit 3');
 
 const ParameterError = -35535;
+      DATA_MAX_SIZE  = 4294967295;
 var
   ErrorCode                                      : Byte;
   CSVFileName, CSVCompareFileName, DrawParameter : String;
@@ -164,6 +184,10 @@ var
   NumberOfPoints                                 : Longint;
   SelectedChartToAdd                             : Byte;
   ShowLabelsFlag                                 : Boolean;
+  TEMP_data                                      : TDoubleArray;
+  RegressionResult                               : TRegressionResult;
+  AirCheckStarted2                               : Boolean = False;  // Compensated sondes Attenuations
+  AirCheckStarted3                               : Boolean = False;  // Compensated sondes Phase shifts
 
 function AmplitudeName(n: Integer):String;
 function PhaseShiftName(n: Integer):String;
@@ -183,9 +207,10 @@ function GetCompSonde(Param: String; n: Integer): Double;
 function Amplitude(nParam, n: Integer): Double;
 function PhaseShift(nParam, n: Integer): Double;
 procedure FillCoplexParams(n: Integer; Freq: Byte);
+procedure AnalyseProbe(Chart, ProbeNumber: Byte);
 
 implementation
-uses Unit1;
+uses Unit1, Utils;
 
 function DateTimePlusLocal(DateTime: String): String;
 begin
@@ -465,12 +490,12 @@ begin
      'A22H': GetCompSonde:= Abs(GetSonde('A16H_UNC' ,n)*a[2,1]+GetSonde('A22H_UNC', n)*a[2,2]+GetSonde('A34H_UNC', n)*a[2,3]);
      'A34H': GetCompSonde:= Abs(GetSonde('A16H_UNC' ,n)*a[3,1]+GetSonde('A22H_UNC', n)*a[3,2]+GetSonde('A34H_UNC', n)*a[3,3]);
 
-     'P16L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[1,1]+GetSonde('P22L_UNC', n)*a[1,2]+GetSonde('P34L_UNC', n)*a[1,3])*180/Pi;
-     'P22L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[2,1]+GetSonde('P22L_UNC', n)*a[2,2]+GetSonde('P34L_UNC', n)*a[2,3])*180/Pi;
-     'P34L': GetCompSonde:= Abs(GetSonde('P16L_UNC' ,n)*a[3,1]+GetSonde('P22L_UNC', n)*a[3,2]+GetSonde('P34L_UNC', n)*a[3,3])*180/Pi;
-     'P16H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[1,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[1,3])*180/Pi;
-     'P22H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[2,1]+GetSonde('P22H_UNC', n)*a[2,2]+GetSonde('P34H_UNC', n)*a[2,3])*180/Pi;
-     'P34H': GetCompSonde:= Abs(GetSonde('P16H_UNC' ,n)*a[3,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[3,3])*180/Pi;
+     'P16L': GetCompSonde:= (GetSonde('P16L_UNC' ,n)*a[1,1]+GetSonde('P22L_UNC', n)*a[1,2]+GetSonde('P34L_UNC', n)*a[1,3]);
+     'P22L': GetCompSonde:= (GetSonde('P16L_UNC' ,n)*a[2,1]+GetSonde('P22L_UNC', n)*a[2,2]+GetSonde('P34L_UNC', n)*a[2,3]);
+     'P34L': GetCompSonde:= (GetSonde('P16L_UNC' ,n)*a[3,1]+GetSonde('P22L_UNC', n)*a[3,2]+GetSonde('P34L_UNC', n)*a[3,3]);
+     'P16H': GetCompSonde:= (GetSonde('P16H_UNC' ,n)*a[1,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[1,3]);
+     'P22H': GetCompSonde:= (GetSonde('P16H_UNC' ,n)*a[2,1]+GetSonde('P22H_UNC', n)*a[2,2]+GetSonde('P34H_UNC', n)*a[2,3]);
+     'P34H': GetCompSonde:= (GetSonde('P16H_UNC' ,n)*a[3,1]+GetSonde('P22H_UNC', n)*a[1,2]+GetSonde('P34H_UNC', n)*a[3,3]);
    end;
    if SondeError then GetCompSonde:= ParameterError
 end;
@@ -514,6 +539,86 @@ begin
   else PhaseShift:= 0;
 end;
 
+procedure LinearRegression(Serie: TLineSeries);
+var
+  Len                        : LongInt;
+  X_mean                     : Single = 0;
+  Y_mean                     : Single = 0;
+  num, den, m, c             : Single;
+  ss_tot, ss_res, Y_pred, r2 : Single;
+  i                          : LongInt;
+
+begin
+  Len:= Serie.Count;
+  for i:= 0 to Len-1 do X_mean:= X_mean + Serie.GetXValue(i);
+  X_mean:= X_mean / Len;
+
+  for i:= 0 to Len-1 do Y_mean:= Y_mean + Serie.GetYValue(i);
+  Y_mean:= Y_mean / Len;
+
+  num:=0;
+  den:=0;
+  for i:= 0 to Len-1 do begin
+    num:= num + (Serie.GetXValue(i) - X_mean)*(Serie.GetYValue(i) - Y_mean);
+    den:= den + (Serie.GetXValue(i) - X_mean)*(Serie.GetXValue(i) - X_mean);
+  end;
+  m:= num / den;
+  c:= Y_mean - (m * X_mean);
+
+  ss_tot:= 0;
+  ss_res:= 0;
+  Y_pred:= 0;
+
+  for i:= 0 to Len-1 do begin
+    Y_pred:= c + (m * Serie.GetXValue(i));
+    ss_tot:= ss_tot + (Serie.GetYValue(i) - Y_mean) * (Serie.GetYValue(i) - Y_mean);
+    ss_res:= ss_res + (Serie.GetYValue(i) - Y_pred) * (Serie.GetYValue(i) - Y_pred);
+  end;
+
+  r2:= 1 - (ss_res / ss_tot);
+
+  RegressionResult.m:= m;
+  RegressionResult.c:= c;
+  RegressionResult.R2:= r2;
+  RegressionResult.Y_pred:= Y_pred;
+end;
+
+procedure AnalyseProbe(Chart, ProbeNumber: Byte);
+var Serie               : TLineSeries;
+    i                   : LongInt;
+    Min, Max, Mean, Std : Double;
+begin
+  Serie:= GetSondeLineSerie(Chart, ProbeNumber);
+  Min:= Serie.GetYMin;
+  Max:= Serie.GetYMax;
+  Mean:= 0;
+  for i:=0 to Serie.Count-1 do begin
+    Mean += Serie.GetYValue(i);
+  end;
+  Mean:= Mean / Serie.Count;
+  LinearRegression(Serie);
+  Std:= 0;
+  for i:=0 to Serie.Count-1 do begin
+    Std += Sqr(Serie.GetYValue(i) - (RegressionResult.c + RegressionResult.m * Serie.GetXValue(i)));
+  end;
+  Std:= Sqrt(Std / (Serie.Count-1));
+
+  CSV.AirCheckGrid.Cells[3, ProbeNumber + (Chart-2)*6 + 1]:= '[' + FloatToStrF(Min, ffFixed, 12, 3) + ', ' + FloatToStrF(Max, ffFixed, 12, 3) + ']';
+  CSV.AirCheckGrid.Cells[4, ProbeNumber + (Chart-2)*6 + 1]:= FloatToStrF(Mean, ffFixed, 12, 3);
+  CSV.AirCheckGrid.Cells[6, ProbeNumber + (Chart-2)*6 + 1]:= FloatToStrF(Std, ffFixed, 12, 3);
+
+  if CSV.Inches_4.Checked then
+    if (Mean >= mean_min_SIBR4_limits[ProbeNumber + (Chart-2)*6]) And (Mean <= mean_max_SIBR4_limits[ProbeNumber + (Chart-2)*6]) then CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Passed'
+    else CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Failed';
+
+  if CSV.Inches_6.Checked then
+    if (Mean >= mean_min_SIBR6_limits[ProbeNumber + (Chart-2)*6]) And (Mean <= mean_max_SIBR6_limits[ProbeNumber + (Chart-2)*6]) then CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Passed'
+    else CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Failed';
+
+  if CSV.Inches_8.Checked then
+    if (Mean >= mean_min_SIBR8_limits[ProbeNumber + (Chart-2)*6]) And (Mean <= mean_max_SIBR8_limits[ProbeNumber + (Chart-2)*6]) then CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Passed'
+    else CSV.AirCheckGrid.Cells[8, ProbeNumber + (Chart-2)*6 + 1]:= 'Failed';
+end;
 
 end.
 

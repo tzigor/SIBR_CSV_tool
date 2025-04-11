@@ -12,7 +12,7 @@ uses
   TADataTools, TAChartExtentLink, TATransformations, SpinEx, SynHighlighterCpp,
   LCLType, Spin, IniPropStorage, Buttons, Parameters, PQConnection, Math,
   uComplex, TAChartAxisUtils, TAChartAxis, TATypes, TALegend,
-  AddCurveToChart, Utils;
+  AddCurveToChart, Utils, TADrawUtils;
 
 type
 
@@ -21,19 +21,23 @@ type
   TCSV = class(TForm)
     App: TPageControl;
     AutoFit: TCheckBox;
-    HotLow: TFloatSpinEdit;
-    GroupBox1: TGroupBox;
+    AnalizeBtn: TButton;
     ChartToolset1UserDefinedTool1: TUserDefinedTool;
+    FullRangeCh: TCheckBox;
     CurveChartPoints: TCheckBox;
     CloseForm: TBitBtn;
+    CutEnd: TSpinEdit;
+    GroupBox1: TGroupBox;
+    HotLow: TFloatSpinEdit;
+    Label35: TLabel;
+    Label36: TLabel;
     Label37: TLabel;
     Label38: TLabel;
     Label39: TLabel;
     Label40: TLabel;
-    CutEnd: TSpinEdit;
-    WarmTemp: TFloatSpinEdit;
-    Label35: TLabel;
-    Label36: TLabel;
+    Inches_4: TRadioButton;
+    Inches_6: TRadioButton;
+    Inches_8: TRadioButton;
     ShowLabel: TImage;
     Image7: TImage;
     OpenCSV: TBitBtn;
@@ -57,7 +61,10 @@ type
     OpenDialog2: TOpenDialog;
     RemoveExtremes: TCheckBox;
     CursorMode: TSpeedButton;
+    AirCheckTab: TTabSheet;
+    AirCheckGrid: TStringGrid;
     ThermoBtn: TButton;
+    WarmTemp: TFloatSpinEdit;
     ZoomMode: TSpeedButton;
     TimeOnBottom: TCheckBox;
     FastMode: TCheckBox;
@@ -308,17 +315,16 @@ type
     TabSheet2: TTabSheet;
     TestDate: TDateTimePicker;
     procedure AddPaneClick(Sender: TObject);
+    procedure AirCheckGridDrawCell(Sender: TObject; aCol, aRow: Integer;
+      aRect: TRect; aState: TGridDrawState);
+    procedure AnalizeBtnClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure ByDotsChange(Sender: TObject);
     procedure ByTemperatureChange(Sender: TObject);
-    procedure ChartToolset1DataPointClickTool3AfterKeyDown(ATool: TChartTool;
-      APoint: TPoint);
     procedure ChartToolset1DataPointClickTool3PointClick(ATool: TChartTool;
-      APoint: TPoint);
-    procedure ChartToolset1DataPointHintTool1AfterKeyDown(ATool: TChartTool;
       APoint: TPoint);
     procedure ChartToolset1LegendClickTool1Click(ASender: TChartTool;
       ALegend: TChartLegend);
@@ -337,7 +343,6 @@ type
     procedure CloseFormClick(Sender: TObject);
     procedure CursorModeClick(Sender: TObject);
     procedure CurveChartPointsChange(Sender: TObject);
-    procedure DrawBtnClick(Sender: TObject);
     procedure FastModeChange(Sender: TObject);
     procedure GetRangeBtnClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
@@ -351,6 +356,9 @@ type
     procedure Image4Click(Sender: TObject);
     procedure Image7Click(Sender: TObject);
     procedure ImportClick(Sender: TObject);
+    procedure Inches_4Change(Sender: TObject);
+    procedure Inches_6Change(Sender: TObject);
+    procedure Inches_8Change(Sender: TObject);
     procedure InvertedChange(Sender: TObject);
     procedure Label41Click(Sender: TObject);
     procedure MainTabContextPopup(Sender: TObject; MousePos: TPoint;
@@ -401,6 +409,8 @@ type
     procedure RawChannelsDrawItem(Control: TWinControl; Index: Integer;
       ARect: TRect; State: TOwnerDrawState);
     procedure RawChannelsSelectionChange(Sender: TObject; User: boolean);
+    procedure Sondes2AfterDraw(ASender: TChart; ADrawer: IChartDrawer);
+    procedure Sondes3AfterDraw(ASender: TChart; ADrawer: IChartDrawer);
     procedure StatusHiChange(Sender: TObject);
     procedure StatusLoChange(Sender: TObject);
     procedure SWListDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -426,6 +436,7 @@ var
 
 procedure ZoomCurrentExtent(Chart1LineSeries: TLineSeries);
 procedure DrawChart(LineSerie: TLineSeries; SelectedParamName: String; ParameterNumber: Integer);
+procedure AirCheck(Chart: Byte);
 
 implementation
 
@@ -492,6 +503,7 @@ begin
    end;
   CSV.Pane1.Width:= CSV.Width Div 2;
   InitTransformations;
+  FillLimits(4);
 end;
 
 procedure TCSV.GenerateClick(Sender: TObject);
@@ -688,12 +700,6 @@ begin
   ResetCharts;
 end;
 
-procedure TCSV.ChartToolset1DataPointClickTool3AfterKeyDown(ATool: TChartTool;
-  APoint: TPoint);
-begin
-
-end;
-
 procedure TCSV.ChartToolset1DataPointClickTool3PointClick(ATool: TChartTool; APoint: TPoint);
 var i, j: Byte;
     LineSerie: TLineSeries;
@@ -709,12 +715,6 @@ begin
     end;
   end;
   ResetZoom;
-end;
-
-procedure TCSV.ChartToolset1DataPointHintTool1AfterKeyDown(ATool: TChartTool;
-  APoint: TPoint);
-begin
-
 end;
 
 procedure TCSV.ChartToolset1LegendClickTool1Click(ASender: TChartTool;
@@ -893,6 +893,24 @@ begin
   end;
 end;
 
+procedure TCSV.Inches_4Change(Sender: TObject);
+begin
+  if Inches_4.Checked then FillLimits(4);
+  AnalizeBtnClick(Sender);
+end;
+
+procedure TCSV.Inches_6Change(Sender: TObject);
+begin
+  if Inches_6.Checked then FillLimits(6);
+  AnalizeBtnClick(Sender);
+end;
+
+procedure TCSV.Inches_8Change(Sender: TObject);
+begin
+  if Inches_8.Checked then FillLimits(8);
+  AnalizeBtnClick(Sender);
+end;
+
 procedure TCSV.InvertedChange(Sender: TObject);
 begin
   if Inverted.Checked then CurveInvert(true)
@@ -1051,6 +1069,12 @@ begin
             ReportStartTime.Text:= StartTime.Text;
             ReportEndTime.Text:= EndTime.Text;
             ZoneDuration.Caption:= IntToStr(DurationInMinutes) + ' min';
+
+            AnalizeBtn.Enabled:= True;
+            Inches_4.Enabled:= True;
+            Inches_6.Enabled:= True;
+            Inches_8.Enabled:= True;
+
         end
         else ShowMessage('Wrong file format');
       except
@@ -1222,32 +1246,32 @@ begin
     end
     else begin
       if time then begin
-        CSV.SondesLineSeries13.AddXY(x, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
-        CSV.SondesLineSeries14.AddXY(x, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
-        CSV.SondesLineSeries15.AddXY(x, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
-        CSV.SondesLineSeries16.AddXY(x, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
-        CSV.SondesLineSeries17.AddXY(x, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
-        CSV.SondesLineSeries18.AddXY(x, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
-        CSV.SondesLineSeries19.AddXY(x, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
-        CSV.SondesLineSeries20.AddXY(x, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
-        CSV.SondesLineSeries21.AddXY(x, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
-        CSV.SondesLineSeries22.AddXY(x, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
-        CSV.SondesLineSeries23.AddXY(x, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
-        CSV.SondesLineSeries24.AddXY(x, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
+        CSV.SondesLineSeries13.AddXY(x, (A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
+        CSV.SondesLineSeries14.AddXY(x, (A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
+        CSV.SondesLineSeries15.AddXY(x, (A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
+        CSV.SondesLineSeries16.AddXY(x, (A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
+        CSV.SondesLineSeries17.AddXY(x, (A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
+        CSV.SondesLineSeries18.AddXY(x, (A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
+        CSV.SondesLineSeries19.AddXY(x, (P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
+        CSV.SondesLineSeries20.AddXY(x, (P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
+        CSV.SondesLineSeries21.AddXY(x, (P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
+        CSV.SondesLineSeries22.AddXY(x, (P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
+        CSV.SondesLineSeries23.AddXY(x, (P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
+        CSV.SondesLineSeries24.AddXY(x, (P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
       end
       else begin
-        CSV.SondesLineSeries13.AddXY(i, Abs(A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
-        CSV.SondesLineSeries14.AddXY(i, Abs(A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
-        CSV.SondesLineSeries15.AddXY(i, Abs(A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
-        CSV.SondesLineSeries16.AddXY(i, Abs(A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
-        CSV.SondesLineSeries17.AddXY(i, Abs(A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
-        CSV.SondesLineSeries18.AddXY(i, Abs(A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
-        CSV.SondesLineSeries19.AddXY(i, Abs(P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
-        CSV.SondesLineSeries20.AddXY(i, Abs(P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
-        CSV.SondesLineSeries21.AddXY(i, Abs(P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
-        CSV.SondesLineSeries22.AddXY(i, Abs(P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
-        CSV.SondesLineSeries23.AddXY(i, Abs(P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
-        CSV.SondesLineSeries24.AddXY(i, Abs(P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
+        CSV.SondesLineSeries13.AddXY(i, (A16L_UNC * a[1,1] + A22L_UNC * a[1,2] + A34L_UNC * a[1,3]));
+        CSV.SondesLineSeries14.AddXY(i, (A16L_UNC * a[2,1] + A22L_UNC * a[2,2] + A34L_UNC * a[2,3]));
+        CSV.SondesLineSeries15.AddXY(i, (A16L_UNC * a[3,1] + A22L_UNC * a[3,2] + A34L_UNC * a[3,3]));
+        CSV.SondesLineSeries16.AddXY(i, (A16H_UNC * a[1,1] + A22H_UNC * a[1,2] + A34H_UNC * a[1,3]));
+        CSV.SondesLineSeries17.AddXY(i, (A16H_UNC * a[2,1] + A22H_UNC * a[2,2] + A34H_UNC * a[2,3]));
+        CSV.SondesLineSeries18.AddXY(i, (A16H_UNC * a[3,1] + A22H_UNC * a[3,2] + A34H_UNC * a[3,3]));
+        CSV.SondesLineSeries19.AddXY(i, (P16L_UNC * a[1,1] + P22L_UNC * a[1,2] + P34L_UNC * a[1,3]));
+        CSV.SondesLineSeries20.AddXY(i, (P16L_UNC * a[2,1] + P22L_UNC * a[2,2] + P34L_UNC * a[2,3]));
+        CSV.SondesLineSeries21.AddXY(i, (P16L_UNC * a[3,1] + P22L_UNC * a[3,2] + P34L_UNC * a[3,3]));
+        CSV.SondesLineSeries22.AddXY(i, (P16H_UNC * a[1,1] + P22H_UNC * a[1,2] + P34H_UNC * a[1,3]));
+        CSV.SondesLineSeries23.AddXY(i, (P16H_UNC * a[2,1] + P22H_UNC * a[2,2] + P34H_UNC * a[2,3]));
+        CSV.SondesLineSeries24.AddXY(i, (P16H_UNC * a[3,1] + P22H_UNC * a[1,2] + P34H_UNC * a[3,3]));
       end;
     end;
   end;
@@ -1260,6 +1284,7 @@ var x, Time: TDateTime;
 begin
   if CSV.ZoneFromChart.Checked and (StartZone = EndZone) then ShowMessage('Time zone is not defined')
   else begin
+      SetLength(TEMP_data, 0);
       TimePos:= TimePosition;
       MiliSecPos:= GetParamPosition('RTCms');
       if zType = 0 then begin
@@ -1298,6 +1323,7 @@ begin
              end;
            end
            else FillZondes(x, i, zType, CSV.TimeScale.Checked);
+           Insert(StrToFloat(GetParamValue(GetParamPosition('BHT'), CSVContent[i])), TEMP_data, DATA_MAX_SIZE);
         end;
         CSV.CommonBar.Position:= CSV.CommonBar.Position + 1;
         i:= i + 1;
@@ -1307,8 +1333,8 @@ begin
       Sonde2.Height:= (CSV.Height - 50) div 2;
       Sonde1.Visible:= True;
       Sonde2.Visible:= True;
-      if zType = 0 then CSV.App.ActivePage:= CSV.SondesChart
-      else CSV.App.ActivePage:= CSV.CSondes;
+      if zType = 0 then CSV.App.ActivePage:= CSV.SondesChart;
+      if zType = 1 then  CSV.App.ActivePage:= CSV.CSondes;
   end;
 end;
 
@@ -1340,6 +1366,7 @@ var i, j, n, CtrlTempPos, ParamPos, ParamLine, MiliSec: Longint;
     SWLOPos, SWHiPos, ESWLOPos, ESWHiPos: Longint;
     LineColor: TColor;
     BarCounter: Longint;
+    dr: TDoubleRect;
 begin
   SWLOPos:= GetParamPosition('STATUS.SIBR.LO');
   SWHiPos:= GetParamPosition('STATUS.SIBR.HI');
@@ -1467,6 +1494,7 @@ begin
   CSV.CommonBar.Position:= 0;
   if CSV.Active then LineSerie.ParentChart.Top:= 10000;
   LineSerie.ParentChart.Visible:= True;
+
 end;
 
 // ***************** DRAW ******************************************************
@@ -1711,6 +1739,24 @@ begin
   i:= RawChannels.GetIndexAtXY(Pos.X, Pos.Y);
   if RawChannels.Selected[i] and (ComputedChannels.SelCount + RawChannels.SelCount > NumOsCharts) then RawChannels.Selected[i]:= false
   else FillSelectedChannels;
+end;
+
+procedure TCSV.Sondes2AfterDraw(ASender: TChart; ADrawer: IChartDrawer);
+begin
+  if AirCheckStarted2 then begin
+    AirCheck(2);
+    AirCheckStarted2:= False;
+    CSV.App.ActivePage:= CSV.AirCheckTab;
+  end;
+end;
+
+procedure TCSV.Sondes3AfterDraw(ASender: TChart; ADrawer: IChartDrawer);
+begin
+  if AirCheckStarted3 then begin
+    AirCheck(3);
+    AirCheckStarted3:= False;
+    CSV.App.ActivePage:= CSV.AirCheckTab;
+  end;
 end;
 
 procedure TCSV.EStatusLoChange(Sender: TObject);
@@ -2304,10 +2350,6 @@ begin
    for j:=1 to 4 do TLineSeries(CSV.FindComponent('Pane' + IntToStr(i) + 'Curve' + IntToStr(j))).Pointer.Visible:= CurveChartPoints.Checked;
 end;
 
-procedure TCSV.DrawBtnClick(Sender: TObject);
-begin
-
-end;
 
 procedure TCSV.FastModeChange(Sender: TObject);
 begin
@@ -2338,6 +2380,36 @@ begin
   end;
   if CSV.ShowDateTime.Checked then SetDateTimeVisible;
   FitPanesToWindow;
+end;
+
+procedure TCSV.AirCheckGridDrawCell(Sender: TObject; aCol, aRow: Integer;
+  aRect: TRect; aState: TGridDrawState);
+begin
+  if (ACol > 7) and (ARow > 0) then begin
+    if AirCheckGrid.Cells[8, aRow]='' then AirCheckGrid.Canvas.Brush.Color:=clWhite
+    else if AirCheckGrid.Cells[8, aRow]='Passed' then AirCheckGrid.Canvas.Brush.Color:=RGBToColor(150, 255, 150)
+         else AirCheckGrid.Canvas.Brush.Color:=RGBToColor(255, 150, 150);;
+    AirCheckGrid.Canvas.FillRect(aRect);
+    AirCheckGrid.Canvas.TextOut(aRect.Left, aRect.Top, AirCheckGrid.Cells[Acol, Arow]);
+  end;
+end;
+
+procedure AirCheck(Chart: Byte);
+var i: Byte;
+begin
+  for i:=0 to 5 do AnalyseProbe(Chart, i);
+end;
+
+procedure TCSV.AnalizeBtnClick(Sender: TObject);
+var ZoneFromChartChecked: Boolean;
+begin
+  ZoneFromChartChecked:= ZoneFromChart.Checked;
+  if FullRangeCh.Checked then ZoneFromChart.Checked:= False
+  else ZoneFromChart.Checked:= True;
+  AirCheckStarted2:= True;
+  AirCheckStarted3:= True;
+  ShowSonde(Sondes2, Sondes3, 1);
+  ZoneFromChart.Checked:= ZoneFromChartChecked;
 end;
 
 procedure TCSV.Pane1ExtentChanged(ASender: TChart);
